@@ -23,7 +23,7 @@ Contains other easy to solve Pascal programs.
 Contains some medium to solve Pascal programs.
 
 7.programs4:
-Contains some medium to hard to solve Pascal programs.
+Contains some medium/hard to solve Pascal programs.
 
 8.programs5:
 Contains some hard to solve Pascal programs.
