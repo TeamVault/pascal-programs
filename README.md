@@ -4,8 +4,8 @@ https://en.wikipedia.org/wiki/Pascal_(programming_language)
 
 # Folder Contents
 1.Final Poject:
-Contains the final project written completly in Pascal. It is composed of eight other sub-progrmas which
-display different capabilities. The report folder contanins the description of the code.
+Contains the final project written completly in Pascal. It is composed of eight other sub-programs which
+display different capabilities of the Pascal prog. language. The report folder contanins the description of the code. For those of you who can not read it I am willing to help out.
 
 2.IDE:
 Contains an IDE which can be used to develop Pascal programs.
