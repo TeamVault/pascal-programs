@@ -1,0 +1,1110 @@
+4. PROGRAMAREA ORIENTATA PE OBIECTE
+
+4.1. Concepte generale
+4.2. Programarea orientata pe obiecte in Turbo Pascal
+
+4.1. Concepte generale
+
+Am vazut in lectia 'Tipuri de date utilizator' ca
+
+programarea orientata pe obiecte = programarea bazata pe obiecte +
+                                   mostenirea +
+                                   polimorfismul.
+
+Inainte de a defini conceptele de mostenire si polimorfism, vom face o scurta
+trecere in revista a conceptelor de baza legate de programarea orientata pe
+obiecte (Object-Oriented Programming, OOP sau POO).
+
+4.1.1. Notiuni si concepte fundamentale
+
+In programarea bazata pe obiecte (Object-Based Programming), obiectele
+incapsuleaza date (ce caracterizeaza starea lor) si actiuni (care
+caracterizeaza comportamentul obiectelor). Obiectele comunica intre ele prin
+mesaje. Doua obiecte de acelasi tip (adica instante ale aceleiasi clase) vor
+avea aceeasi multime a variabilelor de stare (numite campuri sau variabile de
+instanta), dar vor avea valori diferite ale acestora, ce le va deosebi. In
+schimb, din punct de vedere comportamental, ele vor fi capabile sa efectueze
+aceleasi operatii (numite metode); natural, fiecare obiect va efectua o
+anumitt operatie in conformitate cu starea sa. Cu alte cuvinte, doua obiecte
+identice (ca tip) vor reactiona diferit la acelasi mesaj, deoarece raspunsul
+tine cont de starea fiecaruia dintre ele.
+
+In preambulul de mai sus am folosit notiunile:
+  - obiect,
+  - clasa,
+  - instanta sau realizare,
+  - camp sau variabila de instanta sau variabila de stare,
+  - metoda sau operatie,
+  - mesaj.
+Sa le definim.
+
+a) Clasa
+
+Clasa este un tip de date reprezentand o multime de obiecte care au in comun
+aceeasi reprezentare (aceleasi variabile de stare, numite si campuri sau
+variabile de instanta) si acelasi comportament (aceleasi operatii, numite
+metode). Conceptual, ea poate fi considerata la doua nivele:
+
+  1. La nivelul abstract:
+       clasa este un tip abstract de date;
+       campurile definesc reprezentarea sa;
+       operatiile definesc comportamentul obiectelor (instantelor) sale;
+
+  2. La nivelul virtual:
+     - clasa este un mecanism existent intr-un limbaj de programare, ce
+       permite:
+  	- incapsularea datelor si operatiilor;
+  	- stabilirea unor reguli de vizibilitate (acces la campuri din
+          mediul extern ei;
+	  mecanism de protectie a datelor);
+        - asocierea unui nume entitatii respective (mecanism de tipizare);
+  	- posibilitatea creerii si distrugerii instantelor (realizarilor)
+          sale (mecanism de instantiere, constructori, destructori);
+     - campurile clasei se numesc variabile de instanta sau variabile de
+       stare;
+     - operatiile (serviciile) se numesc metode; multimea metodelor clasei
+       formeaza protocolul de comunicatie al obiectelor ei
+
+Deci, la nivelul abstract clasa este un tip abstract de date, iar in a doua
+acceptiune, clasa este un tip virtual de date.
+
+b) Obiectul
+
+Obiectul este instanta (realizare) a clasei, in ambele acceptiuni discutate
+mai sus. La nivelul virtual, putem considera obiectul ca o variabila de tipul
+clasei. Obiectele comunica intre ele prin mesaje. In forma generala, un mesaj
+se poate scrie astfel:
+
+	send(R,S[,A])
+sau
+        R.S(A)
+
+unde:
+  R(receptor) este obiectul destinatar al mesajului
+  S(selector) este metoda apelata
+  A(argumente, optional) contine parametrii actuali ai apelului
+
+Obiectul receptor R, instanta a clasei C, poate raspunde la mesaje cu
+selectorul S numai daca metoda desemnata de S face parte din protocolul de
+comunicatie al clasei C. Altfel spus, S este numele unei metode si aceasta
+metoda trebuie sa fie definita in clasa C.
+
+4.1.2. Mostenirea si polimorfismul - o prima abordare
+
+Definitiile date in acest paragraf sunt imprecise, dar constituie un punct de
+plecare in discutia noastra. Ele vor fi detaliate in sectiunile urmatoare.
+
+Mostenirea permite clasificarea obiectelor in concordanta cu caracteristicile
+comune (de stare sau de comportament) ale lor. Polimorfismul dinamic inseamna
+trimiterea de mesaje spre obiecte de tip necunoscut, dar care recunosc mesajul
+(selectorul acestuia face parte din protocolul de comunicatie al clasei lor).
+Numim obiecte polimorfice acele obiecte care au acelasi protocol de
+comunicatie. Impreuna, mostenirea si polimorfismul sunt instrumente ce permit
+realizarea a doua mari deziderate:
+  - organizarea ierarhiilor de clase;
+  - simplificarea comunicarii intre obiecte.
+
+Cu aceste notiuni precizate, se pot formula doua (pseudo)definitii ale
+programarii orientate pe obiecte (POO):
+  1. Esenta POO este trimiterea de mesaje spre obiecte de tip necunoscut,
+     care au in comun acelasi protocol de comunicatie;
+  2. POO este un stil de programare (mai bine zis de dezvoltare de programe)
+     ce incearca minimizarea complexitatii unui program prin reducerea
+     numarului de conexiuni intre componentele sale. Caile de reducere a
+     complexitatii sunt:
+	- transmiterea de mesaje;
+	- definirea unui protocol de comunicatie simplu si, in acelasi timp,
+          general.
+
+Etapele de realizare a unui program orientat pe obiecte respecta in general
+etapele prezentate pana acum, la programarea bazata pe obiecte. Ele sunt:
+
+  1. Crearea de clase, ce definesc reprezentarea si comportamentul obiectelor;
+  2. Crearea de obiecte, instante ale claselor;
+  3. Crearea programului, vazut ca o secventa de comunicari intre obiecte
+     (programul fiind un sir de mesaje). Cu alte cuvinte, programul este o
+     colectie structurata de obiecte care comunica intre ele.
+
+Aceste etape vor fi detaliate in sectiunea 4.3, succesiunea lor bazandu-se pe
+urmatoarele observatii:
+
+  1. In proiectarea unui program este nevoie de identificarea si clasificarea
+     obiectelor ce concura la realizarea functiunilor programului;
+  2. Clasificarea obiectelor impune ordine, atat pentru sistemul real (o
+     ordine naturala, proprie acestuia), cat si pentru modelele sale (logic
+     si fizic);
+  3. Obiectele se clasifica dupa caracteristicile lor comune;
+  4. In functie de locul de folosire a obiectelor, caracteristicile lor pot fi
+     accentuate sau ignorate;
+  5. Obiectele cu aceleasi caracteristici se grupeaza in clase.
+
+Sa consideram un produs program destinat evidentei marfurilor intr-un
+supermagazin.
+
+Tinand cont de observatiile de mai sus, primul lucru care trebuie facut este
+identificarea obiectelor. In cazul nostru, sistemul real este compus cel
+putin din urmatoarele categorii de obiecte (fiinte, lucruri, compartimente):
+  - marfuri,
+  - magazii,
+  - case de marcaj,
+  - standuri de vanzare,
+  - personal,
+  - cumparatori.
+
+Dintre toate aceste obiecte, vom discuta in continuare doar despre marfuri.
+In sistemul real (supermagazinul), obiectele (reale) care sunt manipulate
+(vandute) sunt marfuri. Prin urmare am identificat obiectele reale si urmeaza
+sa le clasificam. Un supermagazin comercializeaza o mare diversitate de
+marfuri. Din multe considerente (o gestiune mai usoara, atractivitate si
+usurinta in gasirea marfii pentru cumparatori), spatiul comercial al
+supermagazinului este impartit in raioane, a caror denumire caracterizeaza
+genul de marfuri comercializate. Uzual putem gasi raioanele:
+  - alimentar,
+  - textile,
+  - librarie-papetarie,
+  - tutungerie,
+  - cosmetice,
+  - incaltaminte,
+  - menaj,
+  - electrice,
+  - electronice,
+  - articole de lux s.a.
+
+Iata ca sistemul real ofera o clasificare a marfurilor, facuta dupa diverse
+proprietati ale acestora (provenienta, utilizare). Este firesc ca aceasta
+clasificare naturala sa se prelungeasca si in modelele logic si fizic ale
+sistemului real. Prin urmare, putem discuta de obiectul MARFA, care
+are ca descendenti obiectele ALIMENTARE, TEXTILE, LIBRARIE, TUTUNGERIE,
+COSMETICE, INCALTAMINTE, MENAJ, ELECTRICE, ELECTRONICE, ARTICOLE DE LUX.
+
+Caracteristicile comune ale tuturor marfurilor le vom grupa in obiectul MARFA.
+In analiza care trebuie facuta, trebuie considerate obiectele din diverse
+puncte de vedere. Pentru un cumparator sunt importante functionalitatea si
+pretul de vanzare. Functionalitatea este o caracteristica mai greu de
+cuantificat, motiv pentru care ea va fi tratata distinct la fiecare
+clasa in parte, insa pretul este extrem de important: in supermagazine
+diferite, aceeasi marfa poate sa aiba preturi diferite. Din punctul de vedere
+al gestiunii magazinului sunt importante si alte caracteristici, ca de
+exemplu:
+  - codul marfii (ce asigura o identificare unica a ei),
+  - denumirea,
+  - unitatea de masura,
+  - pretul de achizitie,
+  - pretul de transport,
+  - adaosul comercial aplicat,
+  - TVA,
+  - stocul din depozit,
+  - intrari (achizitie de marfa de la furnizori),
+  - iesiri (vanzare de marfa).
+
+Unele dintre aceste caracteristici vor servi la determinarea pretului de
+vanzare.
+
+Caracteristicile de mai sus sunt comune tuturor marfurilor. Pentru clasele de
+marfuri enumerate, se pot identifica si caracteristici specifice fiecareia,
+ca de exemplu:
+
+  ALIMENTARE : termen de valabilitate
+  TEXTILE : tip fire
+  INCALTAMINTE : marime
+  ELECTRICE : putere consumata
+  ELECTRONICE : termen de garantie
+  ARTICOLE DE LUX : accize
+
+Natural, fiecare din marfurile mai sus enumerate, fiind descendenti
+ai obiectului MARFA, vor avea toate caracteristicile acestuia. Se observa deja
+reutilizarea specificarii: obiectul de baza contine caracteristicile comune,
+iar pentru descendentii acestuia se specifica numai ceea ce-i deosebeste de
+parinte.
+
+In explicatiile de mai sus, am identificat si clasificat obiecte din sistemul
+real, determinand caracteristicile comune sau specializate ale lor. Conform
+ultimei reguli (5), trebuie sa grupam aceste obiecte in clase. Gruparea se
+poate face numai dupa ce caracteristicile obiectelor (grupurilor de obiecte)
+sunt scoase in evidenta. Claselor nu le mai corespund obiecte reale; clasele
+sunt descrieri abstracte ale obiectelor reale. Clasificarea acestor obiecte va
+forma o ierarhie de clase. Pentru exemplul nostru, ierarhia clasei MARFA este
+ilustrata in figura 1. Natural, fiecare subclasa a clasei MARFA poate fi
+la randul ei dezvoltata in continuare.
+
+          ÚÄÄÄÄÄ¿  cod       unitate de masura  stoc             intrari
+          ³MARFA³  denumire  pret achizitie     TVA              iesiri
+          ÀÄÄÂÄÄÙ  pret      pret transport     adaos comercial
+             ³
+       ÚÄÄÄÄÄÁÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ÚÄÄÄÄÄÁÄÄÄÄ¿ÚÄÄÄÁÄÄÄ¿ÚÄÄÄÄÄÄÁÄÄÄÄÄ¿ÚÄÄÄÄÁÄÄÄÄ¿ÚÄÄÄÄÄÁÄÄÄÄÄ¿ÚÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄ¿
+ ³ALIMENTARE³³TEXTILE³³INCALTAMINTE³³ELECTRICE³³ELECTRONICE³³ARTICOLE DE LUX³
+ ÀÄÄÄÄÄÄÄÄÄÄÙÀÄÄÄÄÄÄÄÙÀÄÄÄÄÄÄÄÄÄÄÄÄÙÀÄÄÄÄÄÄÄÄÄÙÀÄÄÄÄÄÄÄÄÄÄÄÙÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+  termen de   tip      marime        putere     termen de    accize
+  valabi-     fire                   consumata  garantie
+  litate
+
+	Figura 1. Ierarhia clasei MARFA
+
+Odata clasele identificate, trebuie realizata specificarea lor, cand multe
+dintre elementele discutate informal trebuiesc precizate. Astfel, unele
+dintre caracteristici sunt date, ca de exemplu denumirea, codul, unitatea de
+masura; altele, cum este pretul (de vanzare) se pot calcula (pe baza unui
+algoritm de calcul). Primele sunt ceea ce am numit campuri sau variabile de
+instanta, iar ultimele sunt metode ale claselor respective. Cand am facut
+identificarea caracteristicilor claselor nu am precizat daca ele sunt campuri
+sau metode. Specificarea unei clase va cuprinde, intr-o prima aproximatie
+numele clasei, specificarea campurilor si specificarea metodelor. Schema
+generala de specificare a unei clase este data in figura 2.
+
+      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+      ³ Clasa                   ³
+      ³   nume, identificator   ³      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+      ³ Campuri                 ³      ³ Specificare camp     ³
+      ³   specificare camp_1    ³      ³   nume si explicatie ³
+      ³   specificare camp_2    ³      ³   tip de date        ³
+      ³   ...                   ³      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+      ³   specificare camp_n    ³      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+      ³ Metode                  ³      ³ Specificare metoda   ³
+      ³   specificare metoda_1  ³      ³   nume si explicatie ³
+      ³   specificare metoda_2  ³      ³   parametri formali  ³
+      ³   ...                   ³      ³   algoritm           ³
+      ³   specificare metoda_m  ³      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+	Figura 2. Schema de specificare a clasei
+
+Pentru clasa MARFA, schema de specificare este prezentata in figura 3.
+Din ratiuni de spatiu, numele unor caracteristici este trunchiat.
+
+      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+      ³ Clasa                                                  ³
+      ³   Marfa                                                ³
+      ³ Campuri                                                ³
+      ³   Cod       codul marfii, numar intreg                 ³
+      ³   Denumire  denumirea marfii, sir de caractere         ³
+      ³   UM        unitatea de masura, sir de caractere       ³
+      ³   Pret_ach  pretul de achizitie, numar real            ³
+      ³   TVA       procent TVA, numar real                    ³
+      ³   Adaos_c   procent adaos comercial, numar real        ³
+      ³   Stoc      cantitatea existenta in magazin,           ³
+      ³             numar intreg (real)                        ³
+      ³ Metode                                                 ³
+      ³   Pret_tr    pret transport                            ³
+      ³              Pret_tr := 0.1 * Pret_ach                 ³
+      ³   Pret_v     pret vanzare                              ³
+      ³              Pret_v := Pret_ach (1+(TVA+Adaos_c)/100)  ³
+      ³                      + Pret_tr                         ³
+      ³   Intrare(c) intrarea unei cantitati c din marfa       ³
+      ³              Stoc := Stoc + c                          ³
+      ³   Iesire(c)  vanzarea unei cantitati c de marfa        ³
+      ³              Stoc := Stoc - c                          ³
+      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+	Figura 3. Schema de specificare a clasei MARFA
+
+Revazad schema de specificare a unui tip abstract de date, prezentata intr-o
+lectie anterioara putem constata ca specificarea claselor respecta aceasta
+schema. Din motive de spatiu, in specificarile de mai sus nu am detaliat
+partea aferenta operatiilor TAD (numite aici metode). In plus fata de
+specificarea TAD, dupa cum se va vedea in paragraful urmator, specificarea
+clasei contine si alte elemente.
+
+4.1.3. Mostenirea
+
+Mostenirea permite definirea de noi clase, pe baza celor existente (ultimele
+sunt numite clase de baza sau clase parinti sau superclase). Noile clase
+astfel obtinute se numesc clase derivate, subclase sau clase descendente ale
+claselor de baza, ele fiind specializari ale acestora. Ca regula generala, o
+clasa derivata mosteneste toate caracteristicile (starea si comportamentul)
+clasei de baza, iar specializarea (diferentele in stare sau comportament fata
+de clasa de baza) poate insemna:
+  - ignorarea unor caracteristici ale clasei de baza (mai rar intalnita);
+  - adaugarea unor noi caracteristici (variabile de stare sau metode), numita
+    specializare prin imbogatire;
+  - modificarea unor caracteristici ale clasei de baza (in general modificarea
+    unor metode), adica specializarea prin inlocuire.
+
+Prin urmare, mostenirea permite ca in clasa derivata se se specifice doar
+caracteristicile noi. Ca regula generala, definitia unei clase derivate
+contine: precizarea parintelui (parintilor) si precizarea noilor
+caracteristici. Acest lucru ofera doua prime avantaje:
+  - reutilizarea definitiilor si a codului: caracteristicile mostenite de la
+    parinti nu mai trebuie nici specificate, nici codificate;
+  - definitii mai simple ale claselor derivate (se specifica mai putine
+    elemente), deci o mai buna intelegere a specificarii si implementarii.
+
+Exista doua tipuri de mostenire: simpla si multipla. Mostenirea simpla
+corespunde unei singure clase parinte, iar mostenirea multipla presupune cel
+putin doi parinti.
+
+Relatia de mostenire este o legatura intre clase, de la fiu la parinte, ce
+stabileste o relatie (partiala) de ordine pe multimea claselor. In cazul
+mostenirii simple, ierarhia claselor se poate reprezenta ca un arbore
+(arborele de mostenire, un nod corespunzand unei clase), ce are ca radacina
+clasa de baza a ierarhiei, cea mai generala clasa (ce concentreaza
+caracteristicile comune ale tuturor claselor din ierarhie). In cazul
+mostenirii multiple, ierarhia claselor se reprezinta sub forma unui graf
+(graful de mostenire). In arborele (respectiv graful) de mostenire se pot
+considera subarbori (subgrafe), in care radacina este clasa de baza a
+subarborelui (nodul initial al subgrafului). In cazul mostenirii simple,
+legatura parinte-fiu este de tipul unul_la_mai multe (unui p_rinte ii
+corespund mai multi descendenti), iar in cazul mostenirii multiple, legatura
+este de tipul mai_multe_la_mai multe (unui parinte ii corespund mai multi
+descendenti, iar un descendent poate avea mai multi parinti).
+
+In ierarhia de mostenire, o clasa aflata intr-un nod intern sau terminal are
+doua tipuri de caracteristici:
+  - caracteristici mostenite de la parinti (clasele aflate in aval de ea in
+    ierarhie);
+  - caracteristici proprii, specificate in definitia ei (fie caracteristici
+    noi, fie redefiniri ale caracteristicilor parintilor).
+
+Reluand exemplele discutate in paragraful anterior, trebuie sa precizam ca
+schema de specificare a unei clase trebuie sa contina, pe langa elementele
+preluate de la specificarea TAD (nume, campuri si metode), si precizarea
+parintilor (superclaselor) clasei in cauza. Prin urmare, o schema completa de
+specificare a unei clase va avea structura prezentata in figura 4.
+
+	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+	³ Clasa                      ³
+	³   nume                     ³
+	³ Superclasa                 ³
+	³   lista de superclase      ³
+	³ Campuri                    ³
+	³   specificarea campurilor  ³
+	³ Metode                     ³
+	³   specificarea metodelor   ³
+	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+	Figura 4. Schema completa de specificare a unei clase
+
+Fiecare dintre clasele specificate constituie o specializare a superclasei
+sale, avand fie caracteristici noi (Putere_abs, Garan_ie, Accize, Tip_fire,
+Capacitate, Standard_VCR, Tara_furnizoare, Provenienta, Tip_ingrediente),
+fie redefinind caracteristici (metode) ale superclaselor (Pret_tr, Pret_v).
+
+In figura 1 este prezentat arborele de mostenire cu radacina clasa MARFA.
+Evident, avem de-a face in acest exemplu cu o mostenire simpla, toti
+descendentii avand o singura superclasa, MARFA. Ramanand in acelasi context,
+se pot da exemple mai elaborate de ierarhii de mostenire.
+
+La inceput vom exemplifica mostenirea simpla, considerand trei descendenti ai
+clasei MARFA: ELECTRICE, ARTICOL_DE_LUX si ALIMENTE, care vor avea la randul
+lor descendentii FRIGIDER, VIDEO si HOMAR, respectiv OUA si BISCUITI.
+Schemele de specificare ale acestor clase sunt date in continuare, in figura
+5, iar arborele de mostenire in figura 6.
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿   	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ Clasa         ³	³ Clasa            ³   	³ Clasa       ³
+³   ELECTRICE   ³	³   ARTICOL_DE_LUX ³   	³   ALIMENTE  ³
+³ Superclasa    ³	³ Superclasa       ³   	³ Superclasa  ³
+³   MARFA       ³	³   MARFA          ³   	³   MARFA     ³
+³ Campuri       ³	³ Campuri          ³   	³ Campuri     ³
+³   Putere_abs  ³	³   Accize         ³   	³   Tip_fire  ³
+³ Metode        ³	³ Metode           ³   	³ Metode      ³
+³   Consum      ³	³   Pret_v         ³   	³             ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ   	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿   ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ Clasa         ³	³ Clasa            ³   ³ Clasa             ³
+³   FRIGIDER    ³	³   VIDEO          ³   ³   HOMAR           ³
+³ Superclasa    ³	³ Superclasa       ³   ³ Superclasa        ³
+³   ELECTRICE   ³	³   ARTICOL_DE_LUX ³   ³   ARTICOL_DE_LUX  ³
+³ Campuri       ³	³ Campuri          ³   ³ Campuri           ³
+³   Capacitate  ³	³   Standard_VCR   ³   ³   Tara_furnizoare ³
+³ Metode        ³	³ Metode           ³   ³ Metode            ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ Clasa         ³	³ Clasa              ³
+³   OUA         ³	³   BISCUITI         ³
+³ Superclasa    ³	³ Superclasa         ³
+³   ALIMENTE    ³	³   ALIMENTE         ³
+³ Campuri       ³	³ Campuri            ³
+³   Provenienta ³	³   Tip_ingrediente  ³
+³ Metode        ³	³ Metode             ³
+³   Pret_tr     ³	³                    ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+	Figura 5. Specificari de clase
+
+                      ÚÄÄÄÄÄÄÄ¿
+                      ³ MARFA ³
+                      ÀÄÄÄÂÄÄÄÙ
+       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ-¿
+ ÚÄÄÄÄÄÁÄÄÄÄÄ¿       ÚÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄ¿      ÚÄÄÄÄÄÁÄÄÄÄ¿
+ ³ ELECTRICE ³       ³ ARTICOL_DE_LUX ³      ³ ALIMENTE ³
+ ÀÄÄÄÄÄÂÄÄÄÄÄÙ       ÀÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÂÄÄÄÄÙ
+       ³                ÚÄÄÄÄÁÄÄÄÄÄ¿         ÚÄÄÄÄÄÁÄÄ-¿
+ ÚÄÄÄÄÄÁÄÄÄÄ¿      ÚÄÄÄÄÁÄÄ¿   ÚÄÄÄÁÄÄÄ¿  ÚÄÄÁÄÄ¿ ÚÄÄÄÄÁÄÄÄÄÄ¿
+ ³ FRIGIDER ³      ³ VIDEO ³   ³ HOMAR ³  ³ OUA ³ ³ BISCUITI ³
+ ÀÄÄÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÄÄÙ   ÀÄÄÄÄÄÄÄÙ  ÀÄÄÄÄÄÙ ÀÄÄÄÄÄÄÄÄÄÄÙ
+
+	Figura 6. Arbore de mostenire
+
+Analizand arborele de mostenire din figura 6, remarcam simplitatea lui (fapt
+pozitiv) pe de o parte, dar si rigiditatea ierarhiei (fapt negativ), pe de
+alta parte. Ar parea normal ca VIDEO sa fie si descendent al clasei ELECTRICE,
+pentru ca func_ioneaza cu curent electric, insa acest lucru nu este posibil
+in mostenirea simpla.
+
+Pentru a exemplifica mostenirea multipla, ramanem in acelasi context,
+considerand in plus clasele PERISABILE, FRAGILE si ALTERABILE si rescriind
+specificatiile claselor VIDEO, HOMAR si OUA. Ierarhia de clase astfel
+obtinuta este mai complexa, insa relatiile dintre clase sunt acum mai
+naturale. Am putut astfel sa consideram ca VIDEO are atat caracteristicile
+unui aparat electric (ELECTRICE), cat si cele ale unui ARTICOL_DE_LUX. In
+plus, cele trei noi clase introduse asigura o mai buna ierarhizare a
+marfurilor: PERISABILE (marfuri care trebuie transportate cu mijloace de
+transport adecvate, deci necesita conditii speciale de manipulare si
+transport), FRAGILE (marfuri ce trebuie manipulate si transportate cu atentie,
+ca sa nu se sparga) si ALTERABILE (care se depreciaza rapid in timp),
+descendenta a clasei PERISABILE. In toate aceste situatii, pretul de
+transport va include cheltuieli suplimentare (datorate fie mijloacelor
+speciale de transport, fie restrictiilor de timp), deci in specificarea
+claselor metoda cu numele Pret_tr va fi redefinita. Noile specificatii sunt
+date in figura 7, iar graful de mostenire in figura 8.
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿   	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ Clasa         ³	³ Clasa        ³   	³ Clasa        ³
+³   PERISABILE  ³	³   FRAGILE    ³   	³   ALTERABILE ³
+³ Superclasa    ³	³ Superclasa   ³   	³ Superclasa   ³
+³   MARFA       ³	³   MARFA      ³   	³   MARFA      ³
+³ Campuri       ³	³ Campuri      ³   	³   PERISABILE ³
+³   Temperatura ³	³              ³   	³ Campuri      ³
+³ Metode        ³	³ Metode       ³   	³   Data_expir ³
+³   Pret_tr     ³	³   Pret_tr    ³   	³              ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ   	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿	ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿   ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ Clasa         ³	³ Clasa            ³   ³ Clasa             ³
+³   OUA         ³	³   VIDEO          ³   ³   HOMAR           ³
+³ Superclasa    ³	³ Superclasa       ³   ³ Superclasa        ³
+³   ALIMENTE    ³	³   ARTICOL_DE_LUX ³   ³   ARTICOL_DE_LUX  ³
+³   ALTERABILE  ³	³   ELECTRICE      ³   ³   PERISABILE      ³
+³   FRAGILE     ³	³   FRAGILE        ³   ³ Câmpuri           ³
+³ Campuri       ³	³ Campuri          ³   ³   Tara_furnizoare ³
+³   Provenienta ³	³   Standard_VCR   ³   ³ Metode            ³
+³ Metode        ³	³ Metode           ³   ³                   ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ	ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+	Figura 7. Specificari de clase in cazul mostenirii multiple
+
+                      ÚÄÄÄÄÄÄÄ¿
+                      ³ MARFA ³
+                      ÀÄÄÄÂÄÄÄÙ
+      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄ-¿
+ÚÄÄÄÄÄÁÄÄÄÄÄ¿ ÚÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄ¿ ÚÄÄÄÄÄÁÄÄÄÄ¿  ÚÄÄÄÄÄÁÄÄÄÄÄÄ¿  ÚÄÄÄÄÄÁÄÄÄÄ¿
+³ ELECTRICE ³ ³ ARTICOL_DE_LUX ³ ³ FRAGILE  ³  ³ PERISABILE ³  ³ ALIMENTE ³
+ÀÄÄÄÂÄÄÄÂÄÄÄÙ ÀÄÄÄÄÄÂÄÄÄÄÄÄÄÄÂÄÙ ÀÄÄÄÂÄÄÄÄÄÂÙ  ÀÄÄÂÄÄÄÄÄÂÄÄÄÙ  ÀÄÄÂÄÄÄÄÂÄÄÙ
+    ³   ³           ³        ³       ³     ³ ÚÄÄÄÄÙ     ³         ³    ³
+    ³   ³           ³        ³       ³     ³ ³ ÚÄÄÄÄÄÄÄÄÁÄÄÄ¿     ³    ³
+    ³   ³           ³ ÚÄÄÄÄÄÄÅÄÄÄÄÄÄÄÙ     ³ ³ ³ ALTERABILE ³     ³    ³
+    ³   ³           ³ ³      ³             ³ ³ ÀÄÄÄÄÄÂÄÄÄÄÄÄÙ     ³    ³
+    ³   ÀÄÄÄÄÄÄÄÄÄ¿ ³ ³      ³   ÚÄÄÄÄÄÄÄÄÄÅÄÙ       ³            ³    ³
+    ³             ³ ³ ³      ³   ³         ³ ÚÄÄÄÄÄÄÄÙ            ³    ³
+    ³             ³ ³ ³      ³   ³         ³ ³ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ    ³
+ ÚÄÄÁÄÄÄÄÄÄÄ¿   ÚÄÁÄÁÄÁÄ¿   ÚÁÄÄÄÁÄÄ¿     ÚÁÄÁÄÁ¿              ÚÄÄÄÄÄÄÄÁÄÄ¿
+ ³ FRIGIDER ³   ³ VIDEO ³   ³ HOMAR ³     ³ OUA ³              ³ BISCUITI ³
+ ÀÄÄÄÄÄÄÄÄÄÄÙ   ÀÄÄÄÄÄÄÄÙ   ÀÄÄÄÄÄÄÄÙ     ÀÄÄÄÄÄÙ              ÀÄÄÄÄÄÄÄÄÄÄÙ
+
+	Figura 8. Graf de mostenire
+
+Conform noilor specificatii, clasele ALTERABILE, VIDEO, HOMAR si OUA au mai
+multe superclase directe, prin urmare ierarhia de mostenire se reprezinta sub
+forma unui graf.
+
+Fie C o class si A o caracteristica a ei. Daca A este mostenita, se pune
+problema determinarii superclasei SC a lui C pentru care A este caracteristica
+proprie (SC va fi clasa de la care C mosteneste caracteristica A). In cazul
+mostenirii simple, exista un singur drum de la radacina arborelui de mostenire
+la nodul corespunzator clasei C, relatia de mostenire inducand o relatie de
+ordine pe multimea claselor existente in nodurile acestui drum; identificarea
+superclasei SC se face prin parcurgerea respectivului drum in sens invers (de
+la nodul lui C spre radacina) si inspectarea fiecarui nod intalnit. Primul
+nod in care se gaseste definitia caracteristicii A va corespunde clasei SC.
+In cazul mostenirii multiple, exista mai multe drumuri (in cazul general) de
+la nodul clasei C la nodul initial al grafului de mostenire. Pot exista doua
+situatii:
+  - caracteristica A apartine unui singur drum (C mosteneste caracteristica A
+    de la un singur parinte): determinarea clasei SC se face pe acest drum,
+    la fel ca in cazul mostenirii simple;
+  - caracteristica A apartine la cel putin doua drumuri (C mosteneste
+    caracteristica A de la cel putin doi parinti), situatie numita conflict
+    de mostenire; in acest caz trebuie (pe baza unei informatii suplimentare)
+    precizat parintele de la care C mosteneste caracteristica A; intre
+    modalitatile de rezolvare a conflictului de mostenire amintim:
+    - stabilirea unei ierarhii intre parinti (aceasta ierarhie va dicta
+      ordinea in care se iau in considerare drumurile);
+    - conflictele sunt de fapt conflicte de nume; se poate incerca o schimbare
+      a numelor sau o calificare a lor cu numele clasei parinte (neelegant);
+    - mostenirea se specifica explicit, in genul:
+
+	from SC inherits A.
+	(dela SC mosteneste A).
+
+Revazand exemplul nostru, un asemenea conflict de mostenire apare in clasa OUA,
+pentru care metoda Pret_tr este mostenita atat de la clasa FRAGILE, cat si de
+la clasa PERISABILE. In astfel de situatii, in schema de specificare a clasei
+trebuie precizat parintele de la care se mosteneste respectiva caracteristica.
+O situatie analoaga poate sa apara si pentru campuri.
+
+Relatia de instantiere este o legatura intre obiecte si clase: obiectul este
+o instanta a unei singure clase. Prin urmare, aceasta legatura este de tipul
+unu_la_unu (de la obiect la clasa). Invers, o clasa poate avea mai multe
+instante. Intr-o ierarhie de clase, nu neaparat toate clasele pot avea
+instante. Exista doua categorii de clase:
+  - clasele abstracte, ce nu genereaza instante; de obicei ele sunt in partea
+    superioara a ierarhiei (clase de baza), continand caracteristicile comune
+    ale tuturor claselor descendente;
+  - clasele generatoare de instante, ce se afla in nodurile interioare sau
+    terminale ale ierarhiei.
+
+Revazand ierarhiile de mostenire ale clasei MARFA prezentate in figurile 6 si
+8, putem conchide ca MARFA este o clasa abstracta (in cazul mostenirii simple),
+respectiv ca MARFA, FRAGILE, PERISABILE si ALTERABILE sunt clase abstracte
+(pentru mostenirea multipla). Clasele ELECTRICE, ARTICOL_DE_LUX si ALIMENTE
+se pot considera fie abstracte, fie generatoare de instante, pe cand FRIGIDER,
+VIDEO, HOMAR, OUA, BISCUITI sunt doar clase generatoare de instante.
+
+Intre clasele abstracte, un loc aparte il ocup_ clasele generice sau clasele
+parametrizate. Daca mostenirea permite rafinarea caracteristicilor unei
+multimi de obiecte, plecand de la cele comune si specializand, obtinandu-se
+o ierarhie in care fiecare clasa are cel putin o caracteristica diferit in
+raport cu celelalte, genericitatea inseamna acelasi comportament pentru clase
+diferite. De exemplu, o stiva de intregi, o stiva de siruri de caractere sau
+o stiva de inregistrari PERSOANA vor avea (toate) comportamentul generic al
+stivei (operatiile Push, Pop si Top), dictat de disciplina de servire LIFO
+(Last In First Out). Ceea ce difera la cele trei exemple de stive este tipul
+elementului supus manipularii: intreg, sir de caractere, inregistrare de tip
+PERSOANA. Genericitatea (in acele limbaje in care este implementata) permite
+parametrizarea claselor. Pentru exemplul nostru, va fi suficienta declararea
+unei clase Stiva[Type] unde Type este tipul generic al elementului stivei.
+Utilizarea acestei clase generice in cazurile particulare enumerate inseamna
+instantierea acestei clase generice:
+
+		StivaInt = new Stiva[Integer];
+		StivaStr = new Stiva[String];
+		StivaPER = new Stiva[PERSOANA];
+
+Instantele unei clase generice sunt vazute diferit in limbaje diferite. Spre
+exemplu, in Ada (clasa=pachet), instanta unui pachet generic este tot un
+pachet, generator de instante terminale (obiecte). Ca si in cazul mostenirii,
+genericitatea are ca efect reutilizarea codului scris.
+
+4.1.4. Polimorfismul
+
+Intr-un program pot exista obiecte diferite, care sa fie instante ale unor
+clase legate intre ele prin relatia de mostenire. Le numim obiecte inrudite
+(polimorfice) deoarece:
+  - ierarhia claselor ale caror instante sunt are o clasa radacina, clasa de
+    baza;
+  - clasa de baza defineste protocolul de comunicatie comun tuturor obiectelor
+    inrudite: toate obiectele sunt capabile sa raspunda la aceleasi mesaje
+    (cum raspund e alta problema, important este ca inteleg aceleasi mesaje);
+  - sunt de tipuri (instante de clase) diferite.
+
+Stricto sensu, polimorfism inseamna mai multe forme (aspecte, infatisari).
+Termenul este imprumutat din biologie, unde se defineste astfel: variatie in
+forma si functiile membrilor unor specii cu stramosi comuni in arborele de
+evolutie (diversitate morfofiziologica in acelasi plan sau in planuri
+diferite de structura). In terminologia POO, prin polimorfism intelegem
+abilitatea de a:
+  1. pune obiecte inrudite intr-un tablou sau colectie;
+  2. utiliza protocolul de comunicatie pentru a transmite mesaje obiectelor
+     individuale, printr-o referire unitara (ca elemente de tablou sau
+     colectie).
+
+In primul exemplu, toate marfurile ce se comercializeaza in supermagazin
+formeaza o asemenea colectie de obiecte polimorfice. Ele au in comun acelasi
+protocol de comunicatie (definit in clasa radacina a ierarhiei de mostenire,
+MARFA), pe de o parte, fiind insa instante ale unor clase diferite, pe de
+alta parte. Spre exemplu, orice marfa se manipuleaza (se achizitioneaza de
+la furnizori si se vinde), deci asupra ei se executa operatii ca Intrare si
+Iesire si are un pret (determinat cu metoda Pret_v). Pentru operatiile
+Intrare si Iesire, metoda de calcul este descrisa in clasa MARFA (Figura 3),
+ea fiind general valabila in cazul oricarei marfi. Nu acelasi lucru se
+intampla in cazul metodei Pret_v, care este redefinita in cazul clasei
+ARTICOL_DE_LUX, deoarece pentru aceste articole se aplica taxe fiscale mai
+mari, numite accize. Un exemplu de algoritm pentru pretul de vanzare al
+articolelor de lux ar putea fi:
+
+   ARTICOL_DE_LUX.Pret_v := MARFA.Pret_v + Pret_ach * Accize / 100
+
+Prin urmare, daca avem o marfa M si dorim sa aflam pretul ei de vanzare,
+pentru acest exemplu simplificat conventia de apelare ar putea fi:
+
+	M.Pret_v
+
+unde Pret_v are semnificatia ARTICOL_DE_LUX.Pret_v daca M este articol de lux,
+respectiv MARFA.Pret_v cand M este o alta marfa (M va mosteni Pret_v de la
+clasa de baza MARFA). Se remarca folosirea aceleiasi notatii, deci
+simplificarea scrierii. Acesta este un prim exemplu (mai simplu) de
+polimorfism, realizat numai cu ajutorul mostenirii.
+
+O situatie analoaga este oferita de metoda Pret_tr, care este redefinita in
+clasa OUA (in cazul mostenirii simple), respectiv in clasele PERISABILE si
+FRAGILE (la mostenirea multipla). Ce se intampla insa cand o metoda (cum este
+Pret_tr) redefinita intr-o clasa fiu trebuie folosita in clasa de baza? Spre
+exemplu, revazand algoritmul de calcul al pretului de vanzare pentru clasa
+MARFA (figura 3),
+
+	MARFA.Pret_v := MARFA.Pret_ach +
+                        (1 + (MARFA.TVA + MARFA.Adaos_c) / 100) +
+                        MARFA.Pret_tr
+
+ne punem intrebarea: cum se va calcula OUA.Pret_v? Raspunsul nu este asa de
+simplu cum pare la prima vedere. Elementele de calcul ale pretului trebuie
+sa fie caracteristici (campuri sau metode) ale clasei OUA, deci
+
+	OUA.Pret_v := OUA.Pret_ach +
+                      (1 + (OUA.TVA + OUA.Adaos_c) / 100) +
+                      OUA.Pret_tr
+
+Dintre acestea, doar Pret_tr este metoda proprie clasei OUA (fiind redefinita
+in specificarea 5, la mostenirea simpla, respectiv mostenita de la FRAGILE
+sau PERISABILE in specificarea 7, la mostenirea multipla). Toate celelalte
+elemente de calcul sunt proprii clasei MARFA, prin urmare pretul ar trebui
+sa se calculeze astfel:
+
+	OUA.Pret_v := MARFA.Pret_ach +
+                      (1 + (MARFA.TVA + MARFA.Adaos_c) / 100) +
+                      OUA.Pret_tr
+
+Suntem deci in situatia cand, pentru a se obtine un rezultat corect, o metoda
+definita in clasa de baza trebuie sa apeleze o metoda dintr-o clasa derivata.
+Aceasta este a doua fata a polimorfismului, mult mai atractiva, dar mai greu
+de realizat. Din pacate, numai mostenirea nu este suficienta pentru a pune
+in practica acest lucru, deoarece, asa cum am aratat in 4.1.3, relatia de
+mostenire este o legatura de la fiu la parinte, deci de la clasa derivata la
+clasa de baza. Definitia metodei Pret_v fiind facuta in clasa de baza, MARFA,
+folosind (numai) relatia de mostenire se va ajunge la o definitie de forma:
+
+	OUA.Pret_v := MARFA.Pret_ach +
+                      (1 + (MARFA.TVA + MARFA.Adaos_c) / 100) +
+                      MARFA.Pret_tr
+
+astfel:
+  1) pentru OUA.Pret_v se deduce (din arborele sau graful de mostenire) ca
+     MARFA este clasa in care Pret_v este metoda proprie;
+  2) Pentru elementele de calcul (Pret_ach, TVA, Adaos_c, Pret_tr) se deduce
+     ca toate sunt proprii clasei MARFA; daca n-ar fi asa, ele ar fi cautate
+     in ierarhia de mostenire, in superclasele clasei MARFA (daca ar exista
+     asemenea superclase) si nicidecum inapoi, in subclase.
+
+In concluzie, putem rezuma caracteristicile polimorfismului astfel:
+
+  1. Polimorfismul necesita mostenire. Fara mostenire nu am avea o clasa de
+     baza, deci nu ar exista protocolul comun de comunicatie;
+  2. Mostenirea nu este suficienta pentru realizarea polimorfismului, fiind
+     nevoie de mecanisme suplimentare. In cele ce urmeaza vom discuta modul
+     in care interactioneaza aceste doua mecanisme si de ce mecanisme noi mai
+     e nevoie;
+  3. Polimorfismul simplifica munca programatorului, uniformizand sintaxa
+     mesajelor si micsorand complexitatea programelor.
+
+Diferentele dintre polimorfism si mostenire le putem discuta in raport cu trei
+aspecte: scop, arie de cuprindere si efecte. Mostenirea are ca scop
+ierarhizarea claselor (tipurilor de date), in ideea unei mai bune structurari
+a universului obiectelor, prin eliminarea redundantelor, iar polimorfismul
+simplifica comunicarea cu sau intre obiectele inrudite. Din punctul de vedere
+al ariei de cuprindere, mostenirea implica toate caracteristicile claselor
+(campuri si metode), pe cand polimorfismul are ca obiect doar metodele ce
+definesc protocolul de comunicatie (de fapt numai metodele virtuale, definite
+in cele ce urmeaza, vezi 4.1.5). Mostenirea are ca efect reutilizarea codului
+si permite manifestarea polimorfismului; polimorfismul utilizeaza mostenirea
+pentru a construi ierarhii de tipuri polimorfice, ce au in comun acelasi
+protocol de comunicatie, definit in clasa de baza.
+
+4.1.5. Consideratii de specificare si implementare a POO
+
+4.1.5.1. Clasa ca tip abstract de date
+
+In sec_iunile anterioare, am asimilat o clasa de obiecte cu un TAD. Fata de
+schema generala de specificare a unui TAD, trebuie considerate noi aspecte,
+legate de:
+  - specificarea mostenirii;
+  - regulile noi de vizibilitate si acces induse de mostenire;
+  - specificarea operatiilor (metodelor).
+
+Specificarea mostenirii apare la definirea unei subclase, cand trebuiesc
+facute precizari privind:
+  - parintele (in mostenirea simpla);
+  - parintii si ierarhizarea lor (in mostenirea multipla).
+
+Regulile de vizibilitate si drepturile de acces s-au rafinat. In functie de
+vizibilitatea lor in exterior, caracteristicile unei clase se grupeaza in
+(exemplu: limbajul C++):
+  - publice (se pot accesa si/sau modifica in exterior);
+  - private (nu se pot accesa si/sau modifica in exterior);
+  - protejate (se pot accesa si/sau modifica doar in subclase).
+
+In plus, la specificarea mostenirii se pot prevedea modificatori de acces ai
+caracteristicilor claselor parinti:
+  - public: pastreaza aceleasi drepturi de acces pentru descendenti la
+    caracteristicile mostenite;
+  - privat: interzice accesul pentru descendenti la caracteristicile
+    mostenite.
+
+In sfarsit, o alta modalitate de acces este oferita de clasele prietene
+(friend in limba engleza). Daca o clasa C este prietena a unei clase C',
+atunci C va avea acces la campurile private ale clasei C'.
+
+La TAD am discutat tipurile de operatii dupa functionalitatea lor. In cazul
+claselor din POO, unele operatii capata noi valente (constructorii si
+destructorii) si apare o alta clasificare a operatiilor, dupa criteriul
+momentului legarii (metode statice si virtuale). In paragraful urmator vom
+detalia noile aspecte mentionate.
+
+4.1.5.2. Clasa in POO
+
+Constructori si destructori
+
+In POO, constructorii sunt specifici claselor. In afara functiilor cunoscute
+deja de la programarea bazata pe obiecte (creare de obiecte, cu initializarea
+unor variabile de stare), in POO constructorii au si o alta functie: pun
+"semnatura" clasei in obiect. Practic, ne putem imagina acest lucru in felul
+urmator: un obiect O al unei clase C va fi o variabila ce va contine:
+  - spatiu pentru variabilele de stare (in conformitate cu definitia clasei
+    C);
+  - o legatura spre clasa C (un pointer, de exemplu), ce reprezinta
+    materializarea relatiei de instantiere.
+
+Avem o prima regula:
+
+  R1. Orice obiect O al unei clase C se construieste prin apelul unui
+      constructor.
+
+  (Daca regula R1 ar fi incalcata, ar putea exista obiecte care sa nu-si
+  recunoasca prototipul, adica clasa ale carei instante sunt).
+
+Informatia de instantiere este utila la executie, cand cu ajutorul ei se
+poate determina exact clasa instantei (obiectului). Aceasta regula este
+valabila in cazul programarii orientate pe obiecte. In programarea bazata pe
+obiecte nu este necesara existenta constructorilor in acceptiunea de mai sus.
+
+Analog, un destructor (in afara functiilor deja cunoscute) trebuie sa
+distruga si informatia de instantiere.
+
+Legare statica si dinamica
+
+Limbajele de programare folosesc din plin notiunea de identificator. Prin
+identificatori, programatorul face notatii (intre altele) pentru variabile si
+subprograme. Un identificator poate fi vazut in doua momente distincte:
+declararea si referirea. In general, o declarare a unei variabile se face
+folosind un tip de date cunoscut, iar declararea unui subprogram
+respecta cerintele sintactice ale fiecarui limbaj in parte: se specifica de
+obicei tipul subprogramului (procedura sau functie, la ultima si tipul
+rezultatului obtinut) si lista parametrilor formali (nume si tip). Incepand
+cu abstractizarea datelor, putem vorbi atat de declararea unui subprogram
+(vazut ca o operatie a unui TAD), cat si de definirea acestuia.
+Declararea se face in partea publica a modulului (interfata acestuia) si in
+unele limbaje nu specifica decat tipul parametrilor; definirea precizeaza
+codul, ea fiind proprie implementarii modulului.
+
+Prin legare intelegem o operatie ce are loc intr-un program traducator
+(compilator sau interpretor), ce consta in inlocuirea referirii unui
+identificator (nume de variabila sau de procedura ce apare in textul sursa)
+printr-o adresa (din codul programului, rezultat in urma traducerii). In
+cazul compilatoarelor, fazele de compilare si executie ale aceluiasi program
+se desfasoara la momente diferite de timp (intai compilarea integrala a
+textului sursa si apoi executia codului rezultat in urma compilarii). In
+schimb, in interpretoare aceste doua faze se desfasoara principial una dupa
+alta pentru fiecare linie sursa (intai traducere, apoi executie).
+
+In limbajele de programare dotate cu compilatoare, spunem ca legarea este
+statica, in sensul ca, intr-o faza oarecare a traducerii, compilatorul poate
+asocia referirii unui nume o adresa: adresa unei variabile (cand avem un nume
+de variabila) sau adresa punctului de intrare a unui subprogram (cand avem
+un apel de procedura sau de functie). Cum de obicei declararea unui
+identificator precede referirea lui, declararea are ca efect fie alocarea de
+spatiu in cod (pentru variabile), fie generarea de cod (pentru subprograme),
+in ambele cazuri memorandu-se (sa zicem ca in tabela de simboluri)
+corespondenta nume-adresa (de variabila sau de punct de intrare). Si ca sa
+fim si mai exacti, ceea ce nu poate rezolva compilatorul (in cazul compilarii
+separate a programelor) va rezolva editorul de legaturi, principiul ramanand
+acelasi.
+
+In cazul limbajelor puternic tipizate, in momentul legarii se mai fac si alte
+verificari de compatibilitate:
+  - a tipurilor (pentru variabile);
+  - a listelor de parametri actuali (pentru apelurile de subprograme).
+
+In limbajele de programare dotate cu interpretoare, spunem ca legarea este
+dinamic, ea avand loc in momentul executiei.
+
+Fiecare dintre tipurile de legare discutate prezinta avantaje si dezavantaje,
+pe care nu le discutam aici.
+
+Implementarea polimorfismului
+
+Am vazut ca polimorfismul presupune tratarea unitara a obiectelor inrudite,
+ce au in comun acelasi protocol de comunicatie, definit de clasa de baza. In
+fapt, protocolul de comunicatie inseamna o lista de identificatori (nume de
+metode definite in clasa de baza). Am vazut de asemenea ca obiectele inrudite
+nu au comportament identic, deci un acelasi identificator de metoda poate sa
+refere metode semantic diferite (deci actiuni diferite) pentru doua obiecte
+din clase diferite.
+
+Manipularea obiectelor polimorfice inseamna parcurgerea etapelor:
+     1. Se declara o colectie (lista, tablou) de obiecte in care un element
+        al colectiei are tipul clasei de baza;
+     2. Se creeaza si se introduc in colectie obiecte de tipuri descendente
+        ale clasei de baza (colectia va fi heterogena); crearea de obiecte se
+        va face apeland constructorii proprii claselor respective, care vor
+        pune semnatura clasei in instante;
+     3. Esenta polimorfismului este ca toate elementele colectiei se pot
+        trata unitar in maniera:
+
+	send(EC,S[,A])
+        sau
+        EC.S(A)
+
+        unde:
+          EC (receptorul) este un element al colectiei;
+          S  (selectorul, numele metodei) apartine protocolului de
+             comunicatie definit de clasa de baza.
+
+Consideram ca discutam despre un limbaj dotat cu compilator. Se pune
+intrebarea:
+
+Se poate folosi legarea statica pentru implementarea polimorfismului?
+
+Raspunsul este UN NU CATEGORIC! Sa vedem de ce.
+
+    1. La compilare nu se cunoaste exact clasa receptorului EC, ci doar clasa
+       de baza a lui, pe baza instructiunii de declarare a colectiei. Ar fi
+       bine doar daca clasa EC coincide cu clasa de baza;
+    2. Mesajul de mai sus se traduce printr-un apel al metodei S; la compilare
+       se va alege in toate cazurile (indiferent carei clase ar apartine EC)
+       metoda S a clasei de baza. Din nou ar fi bine doar daca clasa EC
+       coincide cu clasa de baza sau daca metoda corespunzatoare clasei EC ar
+       fi mostenita din clasa de baza;
+    3. Ca sa se aleaga metoda adecvata clasei lui EC, ar trebui sa se cunoasca
+       clasa lui EC, deci compilatorul ar trebui sa aiba acces la
+       reprezentarea obiectului EC (unde se gaseste si "semnatura" clasei,
+       pusa de constructor). Indiferent daca EC este un obiect static sau
+       dinamic, el va exista numai dupa apelul constructorului, care apel
+       inseamna o actiune efectuata la executia programului, si nu la
+       compilare. Chiar daca la compilare avem acces la reprezentarea
+       obiectului (cand acesta este alocat in segmentul de date; n-am avea
+       acces daca este alocat in stiva sau in heap), informatia de instantiere
+       nu este completata, deci nu se poate deduce clasa obiectului;
+    4. Cum se poate face distinctie intre metode care se leaga static si cele
+       care se leaga dinamic? La aceasta intrebare nu putem inca raspunde,
+       dar trebuie sa avem in vedere o atare situatie.
+
+Din discutia de mai sus rezulta ca (pentru compilatoare):
+  - polimorfismul se poate implementa numai prin legare dinamica;
+  - protocolul de comunicatie trebuie sa precizeze si tipul legarii (legare
+    statica sau legare dinamica).
+
+Metode statice si virtuale
+
+Am vazut ca pentru o colectie de obiecte polimorfice, clasa de baza defineste
+protocolul de comunicatie. In acelasi timp, am constatat ca nu este suficienta
+definirea metodelor comune, compilatorul trebuind sa cunoasca si tipul
+legarii pentru fiecare dintre metodele ce formeaza protocolul de comunicatie
+(celelalte metode se vor lega static).
+
+Acesta este ultimul impediment in implementarea polimorfismului si el se
+rezolva prin asa-numitele metode virtuale. Termenul de procedura virtuala
+este introdus pentru prima data in Simula67, fiind preluat intre altele de
+C++ (functie virtuala) si Turbo Pascal (metoda virtuala).
+
+Avem, prin urmare, inca un criteriu de clasificare a metodelor unei clase,
+dupa momentul legarii lor:
+  - metode statice (legare statica, la compilare);
+  - metode virtuale (legare dinamica, la executie).
+Cu aceste precizari, putem defini mai exact protocolul de comunicatie, ca
+fiind format din metodele virtuale ale clasei de baza.
+
+Proiectarea protocolului de comunicatie trebuie sa respecte regulile:
+
+  R2. Constructorii nu pot fi metode virtuale;
+      (ei sunt responsabili cu "identitatea" obiectelor, deci trebuie legati
+       static);
+  R3. Destructorii pot fi metode virtuale;
+  R4. Daca o metoda V este declarata virtuala intr-o clasa C, toate
+      redefinirile ei din descendentii lui C vor fi virtuali;
+  R5. Specificarea metodelor virtuale proprii trebuie sa corespunda celei
+      din clasa de baza, pentru orice clasa descendenta a clasei de baza;
+      (optional, la limbajele puternic tipizate, cand compilatorul verifica
+      lista parametrilor actuali)
+  R6. O clasa ce are metode virtuale trebuie sa posede cel putin un
+      constructor.
+
+Obiectele la munca
+
+Triada constructor - metoda virtuala - legare dinamica asigura implementarea
+corecta a polimorfismului. In linii generale, aceasta implementare presupune
+urmatoarele etape si conventii:
+
+    1. Pentru fiecare clasa ce poseda metode virtuale, compilatorul
+       construieste tabela de metode virtuale (Virtual Method Table VMT in
+       Turbo Pascal, Virtual Function Table VFT in Borland C++), ce contine
+       pointeri la punctele de intrare ale acestora (perechi de forma
+       nume_metoda, adresa_punct_de_intrare);
+    2. Semnatura clasei, pe care constructorul o pune in fiecare obiect este
+       de fapt un pointer la tabela de metode virtuale a clasei obiectului;
+    3. In cazul legarii dinamice, obiectul este cel care ofera informatia
+       necesara legarii, in el existand referinta la tabela de metode
+       virtuale ce trebuie consultata pentru a se rezolva apelul.
+    4. Metodele sunt considerate implicit statice; declararea unei metode
+       virtuale se face explicit.
+
+	Revenind la mesajul:
+	send(R,S[,A])
+        sau
+        R.S(A)
+
+rezolvarea lui se poate discuta in doua ipostaze:
+  - S este un nume de metoda statica;
+  - S este un nume de metoda virtuala.
+
+  A. Legarea statica
+
+Legarea statica se realizeaza cand S este o metoda statica. Toate operatiile
+de mai jos se executa la compilare:
+  1. se determina clasa C a lui R (din declararea lui);
+  2. se verifica daca S este o metoda a clasei C (proprie sau mostenita);
+  3. Daca NU, se va genera un mesaj de eroare (eroare de sintaxa);
+  4. Daca DA, se verifica lista parametrilor actuali cu declararea metodei
+     (daca exista o lista de parametri actuali si daca limbajul este puternic
+     tipizat);
+  5. Daca totul este OK, se face legarea statica (mesajul se traduce prin
+     salt la punctul de intrare al metodei gasite).
+
+Observatie
+
+Unele limbaje (C++, Ada) permit existenta unor proceduri cu acelasi nume,
+care difera prin lista argumentelor (se spune ca numele sunt supraincarcate).
+In cazul lor, trebuie facuta o verificare in plus: metoda este identificata
+dupa nume si dupa lista argumentelor.
+
+  B. Legarea dinamica
+
+Legarea dinamica este proprie colectiilor de obiecte polimorfice. Prin urmare,
+se trateaza mesaje de forma:
+
+	send(EC,S[,A])
+        sau
+        EC.S(A)
+
+unde:
+  EC este un element al unei colectii polimorfice;
+  S  este o metoda virtuala.
+
+Actiunile se desfasoara in doua momente distincte: compilare si executie.
+
+La compilare:
+  1. se determina C - clasa de baza a elementelor colectiei EC;
+  2. se verifica daca S este o metoda (virtuala) a lui C, identificandu-se
+     punctul de intrare in VMT pentru S;
+  3. Daca DA, se verifica sintaxa apelului;
+  4. Daca sintaxa apelului este corecta, se pune in cod adresa relativa a
+     metodei S din VMT a lui C.
+
+La executie:
+  1. se determina C - clasa efectiva a EC (din EC avem adresa VMT; de fapt se
+     identifica VMT a clasei efective, din semnatura pusa in obiectul EC de
+     constructor);
+  2. se identifica S in VMT determinata la pasul anterior (1), pe baza adresei
+     relative a lui S din VMT, determinata la compilare;
+  3. din VMT se ia punctul de intrare determinat la pasul 2 si se continua la
+     fel ca la legarea statica.
+
+In explicatiile de mai sus, am considerat ca, deoarece clasa de baza este cea
+care defineste protocolul de comunicatie (prin metodele sale virtuale), in
+tabelele de metode virtuale ale claselor derivate o metoda virtuala S va ocupa
+aceeasi locatie (va avea aceeasi adresa relativa a unui nume de metoda in
+toate VMT ale unei ierarhii de clase). Prin urmare, la compilare se va
+determina locatia din tabela (adresa relativa) corespunzatoare metodei
+virtuale apelate, iar la executie se va determina in care tabela de metode
+virtuale se face cautarea.
+
+Revenind la exemplul discutat in 4.1.4, putem spune acum ca pentru a se obtine
+un calcul corect al pretului de vanzare pentru clasa OUA, metoda Pret_tr
+trebuie declarata virtuala, iar clasa OUA trebuie sa aiba un constructor
+specific (analog clasele FRAGILE si PERISABILE in cazul mostenirii multiple).
+In aceste conditii, legarea metodei Pret_tr se va face dinamic, cautarea
+metodei virtuale in arborele sau graful de mostenire incepand din clasa OUA.
+Se observa inca odata utilizarea mostenirii, deosebirea (fata de legarea
+statica) fiind ca aceasta cautare are loc si in adancime (fiecare cautare
+incepe din clasa obiectului si nu din clasa in care apare pentru prima data
+referirea la caracteristica cautata, in cazul nostru Pret_tr).
+
+4.1.6. Pasi spre POO
+
+Bertrand Meyer [Mey88] defineste conditiile pe care trebuie sa le
+indeplineasca un produs program si limbaj de programare orientat pe obiecte.
+In afara primei cerinte, care da criteriul de proiectare, toate celelalte se
+refera la programare, in sensul restrans al termenului:
+
+Primul nivel corespunde observatiei: datele trebuie sa ofere criteriul
+fundamental de structurare:
+
+Nivelul 1 (Structura modulara bazata pe obiecte)
+
+      Sistemele sunt modularizate pe baza structurilor de date proprii,
+   sau
+      Proiectarea programelor are drept criteriu datele folosite si nu
+      functiile pe care programele trebuie sa le realizeze.
+
+Urmatorul pas realizeaza conectarea cu TAD:
+
+Nivelul 2 (Abstractizarea datelor)
+
+      Obiectele trebuie descrise ca implementari ale TAD.
+
+Al treilea pas este de natura mai putin conceptuala si mai mult practica,
+reflectand o cerinta importanta de implementare: cum se creeaza obiectele.
+Programatorii nu trebuie sa se preocupe de alocarea sau dealocarea memoriei
+pentru obiecte:
+
+Nivelul 3 (Gestiunea automata a memoriei)
+
+      Obiectele neutilizate trebuie dealocate de sistemul de baza (substrat)
+      al limbajului, fara interventia programatorului.
+
+Urmatorul pas este cel care face o separare clara a limbajelor bazate pe
+obiecte de restul lumii. Se poate spune ca ecuatia de definire a acestor
+limbaje este identitatea:
+
+	clasa = tip de date.
+
+Nivelul 4 (Clase)
+
+      Orice tip de date non-simplu este un modul si orice modul de nivel
+      inalt este un tip de date.
+
+Calificatorul "non-simplu" face posibila pastrarea tipurilor de date
+predefinite, care nu sunt vazute ca module; cuvantul "nivel inalt" permite
+existenta unitatilor de structurare a unui program (procedurile) care nu sunt
+tipuri.
+
+Urmatorul pas este o consecinta naturala a celui precedent: daca tipurile de
+date se identifica cu modulele, suntem tentati sa identificam mecanismele de
+reutilizare oferite de ambele concepte:
+  - pe de o parte, posibilitatea unui modul de a referi direct entitati
+    definite in alt modul;
+  - pe de alta parte, conceptul de subtip, prin care se poate defini un nou
+    tip adaugand proprietati noi unui tip existent (ca un subdomeniu Integer
+    din Pascal, subtip al lui Integer cu precizarea limitei inferioare si
+    superioare a domeniului sau).
+
+Nivelul 5 (Mostenire)
+
+      O clasa poate fi definita ca extensie sau restrictie a alteia.
+
+Tehnicile de mai sus deschid posibilitatea folosirii polimorfismului si
+legarii dinamice:
+
+Nivelul 6 (Polimorfism si legare dinamica)
+
+      Entitatile unui program trebuie sa poata sa refere obiecte din mai
+      multe clase, iar operatiile trebuie sa aiba realizari diferite in
+      clase diferite.
+
+Urmatorul si ultimul pas extinde notiunea de mostenire pentru a permite
+reutilizarea in mai multe contexte. Aceasta inseamna mostenirea multipla.
+
+Nivelul 7 (Mostenirea multipla si repetata)
+
+      Trebuie sa se poata declara clase care sa mosteneasca de la mai multi
+      parinti si/sau de mai multe ori de la aceeasi clasa.
+
+

@@ -1,0 +1,73 @@
+# ******************************************************************
+# *    								   *
+# *   REGEX.DLL Makefile 					   *
+# *   Copyright (c) 1992 by Borland International   		   *
+# *    								   *
+# ******************************************************************
+
+# ------------------------------------------------------------------
+# NOTE:  Borland C++ 3.1 or later is required to use this makefile
+# ------------------------------------------------------------------
+
+.AUTODEPEND
+
+# Translator Definitions -------------------------------------------
+
+BC = C:\BC
+BP = C:\BP
+CC = bcc +REGEXP.CFG
+TLINK = tlink
+LIBPATH = $(BC)\LIB
+INCLUDEPATH = $(BC)\INCLUDE;$(BP)\UNITS
+
+# Implicit Rules ---------------------------------------------------
+
+.c.obj:
+  $(CC) -c {$< }
+
+# List Macros ------------------------------------------------------
+
+OBJS =  \
+ regexp.obj \
+ regexdll.obj
+
+# Explicit Rules ---------------------------------------------------
+
+../regexp.dll: regexp.cfg $(OBJS) regexp.res
+  $(TLINK) /x/c/P-/Twd/L$(LIBPATH) @&&|
+c0dl.obj+
+regexp.obj+
+regexdll.obj
+regexp.dll
+		# no map file
+mathwl.lib+
+import.lib+
+cwl.lib
+regexp.def
+|
+  RC  regexp.res regexp.dll
+  COPY REGEXP.DLL ..
+  DEL REGEXP.DLL
+
+regexp.obj: regexp.cfg regexp.c 
+
+regexdll.obj: regexp.cfg regexdll.c 
+
+regexp.res: regexp.cfg regexp.rc 
+	RC -R -I$(INCLUDEPATH) -FO regexp.res REGEXP.RC
+
+# Compiler Configuration File --------------------------------------
+regexp.cfg: makefile
+  copy &&|
+-ml!
+-WD
+-vi-
+-weas
+-wpre
+-w-pro
+-I$(INCLUDEPATH)
+-L$(LIBPATH)
+| regexp.cfg
+
+
+

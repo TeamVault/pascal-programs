@@ -1,0 +1,22 @@
+#include <_regexp.h>
+
+STRINGTABLE
+BEGIN
+
+RE_OK                   "No error"
+RE_NOTFOUND             "No match found for regular expression"
+RE_INVALIDPARAMETER     "Invalid parameter passed to function"
+RE_EXPRESSIONTOOBIG     "Regular expression too complex"
+RE_OUTOFMEMORY          "Out of memory"
+RE_TOOMANYSUBEXPS       "Too many sub-expressions"
+RE_UNMATCHEDPARENS      "Unmatched '('"
+RE_INVALIDREPEAT        "Invalid use of a repeat"
+RE_NESTEDREPEAT         "Nested repeats not allowed"
+RE_INVALIDRANGE         "Invalid range specifier"
+RE_UNMATCHEDBRACKET     "Unmatched '['"
+RE_TRAILINGBACKSLASH    "Trailing '\\' not allowed"
+RE_INTERNAL             "*** internal REGREP.DLL error ***"
+
+END
+
+

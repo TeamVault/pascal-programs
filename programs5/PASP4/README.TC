@@ -1,0 +1,188 @@
+These files are for a close variant of Pascal known as Pascal-P. It is
+roughly the language described in Jensen & Wirth. 
+
+The compiler (pcom.pas) reads a pascal source file from standard input, 
+and writes executable code in the form of p-code to the file "pcode". Use 
+the assembler/interpreter (pint.pas) to run the pcode file.
+
+On my system, pint waits for you to press enter before it starts running
+the program. I haven't bothered to change this.
+
+If you want detailed documentation of the compiler then I highly recommend
+the 2 volume set by Pemberton and Daniels (see the readme.txt file).
+I've included a few comments to help get you started:
+
+
+
+1) I modified the pcom and pint files to work with more modern Pascal
+compilers. In particular, the original compiler used string as a variable
+or procedure name. In Pascal compilers with strings, this causes conflicts
+so I changed the names as needed. I changed the compiler to write to the
+file "pcode". The original scheme didn't make sense to me, nor did it 
+work for my compiler.
+
+The changes I made are documented in the difference files: pcom.dif, pint.dif
+pcom.p and pint.p are the original files. pcom.pas and pint.pas are my
+modified versions.
+
+
+
+2)I added better messages for range check errors in pint. More of this
+should be done to make debugging easier.
+
+
+
+3) The error numbers produced by the compiler when it encounters errors in
+the Pascal source correspond roughly to those listed in Jensen & Wirth. If
+you get an error and it isn't obvious by inspection, try looking up the
+error number in Jensen & Wirth. The higher numbers diverge, but the low
+numbers seem reliable.
+
+
+
+4) The following table summarizes the pcode instruction set. I typed it in
+from Pemberton & Daniels. See that book for more info.
+
+        S t a c k  
+Op    before/after Param  Description
+abi    (i)     i          Absolute value of integer
+abr    (r)     r          Absolute value of real
+adi    (i,i)   i          add 2 integers on top of stack, leaves integer result
+adr    (r,r)   r          like adi but for reals
+chk C                     checks value is between lower and upper bounds
+chr    (i)     c          converts integer to character
+csp                 Q     call standard procedure
+cup                 PQ    call user procedure
+dec C (x)     x           decrement
+dif   (s,s)   s           set difference
+dvi   (i,i)   i           integer divide
+dvr   (r,r)   r           real divide
+ent                PQ     enter block
+eof   (a)     b           test on end of file
+equ C (x,x)   b    Q      compare on equal
+fjp   (b)                 false jump
+flo   (i,r)  r,r          float next to the top
+flt   (i)    r            float top of the stack
+geq C (x,x)  b    Q       compare on greater or equal
+inc C (x)    x    Q       increment
+ind C (a)    x    Q       indexed fetch
+inn   (i,s)  b            test set membership
+int   (s,s)  s            set intersection
+ior   (b,b)  b            boolean inclusive OR
+ixa   (a,i)  a    Q       compute indexed address
+lao          a    Q       load base-level address
+lca          a    Q       load address of constant
+lci          x    PQ      load constant indirect (assembler generated)
+lda          a    PQ      load address with level P
+ldc C        x    Q       load constant
+ldo C        x    Q       load contents of base-level address
+leq C (x,x)  b    Q       compare on less than or equal
+les C (x,x)  b    Q       compare on less than
+lod C        x    PQ      load contents of address
+mod   (i,i)  i            modulo
+mov   (a,a)       Q       move
+mpi   (i,i)  i            integer multiply
+mpr   (r,r)  r            real multiply
+mst               P       mark stack
+neq C (x,x)  b    Q       compare on not equal
+ngi   (i)    i            integer negate
+ngr   (r)    r            real negate
+not   (b)    b            boolean not
+odd   (i)    b            test on odd
+ord C (x)    i            convert to integer
+ret C                     return from block
+sbi   (i,i)  i            integer subtract
+sbr   (r,r)  r            real subtract
+sgs   (i)    s            generate singleton set
+sqi   (i)    i            square integer
+sqr   (r)    r            square real
+sro C (x)         Q       store at base level address
+sto C (a,x)               store at base level address
+stp                       stop
+str C (x)         PQ      store at level P
+trc   (r)   i             truncate real to integer
+ujc                       error in case statement
+ujp               Q       unconditional jump
+uni   (s,s) s             set union
+xjp   (i)         Q       indexed jump
+
+Key to effect on stack:
+
+  a  address
+  b  boolean
+  c  character
+  i  integer
+  r  real
+  s  set
+  x  any of the above types
+
+The C parameter denotes one of the primitive types.
+P and Q are parameters for some of the operations.
+
+
+5) The P-code machine has the following registers:
+
+  PC     the program counter
+  SP     the stack pointer
+  MP     the mark stack pointer
+  NP     the new pointer
+  EP     the extreme stack pointer
+
+The memory layout is:
+
+  | ----------------------| <-------  location 0
+  |        Stack          |
+  |                       |
+  |                       |
+  |  _____________________|
+  |         |             |
+  |         V             | <---- SP  (stack grows away from loc 0)
+  |                       |
+  |                       |  (between heap and stack is unallocated)
+  |                       |
+  |         ^             | <---- NP  (heap grows towards loc 0)
+  |         |             |
+  |  _____________________|
+  |                       |
+  |       heap            |
+  |                       |
+  |  _____________________|
+  |                       |
+  |      Constants        |
+  |                       |
+  |  _____________________|
+
+
+The stack frame looks like (turned 90 degrees from above picture):
+
+
+|<-- location 0 at this end
+|
+|<------------  stack  frame  ---------------------------------------->|
+------------------------------------------------------------------------
+| function | static | dynamic | old | return | params | locals | local |
+|  value   | link   |  link   | EP  | address|  (if present)   | stack |
+------------------------------------------------------------------------
+^                                                              ^       ^
+|<--------  mark stack --------------------------------------->|       |
+|                                                              |       |
+MP                                                             SP      EP
+
+
+
+
+6) I have included a few test routines with Pascal source and the
+resulting pcode files so that you can have something to compare against
+if you run into problems.
+
+
+
+7) The interpreter is very slow. Roughly a factor of 100 slower than a 
+native code Pascal compiler on my system. A worthwhile project would be
+to either modify it to run faster, or modify it to assemble the pcode 
+into native code for your machine.
+
+
+
+Tom Cattrall 
+Compuserve: 72767,622

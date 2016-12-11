@@ -1,0 +1,93 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal 3.0 Runtime Library                         *)
+(*       DPMI Interface Unit                                    *)
+(*                                                              *)
+(*       Copyright (c) 1995,98 TMT Development Corporation      *)
+(*       Author: Vadim Bodrov                                   *)
+(*                                                              *)
+(****************************************************************)
+
+{$w-,r-,q-,i-,t-,x+,v-}
+
+unit DPMI;
+
+interface
+
+type
+ TRmRegs = record
+  case integer of
+   1:  (edi, esi, ebp, _res, ebx, edx, ecx, eax: Longint;
+        flags, es, ds, fs, gs, ip, cs, sp, ss: Word);
+   2: (_dmy2: array [0..15] of byte; bl, bh, b1, b2, dl, dh, d1, d2, cl, ch, c1, c2, al, ah: Byte);
+   3: (di, i1, si, i2, bp, i3, i4, i5, bx, b3, dx, d3, cx, c3, ax: Word);
+  end;
+
+type
+ TDescriptor = record
+  SegmentLimit: Word;
+  BaseAddressL: Word;
+  BaseAddressH: Byte;
+  FlagsL:       Byte;
+  FlagsH:       Byte;
+  BaseAddressU: Byte;
+end;
+
+//////////////////////////
+// ADDITIONAL FUNCTIONS //
+//////////////////////////
+procedure ClearRmRegs(var Regs: TRmRegs);
+procedure FarPutByte(Seg: Word; Offs: DWord; Value: Byte);
+procedure FarPutWord(Seg: Word; Offs: DWord; Value: Word);
+procedure FarPutDWord(Seg: Word; Offs: DWord; Value: DWord);
+function  FarGetByte(Seg: Word; Offs: DWord): Byte;
+function  FarGetWord(Seg: Word; Offs: DWord): Word;
+function  FarGetDWord(Seg: Word; Offs: DWord): DWord;
+function  GetCS: Word;
+function  GetDS: Word;
+
+////////////////////////////////
+// DPMI INTERRUPT 31H SERVICE //
+////////////////////////////////
+function AllocateDescriptors(NumberOfDescriptors: Word): Word;
+function CreateDataDescriptor(Base, Limit: DWord): Word;
+function CreateCodeDescriptor(Base, Limit: DWord): Word;
+function FreeDescriptor(Selector: Word): Boolean;
+function SegmentToDescriptor(Segment: Word): Word;
+function SelectorInc: Word;
+function GetSegmentBaseAddress(Selsctor: Word): DWord;
+function SetSelectorBaseAddress(Selector: Word; Base: DWord): Boolean;
+function SetSelectorLimit(Selector: Word; Limit: DWord): Word;
+function GetSelectorAccessRights(Selector: Word): Word;
+function SetSelectorAccessRights(Selector,Rights: Word): Boolean;
+function CreateCodeAlias(Selector: Word): Word;
+function CreateDataAlias(Selector: Word): Word;
+function GetDescriptor(Selector: Word; var Descriptor: TDescriptor): Boolean;
+function SetDescriptor(Selector: Word; var Descriptor: TDescriptor): Boolean;
+function AllocateSpecificDescriptor(Selector: Word): Boolean;
+function AllocDOSmemoryBlock(SizeInBytes: DWord): DWord;
+function FreeDOSMemoryBlock(Selector: Word): Boolean;
+function DOSMemoryAlloc(SizeInBytes: DWord): Word;
+function DOSMemoryFree(Segment: Word): Boolean;
+function ResizeDOSmemoryBlock(Selector: Word; NewSize: DWord): Boolean;
+function GetRealModeIntVec(IntNo: Byte; var RSeg,ROfs: Word): Boolean;
+function SetRealModeIntVec(IntNo: Byte; RSeg,ROfs: Word): Boolean;
+function GetExceptionHandler(ExpFault: Byte; var Sel: Word; var Offs: DWord): Boolean;
+function SetExceptionHandler(ExpFault: Byte; Sel: Word; Offs: DWord): Boolean;
+function GetDPMIIntVec(IntNo: Byte; var Sel: Word; var Offs: DWord): Boolean;
+function SetDPMIIntVec(IntNo: Byte; Sel: Word; Offs: DWord): Boolean;
+function RealModeInt(IntNo: Byte; var Regs: TRmRegs): Boolean;
+function CallRealModeFar(var Regs: TRmRegs): Boolean;
+function CallRealModeIRet(var Regs: TRmRegs): Boolean;
+function AllocRealModeCallBack(HandlerAddr, RegsAddr: Pointer; var HndSeg: Word;
+ var HndOfs: DWord): Boolean;
+function FreeRealModeCallBack(HndSeg: Word; HndOfs: DWord): Boolean;
+function GetDPMIVer: Word;
+function GetFreeMemoryInfo(BufferPtr: Pointer): Boolean;
+function MapPhysicalToLinear(PhysAddr, SizeInBytes: DWord): DWord;
+function FreePhysicalMap(LinearAddr: DWord): Boolean;
+function GetDisableInterruptState: Boolean;
+function GetEnableInterruptState: Boolean;
+function GetInterruptState: Boolean;
+
+implementation

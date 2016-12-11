@@ -1,0 +1,57 @@
+The software which accompanies this license (the "Software") 
+is property of Arthur Vargas Lopes and is protected by copyright law. While 
+Arthur Vargas Lopes continues to own the software, you will have certain 
+rights to use the Software since you have accepted this license by breaking 
+the distribution material seal. Your rights and obligations with respect to 
+the use of this Software are as follows:
+
+. You may:
+(i) use one copy of the Software on a single computer;
+(ii) make one copy of the Software for archival purposes, or 
+copy the software onto the hard disk of your computer 
+and retain the original for archives purposes; and
+(iii) use the Software on a network, provided that you have a 
+licensed copy of the Software for each computer that can access 
+the Software over that network;
+
+. You may not:
+(i) copy the printed documentation which accompanies the Software;
+(ii) sublicense, rent or lease any portion of the Software;
+(iii) reverse engineer, decompile, disassemble, modify, translate, 
+make any attempt to discover the source code of the Software, or 
+create derivative works from the Software; or
+(iv) use a previous version or copy of the Software after you have received 
+a disk replacement of the prior version, unless you donate a previous version 
+of an upgraded version to a charity of your choice, and such charity agrees 
+in writing that it will be the sole end user of the product, and that 
+it will abide by the terms of this agreement. Unless you so donate a 
+previous version, upon up upgrading the Software, all copies of the 
+prior version must be destroyed.
+
+. No Warranty:
+Arthur Vargas Lopes does not offer any warranty on both the Software and the media 
+on which the Software is distributed. Arthur Vargas Lopes also does not warrant 
+that the Software will meet your requirements or that operation 
+of the Software will be uninterrupted or that the Software is 
+error-free.
+
+. Disclaimer of Damages:
+REGARDLESS OF WHETHER ANY REMEDY SET FORTH HEREIN FAILS OF ITS ESSENTIAL PURPOSE, 
+IN NO EVENT WILL ARTHUR VARGAS LOPES BE LIABLE TO YOU FOR ANY SPECIAL, CONSEQUENTIAL 
+INDIRECT OR SIMILAR DAMAGES, INCLUDING ANY LOST PROFITS OR LOST 
+DATA ARISING OUT OF THE USE OR INABILITY TO USE THE SOFTWARE EVEN 
+IF ARTHUR VARGAS LOPES HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+   IN NO CASE SHALL ARTHUR VARGAS LOPES LIABILITY EXCEED THE PURCHASE PRICE FOR THE 
+SOFTWARE. The disclaimers and limitations set forth above will apply regardless of whether 
+you accept the Software.
+
+. General:
+This Agreement will be governed by the laws of Rio Grande do Sul, Brazil. 
+Should you have any questions concerning this agreement, or if you desire 
+to contact Arthur Vargas Lopes for any reason, please write:
+
+        Arthur Vargas Lopes
+        Rua Inhandui 303/204
+        90.820-170 Porto Alegre - RS
+        Brazil
+        avl@acm.org

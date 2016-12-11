@@ -1,0 +1,11 @@
+Procedure Run;
+
+Begin
+  WriteLn('Memoria dinamica disponibila este: ', MemAvail, ' byte');
+  Init;
+  Operatii;
+  Term;
+  List;
+  WriteLn('Memoria dinamica disponibila este: ', MemAvail, ' byte');
+  ReadLn
+End;

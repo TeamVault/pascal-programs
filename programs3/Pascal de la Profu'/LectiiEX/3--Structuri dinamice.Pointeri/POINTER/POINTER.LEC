@@ -1,0 +1,433 @@
+3. Tipul pointer in Pascal
+3.1. Tipuri de variabile (dupa durata de viata)
+3.2. Tipul pointer
+3.3. Declararea tipului pointer
+3.4. Declararea de variabile de tip pointer
+3.5. Semantica variabilelor de tip pointer. Operatii
+
+3.1. Tipuri de variabile (dupa durata de viata)
+  - globale
+     - declarate in programul principal
+     - alocate in segmentul de date
+     - durata lor de viata este durata de executie a programului
+     - se initializeaza la declarare cu valori identice lui 0
+       (0 pentru numere, stringul vid pentru stringuri, multimea
+        vida pentru multimi, etc) - in Borland (Turbo) Pascal 7.0
+  - locale unui subprogram
+     - sunt formate din
+        - variabilele declarate in subprogramul respectiv
+        - parametrii transmisi prin valoare
+     - sunt alocate in stiva de executie
+        - alocarea se face automat, cand subprogramul de care ele tin
+          este lansat in executie = inregistrarea de activare a acestuia
+          este pusa in stiva de executie (vezi CTRL+F3)
+        - dealocarea se face automat, cand subprogramul isi termina executia
+        - in stiva de executie pot fi mai multe subprograme
+          - cel din varful stivei este cel activ (care se executa curent)
+          - celelalte au apelat fiecare subprogramul de deasupra lor din
+            stiva
+     - nu sunt initializate automat
+  - dinamice
+     - nu au un nume propriu (se numesc 'anonime')
+     - sunt referite prin intermediul pointerilor
+     - sunt alocate si dealocate de catre programator
+     - sunt alocate in memorie in "heap"
+       heap = gramada, ansamblu, zona de memorie dinamica
+            = impreuna cu stiva de executie ocupa portiunea de memorie
+              ramasa neocupata de programul executabil (cod + segmentul
+              de date), fiecare pornind de la un capat spre mijloc
+     - deosebirea dintre stiva si heap
+       - stiva creste sau descreste dupa cum apar apeluri de subprograme
+       - heap-ul
+           - creste sau descreste dupa cum apar instructiuni de alocare
+             sau dealocare de variabile dinamice
+           - este format din blocuri de memorie (fragmente)
+           - are o lista de blocuri libere
+           - pe masura ce se fac alocari si dealocari, heap-ul este tot
+             mai fragmentat
+           - functii Turbo (Borland) Pascal pentru heap:
+              - MaxAvail - dimensiunea celui mai mare bloc liber
+              - MemAvail - suma dimensiunilor blocurilor libere
+           - la un moment dat se aloca un singur bloc dintre cele libere
+
+3.2. Tipul pointer
+
+  - tip de date definit de utilizator
+  - domeniu
+     - valorile sale sunt adrese de memorie ale altor obiecte din program
+       (variabile, subprograme)
+     - mai exact: multimea valorilor adreselor din memoria RAM disponibila
+       programului, plus o valoare particulara notata (in Pascal) cu Nil
+  - operatii
+     - de atribuire: (:=)
+     - de comparare: (= si <>)
+     - de alocare a variabilei dinamice referite de pointer:
+         New (Pascal standard) si GetMem (in Turbo si Borland Pascal)
+     - de dealocare a variabilei dinamice referite de pointer:
+         Dispose (Pascal standard) si FreeMem (in Turbo si Borland Pascal)
+
+3.3. Declararea tipului pointer
+
+Variabilele de tip pointer refera alte obiecte. Deoarece Pascal este un
+limbaj puternic tipizat, tipul unui pointer TP va indica tipul obiectelor
+referite de variabilele de tipul pointer TP:
+
+Declaratia de tip pointer
+
+type
+  tip_pointer = ^tip_de_baza
+
+va indica faptul ca orice variabila de tipul "tip_pointer" va avea ca
+valoare o adresa a unei variabile (obiect) de tipul "tip_de_baza".
+Aceasta declaratie introduce un nou tip de date, cu numele "tip_pointer"
+in sistemul de tipuri al programului in care ea apare, dupa toate regulile
+cunoscute.
+
+Tipul de date "tip_de_baza" poate fi
+  - predefinit
+  - definit deja (declaratia lui apare inaintea declaratiei lui "tip_pointer"
+  - definit dupa declaratia de mai sus (numai in cazul declaratiei tipului
+    pointer se permite ca un nume (in cazul nostru "tip_de_baza" sa fie
+    referit inainte de a fi declarat
+
+Exemple: (vom prefixa cu P numele tipurilor pointer si cu T numele
+          celorlalte tipuri de date definite)
+
+type
+  PInteger = ^Integer;  { variabilele de tip PInteger vor fi pointeri la
+                          intregi, adica vor contine adresa unor
+                          variabile de tip Integer }
+  TVector = Array[1..10] of Real;
+  PVector = ^TVector;   { TVector a fost definit inainte de PVector }
+  PMatrice = ^TMatrice; { TMatrice este definit dupa }
+  TMatrice = Array[1..5, 1..10] of Integer;
+
+Limbajele Borland si Turbo Pascal au un tip pointer predefinit
+cu numele Pointer. Acest tip se refera la pointeri fara tip si se poate
+folosi in conversii sau in explicarea polimorfismului. Vom da un asemenea
+exemplu la arbori.
+
+Exemplu:
+  var
+    p: PMatrice;
+    q: Pointer;
+  begin
+    New(p);                 { aloca p^ }
+    q := p;                 { atribuire corecta }
+    p := q;                 { eroare de compilare }
+    p := PMatrice(q);       { conversie explicita de pointeri }
+  end.
+
+3.4. Declararea de variabile de tip pointer
+
+Odata declarat tipul pointer, se pot declara variabile de tipul sau,
+respectiv declaratia normala a variabilelor.
+
+Exemple:
+
+var
+  pi: PInteger;
+  pi2: ^Integer;    { tipul ^Integer este un tip anonim }
+  v: PVector;
+  m: PMatrice;
+
+3.5. Semantica variabilelor de tip pointer. Operatii
+
+3.5.1. Variabile pointer si variabile dinamice asociate
+3.5.2. Operatia de atribuire. Semantica
+3.5.3. Alocarea variabilelor dinamice si initializarea pointerilor
+3.5.4. Dealocarea variabilelor dinamice
+
+3.5.1. Variabile pointer si variabile dinamice asociate
+
+Ori de cate ori lucram cu variabile de tip pointer, trebuie sa stim ca
+o astfel de variabila are o dubla semnificatie (sau ca avem de-a face cu
+doua variabile, total diferite una de alta). Cele doua variabile au
+sensul:
+  - variabilei pointer obisnuita, notat prin numele variabilei, care
+    are
+     - un domeniu de vizibilitate (dat de locul in care apare declaratia sa)
+     - o durata de viata (variabila poate fi globala, locala sau
+       dinamica)
+     - o valoare (adresa unui alt obiect din memorie)
+  - obiectului pe care il refera variabila pointer (a carui
+    adresa o contine ca valoare), notat prin numele variabilei
+    pointer urmat de ^
+
+Exemplu:
+
+var
+  pi: PInteger;
+
+  pi  este o variabila pointer de tipul PInteger, deci ea poate
+      contine adresa unei variabile de tip Integer din program
+  pi^ este variabila de tip Integer a carei adresa este continuta
+      de pi.
+
+Terminologie
+  pi  este variabila pointer
+  pi^ este variabila dinamica referita de pi
+
+3.5.2. Operatia de atribuire. Semantica
+
+Avand de-a face cu doua variabile distincte, semantica operatiei de
+atribuire trebuie discutata pentru fiecare caz in parte:
+
+a) Atribuirea de pointeri
+
+Pentru declaratia
+
+var
+  pi1, pi2: PInteger;
+
+atribuirea
+
+  pi1 := pi2;
+
+are semnificatia
+  - se atribuie lui pi1 valoarea lui pi2, adica
+    - pi1 va contine aceeasi valoare ca si pi2
+    - ele vor referi aceeasi variabila dinamica, adica dupa atribuire
+      pi1^ si pi2^ vor referi acelasi obiect
+
+inainte de atribuire:
+
+              adresa pi1           adresa pi1^
+ÚÄÄÄÄÄ¿     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ pi1 ÅÄÄÄÄÄÅ valoare pi1 ÅÄÄÄÄÄÄÅ valoare pi1^ ³
+ÀÄÄÄÄÄÙ     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+             (adresa pi1^)
+
+              adresa pi2          adresa pi2^
+ÚÄÄÄÄÄ¿     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ pi2 ÅÄÄÄÄÄÅ valoare pi2 ÅÄÄÄÄÄÄÅ valoare pi2^ ³
+ÀÄÄÄÄÄÙ     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+             (adresa pi2^)
+
+dupa atribuirea pi1 := pi2;
+
+              adresa pi1           adresa pi1^
+ÚÄÄÄÄÄ¿     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ pi1 ÅÄÄÄÄÄÅ valoare pi2 ÅÄÄ¿   ³ valoare pi1^ ³
+ÀÄÄÄÄÄÙ     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ  ³   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+             (adresa pi2^)   ³
+                             ³
+              adresa pi2     ³     adresa pi2^
+ÚÄÄÄÄÄ¿     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿  ÀÄÄ¿ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ pi2 ÅÄÄÄÄÄÅ valoare pi2 ÅÄÄÄÄÄÁÅ valoare pi2^ ³
+ÀÄÄÄÄÄÙ     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+             (adresa pi2^)
+
+Ce se observa:
+  - variabila dinamica referita de pi1 (dinainte de atribuire)
+    nu mai poate fi referita (dupa atribuire) - ramane orfana
+
+b) Atribuirea de valori (ale variabilelor dinamice)
+
+Pentru declaratia
+
+var
+  pi1, pi2: PInteger;
+
+atribuirea
+
+  pi1^ := pi2^;
+
+are semnificatia
+  - se atribuie lui pi1^ valoarea lui pi2^, adica
+  - pi1^ va contine aceeasi valoare ca si pi2^
+  - pi1 si pi2 vor referi variabile dinamice diferite;
+  - valoarea variabilei dinamice pi2^ este atribuita variabilei
+    dinamice pi1^
+  - pi1^ si pi2^ raman in continuare obiecte diferite, insa ele vor
+    avea aceeasi valoare
+
+inainte de atribuire:
+
+              adresa pi1          adresa pi1^
+ÚÄÄÄÄÄ¿     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ pi1 ÅÄÄÄÄÄÅ valoare pi1 ÅÄÄÄÄÄÄÅ valoare pi1^ ³
+ÀÄÄÄÄÄÙ     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+             (adresa pi1^)
+
+              adresa pi2          adresa pi2^
+ÚÄÄÄÄÄ¿     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ pi2 ÅÄÄÄÄÄÅ valoare pi2 ÅÄÄÄÄÄÄÅ valoare pi2^ ³
+ÀÄÄÄÄÄÙ     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+             (adresa pi2^)
+
+dupa atribuirea pi1^ := pi2^;
+
+              adresa pi1          adresa pi1^
+ÚÄÄÄÄÄ¿     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ pi1 ÅÄÄÄÄÄÅ valoare pi1 ÅÄÄÄÄÄÄÅ valoare pi2^ ³
+ÀÄÄÄÄÄÙ     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+             (adresa pi1^)
+
+              adresa pi2          adresa pi2^
+ÚÄÄÄÄÄ¿     ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿      ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ pi2 ÅÄÄÄÄÄÅ valoare pi2 ÅÄÄÄÄÄÄÅ valoare pi2^ ³
+ÀÄÄÄÄÄÙ     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ      ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+             (adresa pi2^)
+
+
+c) Lucrul cu obiecte existente in program prin intermediul pointerilor
+
+Pentru declaratiile
+
+var
+  pi: PInteger;
+  i: Integer;
+
+instructiunea de atribuire
+
+  pi := Addr(i)
+
+are efectul unei atribuiri de pointeri
+  - functia Addr(o) intoarce adresa unui obiect o din memoria
+    programului
+  - in cazul nostru, Addr(i) intoarce adresa variabilei i
+
+Exemplu: Programul PtrDemo1.PAS
+
+3.5.3. Alocarea variabilelor dinamice si initializarea pointerilor
+
+Exemplul PtrDemo1.PAS a unul artificial. El nu foloseste cu adevarat
+pointeri, ci, cu ajutorul lor, incearca sa explice atribuirea de
+pointeri si atribuirea de valori.
+
+In lucrul cu pointerii, distingem in mod normal urmatoarele momente:
+  - declararea tipurilor pointer pe care vrem sa le folosim
+  - declararea variabilelor de tip pointer, acolo unde vrem sa le
+    folosim
+  - alocarea variabilelor dinamice referite de pointeri
+  - lucrul propriu-zis cu pointerii
+  - dealocarea variabilelor dinamice referite de pointeri
+
+Vom discuta in cele ce urmeaza:
+  - alocarea variabilelor dinamice referite de pointeri
+  - lucrul propriu-zis cu pointerii
+
+Atribuirea de valori unei variabile pointer se face in Borland Pascal
+prin:
+  - folosirea procedurilor standard New si GetMem
+  - folosirea operatorului @ ('at')
+  - folosirea functiei Addr
+  - folosirea functiei Ptr.
+
+Dintre acestea, New si GetMem realizeaza si alocarea in heap a
+variabilei dinamice referita de pointer.
+
+Exista o valoare constanta, notata cu Nil, care semnifica faptul ca
+pointerul care are aceasta valoare nu refera nimic (nu exista inca
+variabila dinamica referita de el).
+
+Procedura standard New are declaratia:
+
+Procedure New(var P: Pointer);
+
+si care realizeaza urmatoarele:
+  - aloca variabila dinamica P^
+  - atribuie ca valoare lui P adresa variabilei dinamice P^.
+
+Tipul Pointer din declaratie este unul general. Procedura primeste ca
+parametru o variabila P de orice tip pointer recunoscut de sistemul de
+tipuri. Alocarea variabilei dinamice P^ se va face in functie de
+tipul lui P.
+
+Fata de limbajul Pascal standard, exista in Borland si Turbo Pascal
+doua extensii ale procedurii New care vor fi discutate la programarea
+orientata pe obiecte.
+
+Procedura standard GetMem are declaratia:
+
+Procedure GetMem(var P: Pointer; Lung: Word);
+
+si realizeaza urmatoarele:
+  - aloca o zona de memorie de dimensiune "Lung" in heap
+  - atribuie variabilei pointer P adresa (de inceput a) zonei
+    respective
+
+Operatorul @ (at) creeaza un pointer (referinta) la un obiect existent
+(alocat deja) in memorie. Constructia
+
+  @nume_ob
+
+se evalueaza la un pointer la obiectul cu numele "nume_ob". Astfel
+
+  Daca nume_ob refera        Atunci P := @nume_ob inseamna
+  --------------------------------------------------------
+  o variabila v              P^ si v au aceeasi semnificatie
+  parametru formal l         P va contine adresa lui l din stiva
+  transmis prin valoare      P^ si l au aceeasi semnificatie
+  parametru formal l         P va contine adresa lui parametrului actual
+  transmis prin adresa       P^ si l au aceeasi semnificatie
+
+Pentru Ptr va rog sa consultati Help-ul mediului.
+
+Lucrul cu variabile pointer inseamna operatii de atribuire si
+comparare.
+
+Trebuie avute in vedere urmatoarele:
+  - prima operatie asupra unei variabile pointer este initializarea
+    acesteia, care se poate face:
+      - prin New, GetMem, @, Addr sau Ptr
+      - prin atribuire de pointeri
+  - prin atribuire de pointeri se pierde vechea valoare a variabilei
+    dinamice care apare in partea stanga a operatorului de atribuire
+
+Exemplu: la atribuirea
+
+  pi1 := pi2;
+
+vechea valoare a lui pi1 (deci adresa variabilei dinamice pi1^) se va
+pierde; in locul ei se va trece (scrie peste) adresa variabilei
+dinamice pi2^).
+
+  - durata de viata a variabilei p^ poate sa depaseasca domeniul de
+    vizibilitate al variabilei p.
+
+Exemplu: Programul DuV_Ptr;
+
+3.5.4. Dealocarea variabilelor dinamice
+
+Dupa ce am terminat lucrul cu o variabila dinamica, ea trebuie
+dealocata explicit. Dealocarea se face in functie de modul in care
+s-a facut alocarea dupa cum urmeaza
+
+   Alocarea s-a facut cu         Dealocarea se face cu
+   ---------------------------------------------------
+   New                           Dispose
+   GetMem                        FreeMem
+   ---------------------------------------------------
+
+Procedura standard Dispose are declaratia
+
+Procedure Dispose(var P: Pointer);
+
+si ea realizeaza
+  - dealocarea din heap a variabilei dinamice referite de P,
+    adica a lui P^
+  - zona ocupata de P^ este pusa in lista de blocuri libere a
+    heap-ului
+  - deinitializarea valorii lui P: referirea lui P dupa Dispose(P)
+    provoaca o eroare de executie.
+
+Procedura standard FreeMem are declaratia
+
+Procedure FreeMem(var P: Pointer; Lung: Word);
+
+si ea realizeaza
+  - dealocarea din heap a variabilei dinamice referite de P,
+    adica a lui P^
+  - zona ocupata de P^ (de dimensiune Lung octeti) este pusa in
+    lista de blocuri libere a heap-ului
+  - deinitializarea valorii lui P: referirea lui P dupa Dispose(P)
+    provoaca o eroare de executie
+  - daca Lung are alta valoare decat cea data in procedura pereche
+    GetMem, se produce o eroare de executie
+
+Exemplu: programul GetFree.PAS
+
+Exemplu complex de lucru cu Pointeri: COMPLEXP.PAS, unit-ul UCOMPL_P.PAS
+

@@ -1,0 +1,457 @@
+8. Grafica in Turbo Pascal
+
+Elemente de discutie
+
+8.1. Utilizarea ecranului in mod grafic
+8.2. Unit-ul Graph
+8.3. Desenarea in plan a figurilor din planul real
+
+8.1. Utilizarea ecranului in mod grafic
+
+Etape
+  - initializarea modului grafic (trecerea de la modul text la modul grafic)
+  - lucrul in modul grafic
+  - terminarea modului grafic (revenirea la modul text)
+
+Memoria ecran: zona de memorie interna ce contine ceea ce se vede pe ecran
+  - text
+  - grafica
+
+Caracteristicile modului de lucru grafic
+  - primitive grafice
+  - culori
+  - rezolutie
+  - placa grafica
+  - Borland Graphics Interface (BGI)
+
+    0                 x                          GetMaxX-1
+   0ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+    ³                 ³                            ³
+    ³                 ³                            ³
+    ³                 ³                            ³
+   yÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ.P(x, y)                     ³
+    ³                                              ³
+    ³                                              ³
+    ³                                              ³
+    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+GetMaxY-1
+
+Pixel
+  - picture element
+  - coordonate (numere intregi)
+  - culoare
+
+Fereastra fizica ecran (viewport)
+  - portiune din ecranul grafic in care se realizeaza desenul
+
+    0        u1                      u2          GetMaxX-1
+   0ÚÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+    ³        ³ P1(u1, v1)            ³             ³
+  v1ÅÄÄÄÄÄÄÄ ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»             ³
+    ³        º                       º             ³
+    ³        º                       º             ³
+    ³        º                       º             ³
+  v2ÅÄÄÄÄÄÄÄ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼             ³
+    ³                               P2(u2, v2)     ³
+    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+GetMaxY-1
+
+  - caracteristicile ferestrei fizice
+     - coordonatele aparat: (u, v) sunt relative la originea P1
+     - initial: fereastra fizica este tot ecranul
+
+8.2. Unit-ul Graph
+8.2.1. Terminologie
+8.2.2. Clase de subprograme
+8.2.3. Exemple de folosire
+Acest unit contine:
+  - subprograme
+  - constante
+  - variabile
+specifice modului de lucru grafic.
+
+8.2.1. Terminologie
+  - ecranul grafic corespunde unui driver grafic
+  - driverul grafic
+      - corespunde placii grafice din calculator
+      - este specificat printr-o constanta simbolica cu urmatoarele valori
+
+      Constanta     ³ Valoare/comentariu
+      ÍÍÍÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+      CurrentDriver ³   -128 pentru GetModeRange
+      Detect        ³   0 Provoaca autodetectie
+      CGA           ³   1
+      MCGA          ³   2
+      EGA           ³   3
+      EGA64         ³   4
+      EGAMono       ³   5
+      IBM8514       ³   6
+      HercMono      ³   7
+      ATT400        ³   8
+      VGA           ³   9
+      PC3270        ³  10
+
+  - modul grafic
+     - un driver grafic poate avea mai multe moduri grafice
+     - la un moment dat pentru driverul grafic existent se lucreaza
+       intr-un singur mod grafic
+     - modul grafic defineste
+         - rezolutia pe verticala si pe orizontala (GetMaxX, GetMaxY)
+         - numarul de culori (GetMaxColor)
+     - modul grafic se reprezinta printr-un numar (constanta simbolica)
+
+Constanta  ³ Valoare³ Rezolutie     Constanta ³Valoare³ Rezolutie
+ÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍ   ÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍÍ
+CGAC0      ³   0    ³ 320 x 200     EGALo     ³   0   ³ 640 x 200
+CGAC       ³   1    ³ 320 x 200     EGAHi     ³   1   ³ 640 x 350
+CGAC2      ³   2    ³ 320 x 200               ³       ³
+CGAC3      ³   3    ³ 320 x 200     EGA64Lo   ³   0   ³ 640 x 200
+CGAHi      ³   4    ³ 640 x 200     EGA64Hi   ³   1   ³ 640 x 350
+           ³        ³                         ³       ³
+MCGAC0     ³   0    ³ 320 x 200     ATT400C0  ³   0   ³ 320 x 200
+MCGAC1     ³   1    ³ 320 x 200     ATT400C1  ³   1   ³ 320 x 200
+MCGAC2     ³   2    ³ 320 x 200     ATT400C2  ³   2   ³ 320 x 200
+MCGAC3     ³   3    ³ 320 x 200     ATT400C3  ³   3   ³ 320 x 200
+MCGAMed    ³   4    ³ 640 x 200     ATT400Med ³   4   ³ 640 x 200
+MCGAHi     ³   5    ³ 640 x 480     ATT400Hi  ³   5   ³ 640 x 400
+           ³        ³                         ³       ³
+EGAMonoHi  ³   3    ³ 640 x 350     IBM8514Lo ³   0   ³ 640 x 480
+HercMonoHi ³   0    ³ 720 x 348     IBM8514Hi ³   1   ³ 1024 x 768
+           ³        ³                         ³       ³
+VGALo      ³   0    ³ 640 x 200     PC3270Hi  ³   0   ³ 720 x 350
+VGAMed     ³   1    ³ 640 x 350     VGAHi     ³   2   ³ 640 x 480
+
+  - informatii de desenare
+    - culoarea de fond - culoarea fondului (GetBkColor)
+    - culoarea cernelii - culoarea cu care se deseneaza (GetColor)
+    - punctul curent (GetX, GetY) - punctul in care se afla
+      cursorul grafic
+  - pagini grafice
+    - pentru driverele EGA (256K), VGA si Hercules, memoria grafica se
+      imparte in mai multe pagini
+    - fiecare pagina este identificata printr-un numar
+    - pagina curenta este pagina care este afisata pe ecran (SetVisualPage)
+    - pagina activa este pagina in care se face desenarea (SetActivePage)
+    - pagina curenta si pagina activa nu sunt neaparat una si aceeasi
+    - la animatie se procedeaza astfel:
+        - se seteaza ca pagina activa alta pagina decat cea curenta si se
+          deseneaza in ea
+        - cand pagina este desenata, se declara ca pagina curenta
+        - se pot folosi mai multe pagini, care se declara pe rand pagini
+          curente
+  - culorile pentru modul curent se codifica prin numere intregi
+    prin urmatoarele constante simbolice
+
+         Culori intunecate:                Culori deschise:
+         (Cerneala si fond)                (Fond)
+          ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ               ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+          Black         0                  DarkGray       8
+          Blue          1                  LightBlue      9
+          Green         2                  LightGreen    10
+          Cyan          3                  LightCyan     11
+          Red           4                  LightRed      12
+          Magenta       5                  LightMagenta  13
+          Brown         6                  Yellow        14
+          LightGray     7                  White         15
+
+  - paleta de culoare: un tabel de culori care contine codurile
+    acestora, intr-o anumita ordine
+      - numarul de culori depinde de driverul grafic si de modul grafic
+      - se poate modifica ordinea culorilor in paleta - se obtin
+        efecte speciale
+      - exista o paleta curenta, care se poate seta (SetPalette)
+  - factor de corectie (aspect ratio)
+      - este definit de doi parametri: XAsp si YAsp cu semnificatia
+        ca o linie orizontala de dimensiune XAsp are pe verticala
+        dimensiunea YAsp
+  - stil de umplere (fill style), se modifica cu SetFillStyle
+    - este folosit pentru umplerea zonelor ecranului grafic
+    - este definit de
+      - sablon de umplere (fill pattern)
+      - culoare de umplere (fill color)
+      - constante simbolice pentru stilul de umplere
+
+       Constanta      ³ Valoarea³ Semnificatia
+       ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+       EmptyFill      ³   0     ³ Foloseste culoarea fondului
+       SolidFill      ³   1     ³ Foloseste culoarea cernelii
+       LineFill       ³   2     ³ Umplere cu ---
+       LtSlashFill    ³   3     ³ Hasura ///
+       SlashFill      ³   4     ³ Hasura /// fina
+       BkSlashFill    ³   5     ³ Hasura \\\ fina
+       LtBkSlashFill  ³   6     ³ Hasura \\\
+       HatchFill      ³   7     ³ Light hatch fill
+       XHatchFill     ³   8     ³ Heavy cross hatch
+       InterleaveFill ³   9     ³ Linii intretesute
+       WideDotFill    ³   10    ³ Puncte spatiate larg
+       CloseDotFill   ³   11    ³ Puncte spatiate strans
+       UserFill       ³   12    ³ Definit de utilizator
+
+  - o linie desenata are urmatoarele caracteristici (GetLineSettings)
+     - stil de linie (line style) SetLineStyle
+     - sablon de linie (line pattern)
+     - grosime de linie (line thickness)
+     - constante simbolice:
+
+         Stiluri de linie                        Grosimi de linie
+          SolidLn   0  continua                   NormWidth  1   normala
+          DottedLn  1  puncte                     ThickWidth 3   subtire
+          CenterLn  2
+          DashedLn  3  intrerupta
+          UserBitLn 4 (Definit de utilizator)
+
+  - textul scris in modul grafic are urmatoarele caracteristici de stil
+    (GetTextSettings)
+      - font - fontul cu care se scrie
+      - directie - directia in care se scrie
+      - dimensiunea caracterelor
+      - proportia acestora pe orizontala si verticala
+
+        Constanta     ³Valoare³ Semnificatie
+        ÍÍÍÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+        DefaultFont   ³   0   ³ font mapat 8x8 bit
+        TriplexFont   ³   1   ³ Stroked font
+        SmallFont     ³   2   ³ Stroked font
+        SansSerifFont ³   3   ³ Stroked font
+        GothicFont    ³   4   ³ Stroked font
+        HorizDir      ³   0   ³ Orientare de la stanga la dreapta
+        VertDir       ³   1   ³ Orientare de jos in sus
+        UserCharSize  ³   0   ³ Dimensiunea caracterelor definita de
+                      ³       ³ utilizator
+
+8.2.2. Clase de subprograme
+
+  - initializarea si terminarea modului grafic
+     - CloseGraph - termina modul grafic
+     - DetectGraph - determina driverul grafic
+     - GraphErrorMsg - intoarce mesajul de eroare pentru un cod specificat
+     - GraphResult - intoarce starea ultimei operatii grafice efectuate
+                     = 0 OK, <> 0 - eroare
+     - InitGraph - initializeaza modul grafic
+     - RestoreCrtMode - restaureaza modul ecran dinainte de trecerea in
+                        modul grafic
+  - setarea ferestrei fizice
+     - ClearDevice - sterge ecranul si seteaza punctul curent CP la (0,0)
+     - ClearViewPort - sterge fereastra fizica curenta
+     - GetViewSettings - obtine parametrii ferestrei fizice
+     - SetViewPort - seteaza fereastra fizica curenta
+     - SetVisualPage - stabileste pagina vizuala curenta
+  - setari de pagina, culoare, factor de corectie
+     - SetActivePage - stabileste pagina activa
+     - SetAllPalette - schimba paletele de culoare
+     - SetAspectRatio - seteaza factorul de corectie
+     - SetBkColor - seteaza culoarea fondului
+     - SetColor - seteaza culoarea cernelii
+     - SetGraphBufSize - modifica dimensiunea bufferului grafic folosit la
+                         scanare sau umplere
+     - SetGraphMode - seteaza sistemul la modul grafic specificat si
+                      sterge ecranul
+     - SetPalette - schimba o culoare a unei palete cu alta
+     - SetRGBPalette - seteaza paletele de culoare pt IBM8514
+  - setarea sau obtinerea punctului curent
+     - GetX - intoarce abscisa punctului curent
+     - GetY - intoarce ordonata punctului curent
+     - MoveRel - muta punctul curent cu un deplasament precizat
+     - MoveTo - schimba punctul curent la cel precizat
+  - primitive grafice
+     - Arc - traseaza un arc de cerc de centru si raza cunoscute, cuprins
+             intre doua raze ce formeaza unghiuri date cu axa Ox
+     - Bar - deseneaza o bara folosind stilul si culoarea de umplere curente
+     - Bar3D - deseneaza o bara 3D folosind stilul si culoarea de umplere curente
+     - Circle - traseaza un cerc de centru si raze cunoscute
+     - Drawpoly - traseaza un poligon cu n varfuri folosind stilul de linie
+                  si culoarea curente
+     - Ellipse - traseaza un arc elipsa data prin centru, semiaxa mare si
+                 mica si unghiurile razelor ce determina arcul cu semiaxa mare
+     - FillEllipse - traseaza si umple o elipsa de centru si semiaxe cunoscute
+     - FillPoly - traseaza un poligon si apoi il umple folosind stilul de
+                  umplere si culoarea curente
+     - FloodFill - umple o regiune marginita cu sablonul de umplere si
+                   culoarea curenta
+     - GetImage - salveaza o imagine (bitmap) dintr-o regiune specificata
+                  intr-un buffer (variabila)
+     - PutImage - pune pe ecran o imagine dintr-un buffer
+     - GetPixel - intoarce culoarea pixelului de la locatia (X,Y) specificata
+     - PutPixel - schimba culoarea pixelului de la locatia specificata
+                  cu culoarea specificata
+     - Line - traseaza o linie de la un punct la alt punct (ambele
+              specificate); punctul curent nu se modifica
+     - LineRel - traseaza o linie de la punctul curent (x0, y0) la punctul
+                 (x1, y1), unde:
+                    x1 = x0 + Dx
+                    y1 = y0 + Dy
+                 iar Dx si Dy sunt parametrii lui LineRel.
+                 (x1,y1) devinde noul punct curent
+     - LineTo - traseaza o linie de la punctul curent (x0, y0) la punctul
+                (x1, y1), unde x1 si y1 sunt parametrii lui LineTo.
+                (x1,y1) devinde noul punct curent.
+     - PieSlice - traseaza si umple o felie de placinta de centru, raza si
+                  unghiuri cunoscute
+     - Rectangle - traseaza dreptunghiul definit de coltul dreapta sus
+                   si coltul stanga jos
+     - Sector - traseaza si umple un sector de elipsa de parametri cunoscuti
+  - parametri de umplere, sablon, stil
+     - GetFillPattern - intoarce sablonul si culoarea de umplere selectate
+     - GetFillSettings - intoarce sablonul si culoarea de umplere curente
+     - GetLineSettings - intoarce setarile curente de stil, sablon si
+                         grosime de linie
+     - SetFillPattern - selecteaza un sablon de umplere definit de utilizator
+     - SetFillStyle - seteaza sablonul si culoarea de umplere
+     - SetLineStyle - seteaza stilul, sablonul si grosimea liniei
+  - informatii despre setarile curente
+     - GetArcCoords - intoarce coordonatele ultimei comenzi Arc executate
+     - GetAspectRatio - intoarce parametrii care determina factorul de
+                        corectie
+     - GetBkColor - intoarce culoarea fondului
+     - GetColor - intoarce culoarea cernelii
+     - GetDefaultPalette - intoarce paleta de culoare cu care s-a initializat
+                           modul grafic
+     - GetDriverName - intoarce un string continand numele driverului grafic
+     - GetGraphMode - intoarce modul grafic curent
+     - GetMaxColor - intoarce cel mai mare cod de culoare
+     - GetMaxMode - intoarce cel mai mare numar de mod grafic
+     - GetMaxX - intoarce rezolutia curenta pe orizontala
+     - GetMaxY - intoarce rezolutia curenta pe verticala
+     - GetModeName - intoarce numele modului grafic
+     - GetModeRange - intoarce subdomeniul numerelor de moduri grafice
+                      valide pentru un anumit driver grafic
+     - GetPalette - intoarce paleta curenta si dimensiunea ei
+     - GetPaletteSize - intoarce dimensiunea paletei curente
+     - GraphDefaults - seteaza pe (0,0) punctul curent si reseteaza parametrii
+                       grafici la valorile lor implicite
+     - ImageSize - intoarce numarul de octeti necesar pentru a memora o
+                   regiune de ecran (bitmap) specificata
+  - scrierea de text in modul grafic
+     - GetTextSettings - intoarce setarile de text pentru scrierea in
+                         modul grafic
+     - SetTextStyle - seteaza parametrii de stil de text
+     - SetTextJustify - seteaza parametrii de aliniere a textului scris
+                        cu OutText sau OutTextXY in raport cu punctul curent
+     - SetUserCharSize - seteaza latimea si inaltimea caracterelor din
+                         fontul curent
+     - SetWriteMode - seteaza modul de desenare a liniilor (scrie peste,
+                      XOR, etc)
+     - TextHeight - intoarce inaltimea stringului argument, in pixeli
+     - TextWidth - intoarce latimea stringului argument, in pixeli
+     - OutText - scrie stringul argument in mod grafic, in raport cu
+                 punctul curent
+     - OutTextXY - scrie stringul argument in mod grafic, in raport cu
+                 un punct specificat
+  - instalari de drivere, fonturi
+     - InstallUserDriver
+     - InstallUserFont
+     - RegisterBGIdriver
+     - RegisterBGIfont
+
+8.2.3. Exemple de folosire
+
+8.2.3.1. Initializarea modului grafic
+   vezi UGraph.InitGr
+   foloseste
+     - DetectGraph
+     - InitGraph
+     - GraphResult
+     - GraphErrorMsg
+
+8.2.3.2. Programul Cercuri
+   vezi Cercuri.PAS
+   foloseste
+     - UGraph.InitGr
+     - CloseGraph
+     - Circle
+
+8.2.3.3. Programul Ferestre
+   vezi Ferestre.PAS
+   foloseste
+     - UGraph.InitGr
+     - CloseGraph
+     - Circle
+     - SetViewPort
+     - Rectangle
+
+8.3. Desenarea in plan a figurilor din planul real
+
+Coordonate ecran
+  - intregi definiti de rezolutia ecranului
+  - sunt coordonate absolute - originea este coltul din stanga sus
+    al ecranului (0, 0)
+Coordonate reale
+  - coordonatele punctelor din planul real
+  - se reprezinta prin numere reale
+Coordonate din fereastra fizica
+  - sunt relative la coltul din stanga sus al ferestrei
+  - se obtin din coordonatele ecran prin scaderea coordonatelor
+    coltului stanga sus
+
+Fereastra fizica ecran V (u1, v1) (u2, v2)
+
+    0                                            GetMaxX-1
+   0ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+    ³        ³ M1(u1, v1)            ³             ³
+  v1ÅÄÄÄÄÄÄÄ ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»             ³
+    ³        º                       º             ³
+  v ÅÄÄÄÄÄÄÄÄ¶ÄÄÄÄÄÄÄÄÄÄ.M(u, v)     º             ³
+    ³        º          ³            º             ³
+  v2ÅÄÄÄÄÄÄÄ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼ M2(u2, v2)  ³
+    ³        ³          ³            ³             ³
+    ÀÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+GetMaxY-1    u1         u            u2
+
+  - u1, v1 si u2, v2 sunt coordonate ecran
+  - ordonata v creste in jos
+
+Fereastra reala (logica): domeniul D din planul real D
+   - definit de doua colturi opuse
+       - (a, c) (b, d)
+       - (a, d) (b, c)
+   - ordonata y creste in sus
+
+     (a, d)           x
+   dÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ (b , d)
+    ³                 ³                            ³
+    ³                 ³                            ³
+    ³                 ³                            ³
+   yÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ.P(x, y)                     ³
+    ³                                              ³
+    ³                                              ³
+    ³                                              ³
+   cÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ (b, c)
+     a                                            b
+
+Punctul P(x, y) din D se reprezinta in punctul M(u, v) din V
+
+Problema reprezentarii punctului P in coordonate ecran este:
+  Date: domeniul real    D (a, c) si (b, d)
+        fereastra ecran (0, 0) si (GetMaxX-1, GetMaxY-1)
+        punctul P(x, y) din D   a <= x <= b, c <= y <= d
+  Rezultate: (u, v)
+
+Relatii de transformare
+
+   x - a   u  - u1
+   ----- = -------      u1 = 0, u2 = GetMaxX-1
+   b - a   u2 - u1
+
+   y - d   v  - v1
+   ----- = -------      v1 = 0, v2 = GetMaxY-1
+   c - d   v2 - v1
+
+de unde rezulta
+
+  u := Round((x-a)*(u2-u1)/(b-a)) + u1
+
+  v := Round((y-d)*(v2-v1)/(c-d)) + v1
+
+u si v sunt coordonate ecran.
+
+
+Daca se doreste reprezentarea numai in fereastra fizica V
+(caz in care coordonatele trebuie calculate relativ la coltul din
+stanga sus al acesteia), atunci formulele de mai sus devin:
+
+  u' := Round((x-a)*(u2-u1)/(b-a))
+
+  v' := Round((y-d)*(v2-v1)/(c-d))
+
+in care (u1, v1) si (u2, v2) reprezinta colturile ferestrei fizice
+

@@ -1,0 +1,1 @@
+pt ca sa mearga  pascalul si nu numa acest programel trebuie pus in C:\windows\system32\autoexec.nt,uitate in c:\windows\repair

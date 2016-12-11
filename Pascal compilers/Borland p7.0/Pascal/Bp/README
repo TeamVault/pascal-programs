@@ -1,0 +1,655 @@
+            Welcome to Borland Pascal with Objects 7.0
+            ------------------------------------------
+
+This README file contains important, last minute information
+about Borland Pascal with Objects 7.0. In addition to this file,
+there are several files in the \BP\DOC directory that you should
+browse. See FILELIST.DOC in the \BP directory for a complete list
+of all files distributed with this package.
+
+
+TABLE OF CONTENTS
+-----------------
+ 1. How to get help
+ 2. Minimum system requirements
+ 3. Installation
+ 4. Run-time library source code installation
+ 5. New features
+ 6. Release notes
+    - Changes to the documentation
+    - Demonstration and utility program notes
+    - Compatibility and known problems
+ 7. Redistributable files
+ 8. Important note for Borland C++ and Paradox 4.0 users
+ 9. Borland Pascal with Objects and the OS/2 Workplace Shell
+
+
+1. HOW TO GET HELP
+------------------
+If you have any problems with this product, please read this
+file, the online documentation files in \BP\DOC, the online help
+files, and the Borland Pascal with Objects manuals first. If you
+still have a question and need assistance, help is available from
+the following sources:
+
+1. You can use your modem to easily obtain assistance online.
+   Borland maintains support forums on CompuServe, BIX, and
+   GEnie. There, you'll have contact with Borland technical
+   support engineers and thousands of programmers using Borland
+   products. They will answer your questions and share
+   information and ideas with you.
+
+   You can also download the latest technical information, sample
+   code, utilities, patches, etc. from these online services as
+   well as from Borland's Download Bulletin Board Service
+   (DLBBS).
+
+   Access Borland's online services in the following manner:
+
+   CompuServe
+     GO BORLAND
+
+   BIX
+     JOIN BORLAND
+
+   GEnie
+     BORLAND
+
+   Borland DLBBS
+     You can reach the Borland DLBBS by dialing (408) 439-9096
+     (up to 9600 Baud, 8 data bits, No Parity, 1 Stop bit). No
+     special setup is required.
+
+2. TechFax is a toll-free, 24-hour automated service that sends
+   free technical information to your fax machine. More than
+   1,000 documents discussing Borland software are available
+   through TechFax. These documents provide valuable technical
+   information that can be used as reference now and in the
+   future.
+
+   You can call TechFax at 1-800-822-4269 from any touch tone
+   telephone and obtain any bulletins or documents that you need.
+
+3. The Technical Support Hot Lines are there to help you with
+   questions about installation, system configuration,
+   compatibility, and or usability. Lines are open from 6:00 A.M.
+   to 5:00 P.M. Pacific Time at (408) 461-9177.
+
+4. If an advanced level of support is required, Borland offers
+   a new Advisor Lines service. Advice concerning program design,
+   debugging and performance tuning is available. Advisor Lines
+   operate from 8:00 A.M. to 5:00 P.M. Pacific Time at
+   1-900-786-6080. Each call is $2.00/minute with the first
+   minute free (available in U.S. only).
+
+When calling Borland's Technical Support, please keep your
+manuals handy and have the program running. To simplify trouble-
+shooting, please be prepared with the following information:
+
+  o Product name, serial number, and version number.
+
+  o Computer name and model and the name and model of any
+    additional hardware (video adapters, modems, etc.).
+
+  o Operating system and version number (to find the version
+    number, type VER at any DOS prompt). If you are using
+    Microsoft Windows, you can find the version number by
+    selecting Help|About from Program Manager.
+
+  o The contents of your AUTOEXEC.BAT and CONFIG.SYS files
+    (located in the root directory (\) of your computer's boot
+    disk).
+
+  o The contents of your WIN.INI and SYSTEM.INI files located in
+    your Windows directory (if you are running Windows).
+
+  o A daytime phone number where you can be reached.
+
+  o The specific steps necessary to reproduce the problem.
+
+
+2. MINIMUM SYSTEM REQUIREMENTS
+------------------------------
+The Windows applications in this package (Borland Pascal for
+Windows, Resource Workshop, etc.) run only in Standard or
+Enhanced mode under Microsoft Windows 3.0 or later.
+
+The DOS protected-mode applications in this package (BPC.EXE,
+BP.EXE, TDX.EXE, etc.) require MS-DOS 3.0 or later, 2 Mb of
+available extended memory, and an 80286 or later processor.
+
+When running a DOS protected-mode application under Windows, make
+sure to create a Windows .PIF file and specify a value of 0 in
+the XMS Memory KB Required setting and at least a value of 1024
+in the XMS Memory KB Limit setting. Turbo Debugger (TD.EXE only)
+requires at least 1024 Kb of expanded memory (EMS).
+
+Note that DOS protected-mode applications produced with Borland
+Pascal with Objects 7.0 will have similar system requirements.
+
+The real-mode integrated development environment, TURBO.EXE,
+requires MS-DOS 3.0 or later and at least 512 Kb of memory.
+
+
+3. INSTALLATION
+---------------
+IMPORTANT: Borland Pascal with Objects 7.0 is not intended to be
+installed over any previous version of Turbo Pascal.
+
+Use the INSTALL program to install Borland Pascal with Objects.
+The files on the distribution disks are all archived and INSTALL
+will de-archive them for you. INSTALL places them into
+subdirectories and automatically creates configuration files for
+the command-line compilers and the Integrated Development
+Environments (IDEs).
+
+Installation of the full product requires approximately 33 Mb of
+available disk space. (The installed product occupies about 28
+Mb. However, about 5 Mb of temporary workspace is required to
+de-archive very large ZIP files.) The actual disk space occupied
+by this product and the amount of temporary work space required
+will vary depending on your disk's cluster size. If you are using
+a disk compression utility (e.g. Stacker), you'll need
+substantially more temporary workspace to avoid a disk full error
+(the amount you'll need will vary and some systems might require
+up to 45 Mb available disk space before running INSTALL).
+
+All further references to directory paths in this README file
+assume you've used INSTALL's default directory structure.
+
+To start the installation, place the disk labeled INSTALL in
+Drive A:, and type A:INSTALL.
+
+Borland Pascal with Objects allows you to create applications for
+these target platforms:
+
+  o DOS real mode
+  o 16-bit DOS protected mode (DPMI)
+  o Windows
+
+In addition, you can use either DOS or Windows as your host
+development environment. Both the DOS-hosted IDE (BP.EXE) and the
+Windows-hosted IDE (BPW.EXE) can produce applications for all
+three platforms.
+
+You can disable target support for a particular platform by
+selecting the "Target Platforms" menu item (from the main install
+dialog box) and setting the target option to "Don't Install."
+
+When you toggle any of the three target platforms (to either
+"Install" or "Don't Install"), the Install program automatically
+modifies the settings for the product components that relate to
+that platform.
+
+Windows Installation Notes
+--------------------------
+
+The following is a list of Windows .INI files and DLLs in your
+Windows directory that Install might modify:
+
+  o WIN.INI - Temporarily modified if you install a Program
+    Manager group. The original WIN.INI is saved as WININI.OLD.
+    The next time you start Windows, the group creation program
+    runs and then restores WIN.INI to its original state.
+
+  o SYSTEM.INI - Modified if you install TDDEBUG.386. The
+    original file is saved as SYSINI.OLD. The line
+    "device=tddebug.386" is placed in the [386ENH] section, and
+    if the line "device=windebug.386" is present, it is removed.
+
+  o TDW.INI - Modified if you install Turbo Debugger for Windows.
+    The original file, if present, is saved as TDWINI.OLD.
+
+  o BPW.INI - Created if you install the Windows IDE (BPW.EXE).
+
+  o SYSTEM\BWCC.DLL - Overwritten with the BWCC version 1.3. You
+    can tell INSTALL where to place this file by selecting
+    "Directory Options", and changing the path for "BWCC.DLL".
+
+
+4. RUN-TIME LIBRARY SOURCE CODE INSTALLATION
+--------------------------------------------
+This product includes the run-time library (RTL) source code,
+including the Turbo Vision and ObjectWindows application
+frameworks. To install the RTL on your system, run the
+installation program on the RTL source code disk and read its
+accompanying README file.
+
+
+5. NEW FEATURES
+---------------
+Borland Pascal with Objects 7.0 offers many new features,
+including:
+
+  o DOS protected-mode applications - Create DOS applications
+    that run in protected mode and gain access to all available
+    extended memory (up to 16 MB).
+
+  o DOS DLLs - Produce DLLs (Dynamic-Link Libraries) for DOS
+    protected-mode applications. Using the WINAPI unit, you can
+    generate one Pascal DLL and use it in both DOS and Windows
+    programs. See \BP\EXAMPLES\CHESS for an extensive example of
+    sharing a Pascal DLL between DOS and Windows chess programs.
+    See \BP\EXAMPLES\GREP for an extensive example of sharing a
+    DLL written in C between DOS and Windows programs.
+
+  o Multi-target IDEs - Produce DOS, Windows, and protected-mode
+    DOS applications from inside the same IDE (your choice of
+    Windows-hosted BPW.EXE or DOS protected-mode hosted BP.EXE).
+
+  o ObjectBrowser - Browse units, objects, and symbols while you
+    edit your source code in either DOS or Windows. Includes full
+    cross-reference information for every identifier in your
+    program.
+
+  o Syntax highlighting - Assign unique text colors (and font
+    attributes under Windows) for symbols, reserved words,
+    identifiers, strings, etc. You can also print your syntax-
+    highlighted source code (bold, italics, etc.) from inside the
+    IDEs.
+
+  o Tools menu in the IDEs that enable you to transfer control to
+    external programs, such as GREP or Turbo Assembler. You can
+    add your own tools to the Tools menu in the DOS IDEs.
+
+  o Persistent symbols - BP and BPW save your program's symbol
+    information across sessions so you can instantly browse or
+    debug your program after exiting and then reloading the IDE.
+
+  o User-installable Help files in the DOS IDEs. Indexes from
+    multiple Help files are automatically merged so you can
+    perform keyword or incremental searches.
+
+  o Local Menus - A click of the right mouse button (or Alt+F10)
+    brings up a context-sensitive menu in all our new IDEs.
+
+  o Optimizations, run-time library and debugging enhancements
+
+    o Now automatically recognizes 386 (or later) processors
+      and uses fast 32-bit instructions for longint arithmetic
+    o Redundant pointer load suppression
+    o Faster text file I/O
+    o Faster string Pos routine
+    o Optimized sets
+    o PChar support - Allows null terminated strings
+    o Integer overflow checking {$Q+/-} - Integer, Word, etc
+    o OBJ file line number information pass-through - Allows
+      stepping through C or ASM code using the integrated
+      debugger
+
+  o Language extensions
+
+    o Open array parameters - Allows safer, more flexible
+      variable-length array parameters.
+    o New OpenString type - Allows a procedure or function
+      to accept any type of string parameter, even in the
+      {$V+} state.
+    o Constant parameters - Efficient, read-only value
+      parameters.
+    o Public/private sections - Allows public and private
+      sections of objects to be declared in any order.
+    o Typed @ operator {$T+/-} - Enforces type-checking when
+      using the address (@) operator.
+    o Inherited reserved word - Allows references to an inherited
+      method without knowing the ancestor's name.
+
+  o New standard procedures/functions
+
+    o Assigned - Returns True if a pointer is not equal to nil
+      (especially useful for procedure and function pointers).
+    o Include - Adds an item to a set.
+    o Exclude - Removes an item from a set.
+    o Break & Continue - FOR, WHILE, REPEAT loop control.
+    o Low & High - Return the low or high bounds of open array
+      parameters or of any scalar type.
+
+  o ObjectWindows enhancements
+
+    o New printer objects to simplify printing in Windows.
+    o Data-validation objects.
+
+  o WinPrn unit - Enables easy printing of text files from
+    within your Windows programs.
+
+  o Turbo Vision enhancements
+
+    o Data-validation objects.
+    o New outliner object.
+    o New methods for inserting/executing windows and dialog
+      boxes.
+    o Multi-state check boxes.
+    o Cluster items that can be disabled.
+
+  o Turbo Debugger for DOS protected-mode (TDX.EXE) - Special
+    version of Turbo Debugger used for debugging DOS
+    protected-mode applications.
+
+  o Turbo Debugger for Windows now includes XGA/SVGA support for
+    several popular chip sets, including Tseng, Ultra, ATI, 8514,
+    and others.
+
+  o Completely reorganized printed documentation with new
+    tutorial programs.
+
+  o Expanded online Help system covering all new features.
+
+See the "What's new" section of the User's Guide for more
+information regarding the new features of Borland Pascal with
+Objects 7.0.
+
+
+6. RELEASE NOTES
+----------------
+
+CHANGES TO THE DOCUMENTATION
+
+  Changes and corrections to the printed documentation are in the
+  \BP\DOC directory (MANUAL.TV, MANUAL.RW, etc.).
+
+
+DEMONSTRATION AND UTILITY PROGRAM NOTES
+
+  o DOC DEMOS - Source code to all of the examples in the
+    documentation can be found in the \BP\EXAMPLES\DOCDEMOS
+    subdirectory.
+
+  o BGIDEMO SHOWS VESA SUPPORT - See BGIDEMO.PAS in the
+    \BP\EXAMPLES\DOS\BGI directory for information on how to
+    autodetect and use the new VESA16.BGI driver. It supports all
+    standard 16-color VESA high resolution modes (800x600,
+    1024x768, 1280x1024).
+
+  o COMPILING DEMOS - There are several major new demonstration
+    programs that consist of multiple units each. Make sure
+    you're in the directory that contains the demo source code
+    before compiling. For example, to build TVCHESS.PAS, the
+    Turbo Vision chess demo, change to the \BP\EXAMPLES\CHESS
+    directory before doing a compile with either the integrated
+    development environment or the command-line compiler.
+
+  o SOURCE CODE TO UTILITY PROGRAMS - The DOS integrated
+    development environments' new syntax-highlighted printing
+    relies on a print filter utility that you can modify.
+    PRNFLTR.PAS can be found in the \BP\EXAMPLES\UTILS directory.
+
+    For an example of how to write a tool filter for the DOS IDE,
+    see GREP2MSG.PAS (the Tool menu's GREP message filter) in the
+    same directory.
+
+
+COMPATIBILITY & KNOWN PROBLEMS
+
+  DOS
+  ---
+  o TURBO VISION 1.0 SOURCE - The virtual method table (VMT)
+    format was modified to support dynamic methods (DMTs). You
+    must update any code which relies on fixed offsets into VMTs.
+
+    The Turbo Vision source code accompanying this package has
+    already been modified. If, for some reason, you want to
+    recompile the Turbo Vision source code provided in the Turbo
+    Pascal 6.0 Run-time Library Source Code product, change the
+    following constant declarations to the values specified
+    below:
+
+      OBJECTS.PAS:
+        TStream_Error = $0C;
+        TStream_Flush = $10;
+        TStream_Read  = $1C;
+        TStream_Write = $28;
+        ...
+        TCollection_Error    = $0C;
+        TCollection_SetLimit = $24;
+
+      VIEWS.PAS:
+        TView_GetPalette = $30;
+
+  Windows
+  -------
+  o USE NEW BWCC, TDW, RW, ETC. - Make sure you replace previous
+    versions of Borland development tools for Windows with the
+    versions provided in this package. These include:
+
+      o Borland Custom Controls (BWCC.DLL)
+      o Turbo Debugger for Windows (TDW.EXE)
+      o Resource Workshop (WORKSHOP.EXE)
+      o WinSpector (WINSPCTR.EXE)
+      o WinSight (WINSIGHT.EXE)
+
+    By using the programs and libraries accompanying this
+    product, you'll ensure that all versions of Borland
+    development tools for Windows are synchronized.
+
+  o WINDOWS 3.1 DEBUG KERNEL RECOMMENDED - Due to incompatibilities
+    between the Microsoft Windows 3.0 and 3.1 debug kernels, we
+    strongly recommend that you upgrade to Windows 3.1.
+
+  o NEW WINHELP - If you are using Windows 3.0, update your
+    Windows Help system (WINHELP.EXE and WINHELP.HLP) to the
+    Windows 3.1 versions which are in the \BP\BIN directory. You
+    can safely overwrite the 3.0 versions of these files with the
+    3.1 versions.
+
+  o WOBJECTS REORGANIZED - In ObjectWindows, the WObjects unit
+    has been reorganized into several smaller, more logical
+    units. To recompile any ObjectWindows program which
+    previously used only WObjects, modify the uses clause to
+    read:
+
+      uses Objects, OMemory, OWindows, ODialogs;
+
+    Streams and collections are now found in the Objects unit,
+    which is shared between DOS and Windows programs. Finally,
+    the StdDlgs and StdWnds units have been renamed to OStdDlgs
+    and OStdWnds, respectively.
+
+    Note that this change should be made to the example programs
+    included with the "World of ObjectWindows Video Training"
+    product. No other modifications to examples are required.
+
+  o BWCC.DLL - The version of BWCC.DLL in this product can cause
+    minor display problems in applications using BWCC. If a
+    non-BWCC static text control is disabled, the foreground
+    color will be the same as the background color and the text
+    will not be visible. You can easily work around this problem
+    by using the Windows Control Panel Color application to
+    change the color of Disabled Text from light gray to dark
+    gray.
+
+
+  DOS Protected Mode
+  ------------------
+  o OLDER SYSTEM UTILITIES - Some older system utilities and
+    application programs (memory managers, disk caches, RAM
+    disks, etc.) do not observe current industry standards for
+    DOS protected-mode operation. We recommend that you upgrade
+    such utilities to more recent versions.
+
+  o WINDOWS AND PROTECTED-MODE APPLICATIONS - Starting Windows in
+    enhanced mode from a DOS shell created by a DOS
+    protected-mode program (such as RTMRES.EXE or BP.EXE) is
+    unsafe. Normally Windows refuses to load in enhanced mode
+    under such conditions, but in certain situations it can hang
+    the system. Therefore, a DOS protected-mode program that
+    invokes Windows should always start Windows in Standard mode.
+
+  o 386^MAX DPMI SERVER - There are known problems with pre-6.02
+    versions of the 386^Max DPMI server. We recommend that you
+    obtain and use their latest version (or use the Borland DPMI
+    server instead).
+
+  o CTRL-C UNDER 386^MAX - If you are using 386^MAX 6.01-6.02
+    with DPMI support, the BP critical-error handlers and
+    Control-C handlers will not be effective. You can work around
+    this problem by putting the NODPMI switch into your
+    386MAX.PRO file.
+
+  o COMPAQ VDISK - If you are running on a Compaq 386 with Compaq
+    DOS v3.31, you should not use the Compaq VDISK. This version
+    of VDISK is not compatible with DOS protected-mode
+    applications.
+
+  o GLOBALNOTIFY - If you have a notification procedure set with
+    GlobalNotify in a DOS protected-mode application, the system
+    will ignore a return value of FALSE. In other words,
+    returning FALSE from a notification procedure to prevent a
+    block from being discarded will not work; the block will
+    always be discarded.
+
+  o GLOBALALLOC - The GMEM_NODISCARD flag is ignored by
+    GlobalAlloc.
+
+  o CTRL-C IN OS/2 DOS BOX - If you are running under an OS/2 DOS
+    box, you will not be able to use Control-C in your DOS
+    protected-mode applications. Control-C will cause the DOS
+    session to crash. This is a bug in OS/2's DOS protected-mode
+    support that will be fixed in a future release.
+
+  o OS/2 AND DOS PROTECTED-MODE APPLICATIONS - If you run a DOS
+    protected-mode application under OS/2 that starts another DOS
+    protected-mode application, both applications MUST use the
+    same protected-mode loader.
+
+    There is a known problem in OS/2 which will cause the DOS
+    session to crash after the second application terminates if
+    it uses a different loader. This will be fixed in a future
+    release of OS/2's DOS protected-mode support.
+
+    It is OK to start other DOS protected-mode applications that
+    have been built with Borland Pascal with Objects (or BP.EXE
+    itself) since they will be loaded by the Borland DOS
+    protected-mode loader (RTM.EXE).
+
+    Note that it is not safe to start Paradox 4.0 from a DOS
+    protected-mode application written in Borland Pascal with
+    Objects.
+
+
+  Turbo Debugger and Profiler
+  ---------------------------
+  o TDW VIDEO DLLS - If your display is corrupted when debugging
+    with Turbo Debugger for Windows (TDW.EXE), you might not be
+    using the correct video DLL. For further information on video
+    DLLs, refer to README.TD in the \BP\DOC directory.
+
+  o TDX DLL DEBUGGING - TDX.EXE does not always release the memory
+    used for DLL symbol tables when debugging DOS protected-mode
+    DLLs. Repeated stepping in and out of a DLL can eventually
+    create a low memory condition. Exit TDX and reload it if you
+    run out of memory during a debugging session.
+
+  o TPROFW LOW MEMORY - If you experience problems when profiling
+    large Windows applications, reduce the amount of debug
+    information generated by placing a {$D-} directive in some of
+    the units not being profiled and then recompile your
+    application.
+
+
+7. REDISTRIBUTABLE FILES
+------------------------
+
+BORLAND PASCAL WITH OBJECTS REDISTRIBUTABLE FILES
+
+  The following files are intended for redistribution (along with
+  your applications) under the terms of the license statement
+  accompanying this product:
+
+    RTM.EXE, RTMRES.EXE, DPMI16BI.OVL, DPMIINST.EXE,
+    DPMILOAD.EXE, BWCC.DLL
+
+  In addition, see the DPMIUSER.DOC in the \BP\DOC directory for
+  DOS protected-mode documentation that you may modify and
+  provide to users of your DOS protected-mode applications.
+
+MICROSOFT WINDOWS 3.1 REDISTRIBUTABLE FILES
+
+  This Borland language product contains everything you need to
+  develop applications to run on the most recent version of
+  Microsoft Windows, version 3.1. In some cases, you might need
+  to copy and include in your application one or more Microsoft
+  "redistributable" files from a copy of version 3.1 so that your
+  application will also run on version 3.0. Microsoft informs us
+  that you may copy the redistributable files from Microsoft
+  Windows 3.1 for this purpose. If you do so, you must comply
+  with the conditions stated in the Borland No-Nonsense License
+  Statement included in this package as if the redistributable
+  files you copy were a part of this Borland language product.
+  Microsoft's redistributable files in Windows 3.1 are:
+
+    COMMDLG.DLL, DDEML.DLL, LZEXPAND.DLL, OLECLI.DLL, OLESVR.DLL,
+    SHELL.DLL, STRESS.DLL, TOOLHELP.DLL, VER.DLL, WINHELP.EXE,
+    WINHELP.HLP, and WINMEM32.DLL.
+
+  Other Microsoft redistributable files not included in this
+  release can be found in the latest version of Microsoft
+  Windows.
+
+
+8. IMPORTANT NOTE FOR BORLAND C++ AND PARADOX 4.0 USERS
+-------------------------------------------------------
+The DPMILOAD.EXE and DPMI16BI.OVL files provided with this
+release replace the older ones that came with Paradox 4.0 and
+BC++ 3.0 or later. Delete or rename the older versions and put
+\BP\BIN on your DOS path (so Paradox and BC can use the newer
+ones).
+
+If you want to be able to run BC++ or Paradox from within BP.EXE,
+you will need to use the EXTLEAVE option for the RTM environment
+variable in order to leave enough memory available. For example,
+you can set aside 2 MB for other programs by using:
+
+  SET RTM=EXTLEAVE 2048
+
+See the printed documentation for more information regarding the
+RTM environment variable.
+
+If you plan to shell out from Paradox or BC++ to run BP.EXE,
+limit the amount of extended memory used by those programs. For
+Paradox, use its /extk command-line parameter; for BC++, use its
+/x command-line parameter. Refer to their documentation for more
+information on the use of command-line options.
+
+Here's a summary for troubleshooting purposes:
+
+  1.  Are there any copies of DPMILOAD.EXE or DPMI16BI.OVL on the
+      path prior to those provided in \BP\BIN or in the same
+      directories as BC.EXE or PARADOX.EXE? If so, replace them
+      with Borland Pascal with Objects 7.0's newer versions, or
+      remove them and set your DOS path correctly.
+
+  2.  Have you set the RTM environment variable? For example:
+
+        SET RTM=EXTLEAVE 2048
+
+  3.  If starting Paradox or BC first, have you used the required
+      command-line options?
+
+
+9. BORLAND PASCAL WITH OBJECTS AND THE OS/2 WORKPLACE SHELL
+-----------------------------------------------------------
+These are the steps for creating a program icon for BP.EXE under
+the OS/2 2.0 Workplace Shell:
+
+  1.  From the OS/2 desktop, double-click the Templates folder
+      to open it, grab the Program icon and drop it onto the
+      desktop or another folder.
+
+  2.  When the Program Settings dialog box appears, enter the
+      following:
+
+        Path and file Name: *
+                Parameters: /C C:\BP\BIN\BP.EXE
+         Working directory: C:\BP\BIN
+
+      Substitute the appropriate drive/path as needed.
+
+  3.  Click the Session thumb tab and select DOS full screen
+      or DOS window as desired.
+
+  4.  Click on the General thumb tab and enter Borland Pascal
+      with Objects for the program title.
+
+  5.  Double-click the Close button.
+
+                      *    *    *    *    *
+

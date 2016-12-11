@@ -1,0 +1,36 @@
+                            README.RW
+                            =========
+
+256-Color bitmaps and RLE4 compression
+--------------------------------------
+
+Due to problems with many 256-color display drivers for Windows
+3.x, saving a bitmap with the RLE4 compression feature of
+Resource Workshop enabled can fail to produce valid output files.
+
+Under Windows, the display driver is responsible for providing
+RLE compression when it is requested. However, because many
+display drivers do not implement this feature correctly, we
+recommend that you take the following steps when attempting to
+use RLE4 compression:
+
+1. Save the bitmap with the compression option set to "None".
+This ensures that you will have a usable copy of your bitmap if
+the remaining steps are not successful.
+
+2. Set the compression option to "RLE4".
+
+3. Select Resource|Save Resource As and save the bitmap under a
+different file name.
+
+4. Select File|Open Project and load the compressed version of
+the bitmap.
+
+If you cannot load the compressed bitmap, you must use the
+uncompressed bitmap file you saved in step 1.
+
+If your 256-color driver fails to compress the bitmap correctly,
+contact the display driver vendor.
+
+              ========= END OF README.RW =========
+

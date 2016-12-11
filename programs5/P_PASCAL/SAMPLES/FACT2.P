@@ -1,0 +1,9 @@
+{ INTEGER VERSION OF FACTORIAL: }
+function fact2(n : integer) : integer;
+begin
+ if n < 1 then
+  fact2 := 1
+   else
+    fact2 := n * fact2(pred(n))
+end;
+

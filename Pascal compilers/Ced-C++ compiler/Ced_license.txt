@@ -1,0 +1,63 @@
+C++ Editor - A text and C/C++ language code editor for Windows 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+License for use and distribution
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This license agreement covers all existing versions of UA1ZCL Tools C++ Editor 
+from now on referred below as "C++ Editor" unless otherwise specified.
+
+1. All rights not expressly granted here are reserved by UA1ZCL Tools.
+
+2. All copyrights to "C++ Editor" are exclusively owned by the author - UA1ZCL 
+Tools.
+
+3. UA1ZCL Tools grants a free license for use of this software 
+("C++ Editor"), however you are encouraged to register it with UA1ZCL Tools 
+with appropriate compensation and registration forms after 60 first days of 
+use. You are encouraged to purchase a separate copy of the software for each 
+person who uses the software personally on one or more computers, or installed 
+on a single workstation used nonsimultaneously by multiple people, but not both.
+
+4. UA1ZCL Tools does not grant permission to distribute the software for profit 
+in any form, including but not limited to, electronic information service 
+distribution, bulletin board distribution, and magnetic or optical medium 
+distribution. Non-profit distribution of the software is additionally restricted 
+in the same manner. 
+
+5. "C++ Editor" IS DISTRIBUTED "AS IS".  NO WARRANTY OF ANY KIND IS EXPRESSED 
+OR IMPLIED. YOU USE "C++ Editor" AT YOUR OWN RISK. THE AUTHOR WILL NOT BE LIABLE 
+FOR DATA LOSS, DAMAGES, LOSS OF PROFITS OR ANY OTHER KIND OF LOSS WHILE 
+USING OR MISUSING THIS SOFTWARE.
+
+6. You may not use, copy, emulate, clone, rent, lease, sell, modify, 
+decompile, disassemble, otherwise reverse engineer, or transfer the licensed 
+program, or any subset of the licensed program, except as provided for in 
+this agreement. Any such unauthorized use shall result in immediate and 
+automatic termination of this license and may result in criminal and/or 
+civil prosecution.
+
+7. The terms of this license, as well as the "C++ Editor" interface design are 
+subjects of changes in future versions of "C++ Editor".
+
+8. When you register "C++ Editor" the "Registration code" is being issued to 
+you. This "Registration code" can ONLY be used according to point 3 of this 
+agreement.
+
+9. You can only use the "Registration code" received from UA1ZCL Tools 
+or the company affiliating or partnering with UA1ZCL Tools and having 
+written permission to distribute "Registration code".
+
+10. "C++ Editor" may come packaged with additional UA1ZCL Tools products or 
+third-party products. Please review the licensing terms of these individual 
+products. 
+
+11. Installing and using "C++ Editor" signifies acceptance of these terms and 
+conditions of the license.
+
+12. If you do not agree with the terms of this license you must remove 
+"C++ Editor" files from your storage devices and cease to use the product.
+
+
+			Thank you for using "C++ Editor".
+			UA1ZCL Tools

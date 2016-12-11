@@ -1,0 +1,1746 @@
+1. Generalitati
+2. Elemente de sintaxa
+3. Structura unui program
+4. Tipuri de date predefinite
+5. Expresii
+6. Declaratii si definitii
+7. Instructiuni
+8. Subprograme Pascal
+9. Tipuri de date structurate
+10. Structuri dinamice de date
+11. Elemente de modularizare
+12. Abstractizarea datelor
+13. Programarea orientata pe obiecte
+
+Capitolul 9. Tipuri de date structurate
+
+9.1. Tipul de date tablou
+9.1.1. Conceptul de tablou
+9.1.2. Declararea tablourilor
+9.1.3. Accesarea tablourilor
+9.1.4. Tablouri bidimensionale
+9.1.5. Tablouri multidimensionale
+9.1.6. Operatii globale pe tablori
+9.1.7. Stringuri
+9.1.8. Tablouri deschise
+
+9.2. Tipul de date multime
+9.2.1. Definitia tipurilor multime
+9.2.2. Construirea multimilor si atribuirea
+9.2.3. Compararea multimilor si testul de apartenenta
+9.2.4. Operatii cu multimi
+
+9.3. Tipul de date Œnregistrare
+9.3.1. Conceptul de Œnregistrare
+9.3.2. Declararea tipului Œnregistrare
+9.3.3. Accesarea componentelor. Instructiunea With
+9.3.4. Structuri complexe
+9.3.5. Inregistrari cu variante
+9.3.6. Initializarea Œnregistrarilor
+
+9.4. Tipul de date fisier
+9.4.1. Notiunea de fisier
+9.4.2. Operatii asupra fisierelor
+9.4.3. Fisiere text
+9.4.4. Fisiere cu tip
+9.4.5. Fisiere fara tip (stream)
+9.4.6. Fisierele sistem
+
+Tipuri de date structurate
+
+Limbajele de programare dispun de modalitati de agregare a datelor care
+permit apoi tratarea globala a acestora. Este vorba Œn general de date care
+corespund nivelului de abstractizare al limbajului, deci care nu au
+corespondent direct Œn tipurile masina. Pentru ca aceste date definite de
+utilizator conform nevoilor sale concrete sa poata fi integrate Œn mecanismul
+de tipuri al limbajului, acesta din urma pune la dispozitia programatorului
+constructorii de tipuri. In acest capitol se vor discuta tipurile de date
+structurate.
+
+Spre deosebire de datele simple, care sunt atomice, indivizibile, datele
+structurate (compuse, agregate) se descompun Œn componente sau elemente,
+fiecare de un tip precizat (simplu sau structurat). O data structurata poate
+fi accesata fie ca Œntreg (global), fie pe componente. Structura unei date
+stabileste relatiile care exista Œntre componentele acesteia.
+
+Exista patru tipuri de legaturi structurale fundamentale:
+  - multime (nici o legatura Œntre componente),
+  - liniara (legatura 1:1),
+  - arbore (legatura 1:n) si
+  - graf (legatura m:n).
+
+Din punctul de vedere al uniformitatii structurale, datele structurate se
+Œmpart Œn:
+- omogene (toate componentele au acelasi tip); tipurile de date aferente sunt
+  numite tablou (engl. array), multime (engl. set) si fisier (engl. file);
+- heterogene (elementele unei date au de obicei componente diferite ca tip);
+  ele apartin tipului de date Œnregistrare (engl. record).
+
+Tablourile, fisierele si Œnregistrarile au structura liniara: exista o prima
+si o ultima componenta, iar toate celelalte au fiecare atƒt predecesor, cƒt si
+succesor. Prin urmare, un element (al tabloului), o Œnregistrare (din fisier)
+sau un cƒmp (al Œnregistrarii) se pot localiza. Un tablou este un agregat de
+elemente de acelasi tip, un element fiind localizat prin pozitia pe care o
+ocupa Œn cadrul acestuia (indicele elementului de tablou). Un fisier este
+constituit si el din elemente (Œnregistrari) de acelasi tip, localizate tot
+dupa pozitia ocupata Œn fisier. Deosebirea dintre un tablou si un fisier
+consta Œn aceea ca tabloul este memorat Œn memoria interna a calculatorului,
+iar fisierul este memorat Œn memoria externa (pe un suport magnetic sau
+magneto-optic). O Œnregistrare este un agregat care grupeaza de obicei
+elemente de tipuri diferite numite cƒmpuri si localizate prin numele lor.
+Multimea are o structura amorfa: ea contine elemente de acelasi tip, care
+Œnsa nu pot fi localizate explicit, neexistƒnd o ordine in care sa fie
+considerate elementele din ea.
+
+Pentru tipurile structurate, exista doua operatii de baza: construirea si
+selectarea componentelor. Operatia de construire a unei variabile de tip
+structurat se face dupa regulile proprii ale fiecarui limbaj. Pentru tablouri,
+fisiere si Œnregistrari exista si operatia de selectare a unei componente,
+care este realizata Œn maniere diferite.
+
+In cazul unui tablou, selectarea unui element se face pe baza unei expresii
+de indice, atasata numelui variabilei tablou. Pe baza expresiei de indice si
+a informatiilor despre tablou se efectueaza calculul adresei elementului Œn
+cauza. Expresia de indice nu se poate evalua la compilare (ea contine de
+regula identificatori), valoarea ei fiind obtinuta la executie.
+
+Pentru fisiere, selectarea unei Œnregistrari se face dupa pozitia pe care
+Œnregistrarea respectiva o ocupa Œn fisier. Din nou, pozitia se poate da
+printr-o expresie care nu se poate evalua la compilare.
+
+Domeniul de vizibilitate al numelor cƒmpurilor unei Œnregistrari Œncepe cu
+punctul lor de declarare si se termina la sfƒrsitul declaratiei tipului
+Œnregistrare. Selectarea unei componente (cƒmp) se face pe baza unei expresii
+de selectare, care contine numele cƒmpului calificat cu numele variabilei
+Œnregistrare. In acest caz, adresa relativa a cƒmpului Œn cauza se poate
+determina la compilare.
+
+Pentru fiecare tip de date T introdus printr-o declaratie de tip, Turbo Pascal
+pune la dispozitia programatorului o functie numita SizeOf, care Œntoarce
+numarul de octeti pe care se reprezinta o variabila de tipul respectiv.
+SizeOf poate se poate folosi
+  - cu parametrul T: SizeOf(T);  T este un nume de tip de date
+  - cu parametrul V: SizeOf(V);  V este o variabila de tipul T
+
+Exemplu de folosire SizeOf: daca avem constructiile
+
+  [declararea lui T]
+Var
+  V: T;
+
+begin
+  If SizeOf(V) = SizeOf(T) Then ...   {expresia este True}
+End.
+
+9.1. Tipul de date tablou
+
+9.1.1. Conceptul de tablou
+9.1.2. Declararea tablourilor
+9.1.3. Accesarea tablourilor
+9.1.4. Tablouri bidimensionale
+9.1.5. Tablouri multidimensionale
+9.1.6. Operatii globale pe tablori
+9.1.7. Stringuri
+9.1.8. Tablouri deschise
+
+Elementele definitorii ale unui tip de date tablou sunt:
+
+- numele (optional),
+- lista dimensiunilor,
+- tipul elementului de tablou,
+- domeniul pentru multimea indicilor.
+
+Numele unui tip tablou este un identificator. Exista si tipuri tablou anonime,
+care nu necesita declarare de tip, ele putƒndu-se folosi la declararea de
+variabile. Lista dimensiunilor precizeaza numarul de dimensiuni al tabloului
+respectiv (monodimensional, bidimensional, tridimensional s.a.m.d), existƒnd
+restrictii de la limbaj la limbaj privind numarul maxim de dimensiuni permis.
+Tipul elementului de tablou defineste natura acestui element, precizƒnd
+reprezentarea lui, iar domeniul pentru multimea indicilor este de obicei
+(dar nu Œntotdeauna) de tip subdomeniu, oferind informatie despre indicii
+valizi: pentru fiecare dimensiune se specifica limita inferioara 'li' si
+limita superioara 'ls', cu Ord(li) <= Ord(ls); numarul de elemente al
+dimensiunii respective este Ord(ls) - Ord(li) + 1. Numarul de elemente al
+tabloului este produsul numerelor de elemente din fiecare dimensiune.
+Lungimea de reprezentare (dimensiunea alocata) al unei variabile de tip
+tablou este egal cu produsul dintre numarul de elemente al tabloului si
+lungimea de reprezentare a elementului de tablou.
+
+Criteriile de clasificare a tablourilor sunt cel putin urmatoarele:
+- numarul de dimensiuni;
+- tipul elementului (care poate induce operatii specifice);
+- momentul alocarii;
+- posibilitatea de redimensionare.
+
+Din punctul de vedere al numarului de dimensiuni, Œntƒlnim tablouri
+monodimensionale (numite si vectori), tablouri bidimensionale (numite si
+matrici), tablouri tridimensionale, Œn general tablouri d-dimensionale.
+
+La Œnceputurile folosirii calculatoarelor, cƒnd calculele stiintifice erau
+principalul domeniu de folosire a acestora, tablourile utilizate erau
+numerice, Œn special vectori si matrici. In limbajele de programare actuale,
+tablourile pot avea o mare diversitate de tipuri de elemente: numerice,
+caractere, siruri de caractere, Œnregistrari, pointeri.
+
+Din punctul de vedere al momentului alocarii, exista doua categorii de
+tablouri: statice si dinamice. Tablourile statice se aloca la compilare (sau
+cel putin trebuie cunoscute la compilare dimensiunile). Pentru tablourile
+dinamice, dimensiunile acestora se determina abia la executie. O categorie
+speciala de tablouri dinamice o reprezinta tablourile flexibile, care se pot
+redimensiona Œn timpul executiei.
+
+Incepƒnd cu versiunea 7.0, Turbo Pascal permite si declararea tablourilor
+deschise, pentru care nu se precizeaza domeniul indicilor. De regula, aceste
+tablouri apar ca parametri formali ai subprogramelor.
+
+9.1.1. Conceptul de tablou
+
+Tablourile se folosesc pentru a grupa variabile de tipuri identice si a le
+manipula prin operatii. Daca fiecare variabila ar fi declarata individual,
+atunci fiecare operatie ar trebui specificata separat, fapt care ar duce la
+programe lungi.
+
+Un tablou ne permite sa grupam variabilele de acelasi tip sub un singur nume
+si sa putem referi fiecare variabila (numita element al tabloului) asociind
+numelui un indice (care o va identifica unic). Prin aceasta se reduce
+considerabil dimensiunea unui program care efectueaza operatii similare
+asupra mai multor elemente din tablou, folosind indicii si instructiunile de
+ciclare.
+
+9.1.2. Declararea tablourilor
+
+Incepƒnd cu Algol68 si Pascal, tipul tablou este integrat Œn sistemul de
+tipuri al limbajului. Intre altele, sistemul de tipuri verifica concordanta
+tipurilor pentru parametrii formali si actuali de tip tablou la apelarea de
+subprograme, motiv pentru care este aproape impusa folosirea de tipuri
+tablou cu nume. De altfel, limbajul Pascal nu permite specificarea unui
+parametru formal de tip tablou ca tip anonim.
+
+In Pascal, declaratia de tip tablou are sintaxa:
+
+  Type tip_tablou = Array[tip_index] Of tip_element;
+
+unde:
+- Array si Of sunt cuvinte rezervate
+- tip_element, numit tipul componentei, poate fi orice tip recunoscut de
+  sistemul de tipuri
+- tip_index este o lista de tipuri de indici; numarul elementelor din aceasta
+  lista denota numarul de dimensiuni al tabloului, care nu este limitat.
+  Tipurile indicilor trebuie sa fie ordinale (cu exceptia lui Longint si a
+  subdomeniilor de Longint). Daca tipul componentei este tot un tip tablou,
+  rezultatul acestei declaratii de tip poate fi tratat fie ca un tablou de
+  tablouri, fie ca un tablou monodimensional. De exemplu, a doua declaratie:
+
+  type D = 20..30;
+  type T = array[boolean] of array[1..10] of array[D] of real;
+
+este identica (structural) cu declaratia:
+
+  type T1 = array[boolean, 1..10, D] of real;
+
+iar referiri corecte de elemente sunt:
+
+  var
+    A: T;
+   A1: T1;
+
+  A[false] si A1[false] sunt de tip array[1..10] of array[D]of real;
+  A[false,5] si A1[false,5] sunt de tip array[D] of real;
+  A[false][5] si A1[false][5] sunt de tip array[D] of real;
+  A[false,5,30] si A1[false,5,30] sunt de tip real;
+  A[false][5][30] si A1[false][5]30] sunt de tip real;
+
+Declararea de variabile de tip tablou nu trebuie neaparat sa contina numele
+unui tip de date tablou. Constructorul de tip se poate include Œn declaratia
+de variabila. Astfel,
+
+  Var
+    V: Array[1..10] Of Integer;
+
+este o declaratie valida de variabila. In aceasta declaratie de variabila,
+numele tipului tablou este referit chiar prin constructorul de tip, adica
+
+  Array[1..10] Of Integer;
+
+In acest caz se spune ca folosim un tip de data anonim, adica fara nume
+(el n-are numele declarat Œntr-o declaratie de tip de date). Nu recomandam o
+asemenea practica, deoarece sistemul de tipuri al limbajului nu lucreaza asa
+cum ne-am astepta noi cu tipurile anonime. Deci sa nu uitam o noua regula:
+
+  Nu folositi tipuri de date anonime.
+
+Numarul de elemente al unui tablou este dat de produsul numarului de elemente
+Œn fiecare dimensiune.
+
+9.1.3. Accesarea tablourilor
+
+Accesarea (referirea) unui element de tablou se face prin precizarea
+numelui tabloului urmata de o expresie de indice. Expresia de indice contine,
+Œn paranteze drepte valorile efective ale indicilor tabloului (ce trebuie,
+de obicei, sa concorde ca numar si tip cu declararea acestuia). Exista Œn
+general doua modalitati de referire: punctuala si de subtablouri. Ambele
+modalitati se bazeaza pe calculul de adresa.
+
+Calculul de adresa realizeaza, pentru o expresie de indice data, determinarea
+locatiei de memorie (a adresei) ce contine elementul de tabloul referit.
+Deoarece memoria calculatorului poate fi considerata ca tablou monodimensional
+de locatii adresabile, problema calculului de adresa se reduce la determinarea,
+pe baza informatiei asupra indicilor si asupra tabloului Œn general, a unui
+numar ce reprezinta adresa cautata. Pentru fiecare tablou declarat, se
+memoreaza Œn descriptorul de tablou urmatoarele informatii:
+
+- nume = numele tabloului;
+- tip  = tipul elementului de tablou;
+- lung = lungimea reprezentarii unui element de tablou (Œn unitati de alocare);
+- adrs = adresa de unde Œncepe memorarea tabloului;
+- nrd  = numarul de dimensiuni al tabloului;
+- pentru fiecare dimensiune i, limitele lii si lsi (1(i(nrd)
+
+Se presupune ca tabloului i se aloca locatii consecutive de memorie, deci el
+ocupa o zona compacta. Fiecare element de tablou va ocupa, Œn zona respectiva,
+o locatie unic determinata. Exista doua modalitati de memorare a unui tablou:
+pe linii (cƒnd ultimul indice variaza cel mai repede, engl. row major order),
+si pe coloane (cƒnd primul indice variaza cel mai repede, engl. column major
+order). Notƒnd cu loc o functie ce Œntoarce adresa locatiei de memorie a unei
+referinte de tablou, pentru doua tablouri A(li:ls) si B(li1:ls1,li2:ls2),
+calculele de adresa se descriu astfel:
+
+  loc(A(i)) =  adrs + (i - li) * lung   SAU
+  loc(A(i)) =  adrs - li * lung + i * lung
+
+Memorare pe linii:
+  toate elementele liniilor anterioare liniei i plus primele j-1 elemente ale
+  liniei i;
+
+  loc(B(i,j)) =  adrs + (i - li1) * (ls2  - li2 +1) * lung +
+                        (j - li2) * lung  sau
+
+  loc(B(i,j)) =  adrs - li1 * (ls2  - li2  + 1) * lung -
+                        li2  * lung + j * lung + i * (ls2  - li2  + 1) * lung
+
+Memorare pe coloane:
+  toate elementele coloanelor anterioare coloanei j plus primele i-1
+  elemente ale coloanei j;
+
+  loc(B(i,j)) = adrs + (j - li2) * (ls1 - li1 +1) * lung +
+                       (i - li1) * lung  sau
+
+  loc(B(i,j)) = adrs - li2 * (ls1 - li1 +1) * lung - li1 * lung +
+                       i * lung + j * (ls1 - li1 + 1) * lung
+
+In expresiile de mai sus, ultimele relatii corespund unor calcule optime de
+adresa, prin gruparea la Œnceput a termenilor constanti (termenii ce nu
+contin indicii i si j ca factori).
+
+Sintaxa expresiei de indice Œn Pascal permite folosirea indicilor de tip
+enumerare. Folosind tipul enumerare Luni,  pe baza declaratiilor:
+
+ Type
+  Luni = (Ian, Feb, Mar, Apr, Mai, Iun, Iul, Aug, Sep, Oct, Nov, Dec);
+ Var
+  temp : array[Luni] of real;    {contine temperaturile lunare }
+  i    : luni;
+ Const
+  x: real = 0.0;                 { suma temperaturilor lunare }
+
+instructiunea de ciclare:
+
+  For i := Ian To Dec Do x := x + temp[i];
+
+care calculeaza Œn x suma temperaturilor lunare este valida. Sa remarcam aici
+ca declaratia de variabila pentru temp foloseste un tip anonim.
+
+9.1.4. Tablouri bidimensionale
+
+Tablourile bidimensionale (numite si matrici Œn limbajul curent) au linii si
+coloane. Am vazut Œn paragraful precedent cum se memoreaza aceste tablouri.
+Dam aici un exemplu care foloseste doua modalitati diferite (si structural
+echivalente) de declarare a tablourilor bidimensionale.
+
+Type
+  DomeniuLinii = 1..25;
+  DomeniuColoane = 1..80;
+  Element = Record
+    Car: Char;
+    Atr: Byte
+  End;
+  TabEcran1 = Array[DomeniuLinii, DomeniuColoane] Of Element;
+  TabEcran2 = Array[DomeniuLinii] Of Array[DomeniuColoane] Of
+              Element;
+
+Var
+  EcranColor1: TabEcran1 Absolute $B800:0000;
+  EcranMono1: TabEcran1 Absolute $B000:0000;
+  EcranColor2: TabEcran2 Absolute $B800:0000;
+  EcranMono2: TabEcran2 Absolute $B000:0000;
+
+Begin
+  EcranColor1[12, 33].Car := 'A';
+  Write(EcranColor2[12][33].Car);
+  EcranMono2[11][25].Car := 'B';
+  Write(EcranMono1[11,25].Car);
+End.
+
+Prima modalitate de declarare permite accesarea
+  - punctuala: EcranColor1[12, 33]
+  - globala: EcranColor1
+
+A doua modalitate de declarare a tabloului permite accesarea
+  - punctuala: EcranColor2[12, 33] sau EcranColor2[12][33]
+  - a unei linii: EcranColor2[12] (care va fi de tipul Array[DomeniuColoane]
+    Of Element)
+  - globala: EcranColor2
+
+9.1.5. Tablouri multidimensionale
+
+Au mai mult de doua dimensiuni. Limbajul Pascal nu impune o regula privind
+numarul maxim de dimensiuni al unui tablou. Trebuie avuta Œn vedere doar
+restrictia ca spatiul alocat unei variabile sa nu depaseasca dimensiunea
+segmentului de date sau de stiva.
+
+9.1.6. Operatii globale pe tablori
+
+Operatiile definite pe tipul tablou sunt atribuirea si testul de egalitate.
+De asemenea, variabilele de tip tablou se pot transmite ca parametri Œn
+subprograme.
+
+9.1.7. Stringuri
+
+Amintim ca Œn Standard Pascal apare (Œntre primele) tipul sir de caractere
+Œmpachetat care este declarat prin:
+
+  packed array[li..lf] of Char;            li ó lf
+
+Pentru compatibilitate cu Standard Pascal, Turbo Pascal accepta si astfel de
+declaratii, Œnsa packed nu are nici un efect. La vremea respectiva (cƒnd a
+aparut standardul Pascal), setul de caractere folosit era setul ASCII (un
+caracter reprezentat pe 7 biti).
+
+Un String de lungime N caractere (N > 1) este considerat Œn Pascal standard
+ca fiind constanta de tipul:
+
+  packed array[1..N] of Char;
+
+Variabilele de tipul packed array[1..N] of Char se numesc variabile string
+de lungime N.
+
+In Turbo Pascal este definit tipul String, cu lungime dinamica, Œn doua forme:
+
+Type
+   String = Array[0..255] Of Char;
+   String[N] = Array[0..N] Of Char;
+
+Operatiile si subprogramele de lucru cu variabile String au fost discutate
+Œn cap. 5 (Expresii).
+
+9.1.8. Tablouri deschise
+
+In Turbo (Borland) Pascal 7.0 se pot folosi si tablouri deschise (engl. open
+arrays) pe post de parametri formali Œn declaratiile de subprograme.
+Declararea unui tablou deschis nu se poate face cu sintaxa:
+
+  Type tip_tablou = Array Of tip-element;   { declaratie incorecta }
+
+ci doar ca tip anonim, Œntre parametrii unei proceduri sau functii. Pentru
+tablourile deschise, Turbo Pascal are doua functii standard, numite Low si
+High (parametrul lor este numele tabloului deschis) care Œntorc limita
+inferioara, respectiv limita superioara a tabloului deschis.
+
+Functia Low(A) Œntoarce cea mai mica valoare a domeniului argumentului A.
+In cazul general, A poate sa fie identificator de tip sau nume de variabila
+de tip ordinal, tablou, sir de caractere si tablou deschis. Valorile Œntoarse
+sunt precizate Œn tabelul urmator:
+
+ -----------------------------------------------------------------------
+ Tipul lui A                 Ce Œntoarce Low(A)
+ -----------------------------------------------------------------------
+ Ordinal                     cea mai mica valoare a domeniului tipului
+ Array                       cea mai mica valoare a domeniului indicilor
+                             tabloului
+ String                      0
+ Open array                  0
+ parametru String            0
+ -----------------------------------------------------------------------
+
+Functia High(A) Œntoarce cea mai mare valoare a domeniului argumentului A,
+care are semantica de la Low. Valorile Œntoarse sunt precizate Œn tabelul
+urmator:
+
+ ------------------------------------------------------------------------
+ Tipul lui A                 Ce Œntoarce High(A)
+ ------------------------------------------------------------------------
+ Ordinal                     cea mai mare valoare a domeniului tipului
+ Array                       cea mai mare valoare a domeniului indicilor
+                             tabloului
+ String                      dimensiunea declarata a sirului de caractere
+ Open array                  numarul de elemente din tablou - 1
+ parametru String            numarul de caractere din sir - 1
+ ------------------------------------------------------------------------
+
+Exemplul urmator prezinta folosirea tabloului deschis la determinarea
+elementului minim dintr-un tablou de numere. Functia Min este generala, ea
+acceptƒnd orice tablou de numere reale ca parametru, tocmai prin folosirea
+tabloului deschis. In corpul ei, determinarea primului si ultimului indice
+se face cu ajutorul functiilor Low si High descrise anterior.
+
+Program TabDesc;
+
+ Function Min(var A: array of Real): Real;
+   {A este parametru tablou deschis }
+   Var
+     I: integer;
+     M: real;
+   begin
+     M := 10e20;
+     for I := Low(A) to High(A) do
+       if A[I] < M then M := A[I];
+     Min := M
+   end;
+
+ const   { constante tablou cu tip }
+
+   CA1: array[5..20] of real =(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+   CA2: array[-5..7] of real =(-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7);
+
+ Begin
+   WriteLn(Min(CA1):10:2);
+   WriteLn(Min(CA2):10:2);
+   WriteLn
+ End. { TabDesc }
+
+Pentru un parametru tablou cu declaratia
+
+  T : Array[li..lf] of Real,
+
+care este argument de apel al functiei Min din exemplul anterior, la executia
+acesteia parametrul formal A va fi considerat de tipul:
+
+  A : array[0..nr-1] of Real;
+
+unde nr este numarul de elemente al tabloului parametru actual, adica
+lf - li + 1. Prin urmare, are loc o translatie a domeniului indicilor, de la
+li..lf la 0..nr-1, limitele efective (de lucru) ale indicelui fiind Œntoarse
+de functiile Low si High: A[0] (adica A[Low(A)]) corespunde lui T[li], A[1]
+lui T[li+1], ... A[nr-1] (adica A[High(A)]) corespunde lui T[lf].
+
+9.2. Tipul de date multime
+
+9.2.1. Definitia tipurilor multime
+9.2.2. Construirea multimilor si atribuirea
+9.2.3. Compararea multimilor si testul de apartenenta
+9.2.4. Operatii cu multimi
+
+9.2.1. Definitia tipurilor multime
+
+Limbajul Pascal este unul din primele limbaje care a introdus tipul multime.
+Fiind dat un tip ordinal B, numit tip de baza, tipul multime T se declara
+folosind sintaxa:
+
+  Type tip_multime = Set Of tip_de_baza;
+
+Domeniul tipului tip_multime T este multimea partilor (submultimilor)
+domeniului tipului tip_de_baza. Astfel, daca tipul B are domeniul {a, b, c},
+atunci domeniul lui T va fi
+
+  {{}, {a}, {b}, {c}, {a, b}, {a, c}, {b, c}, {a, b, c}}.
+
+Tipul T se considera structurat deoarece fiecare element al sau contine
+elemente (posibil nici unul) din domeniul tipului de baza B.
+
+Implementarea tipului multime se face pe siruri de biti. Daca domeniul tipului
+de baza B are n elemente, atunci domeniul tipului multime T va avea 2^n
+(2 la puterea n) elemente, deci o variabila de tip T se poate reprezinta pe
+un sir de n biti. Bitul de pe pozitia i din sirul respectiv (1óión) va fi
+setat pe 1 daca al i-lea element din domeniul lui B (ordinal) apartine
+multimii si 0 Œn caz contrar. Operatiile tipului multime se implementeaza
+eficient prin operatii pe siruri de biti. In cazul limbajului Pascal, n = 256.
+
+Multimile reprezinta un instrument matematic elegant. Prezenta lor Œn
+limbajele de programare Œmbogateste expresivitatea acestuia. Din pacate,
+limitarile impuse asupra domeniului tipului de baza (numar de elemente si tip)
+restrƒng utilizarea multimilor. In astfel de situatii, utilizatorul poate
+sa-si defineasca propriile sale tipuri multime.
+
+9.2.2. Construirea multimilor si atribuirea
+
+Inainte de a opera cu variabile de tip multime, ele trebuie construite.
+Regulile de construire a variabilelor de tip multime Œn Pascal sunt
+urmatoarele:
+- o multime Pascal este formata dintr-o lista de elemente separate prin
+  virgula si incluse Œn paranteze drepte;
+- multimea vida se marcheaza prin [];
+- toate elementele din lista trebuie sa fie de acelasi tip, tipul de baza al
+  multimii
+- toate elementele sunt diferite
+- Œn loc sa se enumere toate elementele dintr-un subdomeniu, se poate preciza
+  subdomeniul pe post de element Œn lista (primul si ultimul element cu ..
+  Œntre ele)
+
+Ordinea Œn care se executa operatiile:
+- declararea tipului multime T
+- declararea variabilei V de tipul T
+- construirea (initializarea) variabilei V
+
+Exemple:
+
+ Type
+  Luni = (Ian, Feb, Mar, Apr, Mai, Iun, Iul, Aug, Sep, Oct, Nov, Dec);
+  Anotimp = Set Of Luni;
+  Caractere = Set Of Char;
+ Var
+  Iarna, Primavara, Vara, Toamna: Anotimp;
+  Litere, Cifre: Caractere;
+
+ Begin
+   Iarna := [Dec, Ian, Feb, Mar];
+   Vara := [];
+   Toamna := [Aug, Sep, Oct, Nov];
+   Primavara := [Apr, Mai, Iun, Iul];
+   If Vara = [] Then WriteLn('Anul asta n-a fost vara!');
+   Litere := ['A'..'Z', 'a'..'z'];
+   Cifre := ['0'..'9']
+ End.
+
+9.2.3. Compararea multimilor si testul de apartenenta
+
+Asa cum am discutat Œn cap. 5, Pascal are cinci operatori relationali care
+opereaza cu expresii de tipuri multime ca operanzi si care sunt prezentati Œn
+tabelul urmator. Primii patru dintre ei cer ca ambii operanzi sa fie tipuri
+multime compatibile, iar ultimul are un operand de tipul B si altul de tipul
+T unde T este Set Of B.
+
+----------------------------------------------------------------------------
+Operator  Descriere                 Exemplu de folosire           Rezultat
+----------------------------------------------------------------------------
+=         egalitate de multimi      [Ian, Feb] = [ ]              False
+<>        diferit                   [Ian, Mar] <> [Apr]           True
+<=        incluziunea A <= B        [Ian, Mar] <= [Ian, Aug, Mar] True
+          inseamna ca orice element [Ian, Mar] <= [Feb]           False
+          din A apartine si lui B
+>=        include: A >= B Œnseamna  [Ian, Aug, Mar] >= [Ian, Apr] False
+          ca orice element din B    [Ian, Mar] >= [Mar]           True
+          apartine si lui A
+in        x in A Œnseamna x         Ian in [Aug, Feb]             False
+          apartine lui A            Mar in [Ian, Aug, Mar]        True
+          x trebuie sa fie din      'P' in ['A'..'Z']             True
+          tipul de baza
+----------------------------------------------------------------------------
+
+9.2.4. Operatii cu multimi
+
+Operatiile proprii tipului multime sunt cele cunoscute: reuniunea,
+intersectia, diferenta (operatii binare cu rezultat multimi), incluziunea,
+testul de egalitate (operatii binare cu rezultat boolean), apartenenta,
+atribuirea. Ele au fost discutate Œn capitolul 5 (Expresii).
+
+Incepƒnd cu versiunea 7.0, Turbo Pascal poseda doua noi proceduri, Include
+si Exclude. Procedura Include, declarata prin
+
+  procedure Include(var S: set of T; I:T);
+
+are ca efect adaugarea elementului I la multimea S, iar procedura Exclude, cu
+aceeasi signatura, are ca efect eliminarea elementului I din multimea S.
+
+9.3. Tipul de date Œnregistrare
+9.3.1. Conceptul de Œnregistrare
+9.3.2. Declararea tipului Œnregistrare
+9.3.3. Accesarea componentelor. Instructiunea With
+9.3.4. Structuri complexe
+9.3.5. Inregistrari cu variante
+9.3.6. Initializarea Œnregistrarilor
+
+9.3.1. Conceptul de Œnregistrare
+
+Elementele definitorii ale unei Œnregistrari sunt:
+
+- numele tipului Œnregistrare (optional),
+- numarul de cƒmpuri,
+- numele si tipul fiecarui cƒmp.
+
+Inregistrarea este o modalitate de agregare (punere Œmpreuna a unor date de
+tipuri (Œn general) diferite. Numele tipului de data Œnregistrare este un
+identificator. Numarul de cƒmpuri este dedus din lista de declarare a
+cƒmpurilor. Cƒmpurile unei Œnregistrari se memoreaza Œn zone adiacente de
+memorie. Informatia de tip a fiecarui cƒmp serveste la stabilirea lungimii de
+reprezentare a acestuia, iar numele cƒmpului se foloseste pentru a accesa
+valoarea lui (prin operatia de accesare). De obicei, sunt accesibile atƒt
+data compusa (Œnregistrarea), cƒt si componentele (cƒmpurile) acesteia.
+
+Exista doua clase de Œnregistrari: cu structura fixa si cu variante.
+Inregistrarile cu structura fixa au o singura definitie, iar Œnregistrarile
+cu variante au o parte fixa, un discriminant si mai multe definitii de
+variante.
+
+Lungimea unei Œnregistrari este suma lungimilor cƒmpurilor componente. Se
+poate folosi functia SizeOf cu parametru tipul de data Œnregistrare sau
+variabila de tip Œnregistrare.
+
+Elementele de discutie privitoare la tipul de date Œnregistrare sunt
+urmatoarele:
+- maniera de declarare a tipurilor Œnregistrare;
+- maniera de accesare a cƒmpurilor unei Œnregistrari;
+- definirea Œnregistrarilor cu structura variabila;
+- initializarea unei variabile Œnregistrare;
+- operatiile permise pe variabile de tip Œnregistrare.
+
+9.3.2. Declararea tipului Œnregistrare
+
+Odata cu Pascal si Algol68, prin mecanismele de tipizare se pot declara
+tipuri de date Œnregistrare. In Pascal, de exemplu, tipurile de date
+DataC (data calendaristica), Timp si ElementEcran se declara astfel:
+
+  Type
+    DataC = Record
+       zi : 1..31;
+       lu : 1..12;
+       an : 1800..2000;
+    End;
+    Timp = Record
+      ora: 0..23;
+      min: 0..59;
+      sec: 0..59
+    End;
+    Element = Record  { definitia unui element pe ecranul text }
+      Car: Char;
+      Atr: Byte
+    End;
+
+Se observa ca aceste tipuri de date au componente (cƒmpuri) diferite ca tip
+de date. Odata declarate aceste tipuri, se pot declara variabile de tipurile
+respective:
+
+Var
+  DataNasterii, DataCasatoriei: DataC;
+  OraDeIncepere: Timp;
+  Ecran: Array[1..25] Of Array[1..80] Of ElementEcran;
+
+Doar Œn momentul declaratiei de variabila se poate stabili dimensiunea de
+alocare pentru variabilele de tipurile respective.
+
+9.3.3. Accesarea componentelor. Instructiunea With
+
+Referirea componentelor sau selectarea (accesarea) cƒmpurilor unei
+Œnregistrari se face Œn Pascal Œn doua moduri
+- folosind calificarea cu punct
+- folosind instructiunea With
+
+Calificarea cu punct permite accesarea sau modificarea valorii unui cƒmp
+dintr-o variabila Œnregistrare. Ea se face Œn forma:
+
+  nume_variabila.nume_cƒmp
+
+In Pascal, daca se acceseaza succesiv mai multe cƒmpuri ale aceleiasi
+variabile de tip Œnregistrare, se poate folosi instructiunea With (vezi 9.3.3
+si 7.7).
+
+Variabilele de tip Œnregistrare se pot accesa si global, prin numele lor.
+Este permisa de asemenea operatia de atribuire, cƒnd variabilele implicate
+sunt de acelasi tip:
+
+Var
+  Data1, Data2: DataC;
+
+----------------------------------------------
+Atribuire globala         Echivalenta cu
+----------------------------------------------
+Data1 := Data2            Data1.zi := Data2.zi
+                          Data1.lu := Data2.lu
+                          Data1.an := Data2.an
+----------------------------------------------
+
+
+9.3.4. Structuri complexe
+
+Cƒmpurile unei Œnregistrari pot fi de orice tip recunoscut de sistemul de
+tipuri, Œn particular si tip Œnregistrare.
+
+  Type
+    DataC = Record
+       zi : 1..31;
+       lu : 1..12;
+       an : 1800..2000;
+    End;
+    A40 = Array[1..40] Of Char;
+    TipSex = (masc,fem);
+    StareCiv = (necas,casat,vaduv,divortat);
+    Persoana = Record
+      Nume : String[30];
+      NrId   : Longint;
+      Adr    : A40;
+      Sex    : TipSex;
+      StareC : StareCiv;
+      DataN  : Datac;
+      inalt  : Real
+    End;
+
+Tipurile cƒmpurilor sunt predefinite (String, LongInt, Real Œn Turbo Pascal),
+simple utilizator (TipSex si StareCiv), respectiv structurate (A40 si DataC).
+Prin urmare, cu astfel de notatii de tip se pot declara tipuri oricƒt de
+complexe. Daca se declara o variabila de tip Persoana:
+
+Var p : Persoana;
+
+ea va putea fi tratata fie global (atribuire, test de egalitate), fie selectiv
+(p.Inalt va semnifica cƒmpul inalt din Œnregistrarea p). Tabelul urmator
+prezinta exemple de accesare (cu punct si cu With).
+
+                             With P Do Begin
+P.Nume   := 'IONESCU';         Nume   := 'IONESCU';
+P.Sex    := masc;              Sex    := masc;
+P.StareC := casat;             StareC := casat;
+P.Inalt  := 1.80;              Inalt  := 1.80;
+P.DataN.zi := 23;              DataN.zi := 23
+                             End
+
+Alte exemple de structuri complexe
+- Œnregistrari cu cƒmpuri tablou
+- tablouri de Œnregistrari
+
+Const
+  Max_Persoane = 100;
+  Max_Discipline = 20;
+Type
+  Personal: Array[1..Max_Persoane] Of Persoana;
+  Medie = Record      {facem economie: Medie: Real ar ocupa 6 byte }
+    Parte_Int: Byte;  {SizeOf(Medie) = 2}
+    Parte_Zec: Byte
+  End; { Medie }
+  Medii = Array[1..Max_Discipline] Of Medie;
+  Trimestru = 1..3;
+  Elev = Record
+    Nume: String[40];
+    DataN: DataC;  {declarat Œn exemplul de mai sus}
+    SitScolara: Array[Trimestru] Of Medii;
+  End; { Elev }
+
+9.3.5. Inregistrari cu variante
+
+Inregistrarile date ca exemplu pƒna acum au o structura fixa. O Œnregistrare
+cu structura variabila contine diferite definitii alternative ale unora
+dintre componentele sale. De obicei, o Œnregistrare cu structura variabila
+are o parte fixa, comuna tuturor alternativelor sale, si o parte variabila,
+a carei structura trebuie definita explicit Œn fiecare alternativa. Partea
+variabila este identificata prin valoarea pe care o poate lua un cƒmp special
+al Œnregistrarii numit 'discriminant'. Valori distincte ale discriminantului
+vor produce alternative distincte. Modul Œn care se precizeaza alternativele
+partii variabile este de obicei de tip case. In Pascal, sintaxa partii
+variabile este:
+
+ <parte variabila record> ::=
+    case <camp discriminant> <identificator de tip> of <varianta>
+ <camp discriminant> ::= [<identificator>:]
+ <varianta> ::= [<lista etichete case>:(<lista campuri>)]
+
+cu precizarea general valabila ca partea fixa a Œnregistrarii trebuie
+declarata Œnaintea partii variabile.
+
+Inregistrarile cu variante respecta principiul de reprezentare a celor cu
+structura fixa. Lungimea de reprezentare a unei variabile de tip Œnregistrare
+cu variante este de obicei lungimea partii fixe plus maximul lungimii
+variantelor. Partea fixa contine inclusiv cƒmpul discriminant. Prin urmare,
+Œntr-o Œnregistrare cu variante, primele cƒmpuri ale variantelor au aceeasi
+adresa relativa la Œnceputul Œnregistrarii.
+
+De exemplu, Œn Pascal se poate defini o Œnregistrare cu variante astfel:
+
+  Type
+   CuloareOchi = (caprui,albastru,negru,verde);
+   Sex = (Masc,Fem);
+   Persoana = record
+     Nume   : string[30];
+     NrId   : longint;
+     Adr    : array[1..40] of char;
+     Case s:Sex of            { discriminant }
+       Masc : (Inalt: Real; DataN: DataC);
+       Fem  : (CO: CuloareOchi; Bust:Real)
+     End;
+
+Partea fixa a Œnregistrarii Persoana contine cƒmpurile Nume, NrId, Adr si S,
+iar pentru partea variabila exista doua alternative. Daca valoarea
+discriminantului S este Masc, atunci vor putea fi accesate cƒmpurile Inalt si
+DataN, iar daca S are valoarea Fem cƒmpurile valide sunt CO si Bust.
+
+Un alt exemplu:
+
+  Type
+    ambele = (by,ch);
+    bc = record
+      case t:ambele of
+        by : (b:byte);
+        ch : (c:char);
+      end;
+  var a1, a2, a3 : bc;
+
+Prin urmare variabilele a1, a2, a3 vor contine fie cƒmpuri de tip byte, fie
+cƒmpuri de tip caracter. Sunt permise urmatoarele instructiuni:
+
+  a1.t := ch;    {discriminantul ch: accesibil a1.c }
+  a1.c := 'a';
+  a1.t := by;    {discriminantul by: accesibil a1.b }
+  writeln(a1.c); { care nu este initializat }
+
+Accesarea variantei a1.c cu valoarea discriminantului a1.t=by reprezinta o
+utilizare inconsistenta a variabilei a1. Acest lucru nu ar trebui sa fie
+permis, deoarece cƒmpul discriminant Œsi pierde astfel "puterea de decizie"
+Œn ceea ce priveste varianta aleasa, rolul sau devenind practic Œn acest caz
+unul pur decorativ.
+
+Folosirea sistemului de tipuri pentru a realiza verificarile de consistenta
+necesare nu este posibila Œn cazul tipizarii statice, specifica limbajului
+Pascal.
+
+9.3.6. Initializarea Œnregistrarilor
+
+Inregistrarile se pot initializa folosind constante cu tip. Declararea unei
+constante de tip Œnregistrare specifica numele (identificatorul) si valoarea
+asociata pentru fiecare cƒmp. Cƒmpurile trebuie specificate Œn ordinea
+declararii lor Œn tipul Œnregistrare..
+
+Nu se pot initializa Œnregistrari ale caror tipuri contin cƒmpuri de tip file.
+
+type
+  Punct = record
+    X, Y: Real;
+  end;
+  Vector = array[0..1] of Punct;
+  Luna = (Ian,Feb,Mar,Apr,Mai,Iun,Iul,Aug,Sep,Oct,Nov,Dec);
+  DataC = Record
+       zi : 1..31;
+       lu : Luna;
+       an : 1800..2000;
+    End;
+const
+  Origine: Punct = (X: 0.0; Y: 0.0);
+  Linie: Vector = ((X: -3.1; Y: 1.5), (X: 5.8; Y: 3.0));
+  ZiuaMea: DataC = (zi: 2; lu: Dec; an: 1960);
+
+9.4. Tipul de date fisier
+
+9.4.1. Notiunea de fisier
+9.4.2. Operatii asupra fisierelor
+9.4.3. Fisiere text
+9.4.4. Fisiere record
+9.4.5. Fisiere fara tip (stream)
+9.4.6. Fisierele sistem
+
+9.4.1. Notiunea de fisier
+
+Programele realizate pƒna acum au folosit date de intrare furnizate de la
+tastatura si au prezentat rezultatele pe ecran. In cazul mai general, un
+program P va prelua date dintr-un fisier de intrare si va furniza rezultate
+Œntr-un fisier de iesire. Spunem Œn acest caz ca P efectueaza operatii de
+intrare/iesire (I/E).
+
+Implicit, un program Pascal considera ca preia datele de intrare de la
+fisierul standard de intrare al sistemului de operare si ca scrie rezultatele
+Œn fisierul standard de iesire al sistemului. Uzual, fisierul standard de
+intrare este tastatura sau un dispozitiv special de introducere de date, pe
+cƒnd fisierul standard de iesire este ecranul terminalului sau imprimanta. In
+9.4.6. vom discuta despre aceste fisiere sistem.
+
+Fisierul este o colectie de informatii. Aceste informatii se pot structura Œn
+Pascal sub forma de text, sub forma de date atomice (de tipuri simple,
+predefinite) sau sub forma de Œnregistrari (record). Turbo Pascal poseda si
+fisiere cu structura nedefinita, numite fisiere fara tip. Fisierul se poate
+considera din doua puncte de vedere
+- fizic sau extern programului (respectƒnd conventiile sistemului de operare):
+  specificator de fisier
+- logic sau intern programului care-l foloseste: identificator logic de fisier.
+
+Din punct de vedere fizic, un fisier este identificat de
+- perifericul pe care este memorat
+- directorul (calea) Œn care se afla
+- numele sau (nume.tip)
+iar din punct de vedere logic, un fisier este manipulat Œntr-un program
+printr-o variabila de tip fisier. In Pascal tipul fisierului se construieste
+specific.
+
+9.4.2. Operatii asupra fisierelor
+
+Fisierele sunt folosite pentru a pastra (memora) informatie pe suport extern.
+Aceste informatii au un caracter persistent, adica ele exista si dupa ce
+programul care le-a creat Œsi termina executia. Spre exemplu, programele
+sursa Borland (Turbo) Pascal se gasesc Œn fisiere text, care sunt create cu
+ajutorul unui editor de texte. Odata introdus textul sursa, acesta poate fi
+modificat dupa dorinta programatorului, folosind un editor similar.
+
+Operatiile efectuate asupra fisierelor Œntr-un program Pascal sunt:
+- declararea
+- deschiderea
+- Œnchiderea
+- pozitionarea
+- citirea
+- scrierea
+
+Ordinea Œn care aceste operatii se efectueaza este de obicei urmatoarea:
+- declararea fisierului
+- deschiderea fisierului, care Œnseamna si o pozitionare implicita
+- citirea sau scrierea de informatie din/Œn fisier, precedate sau nu de
+  operatii de pozitionare
+- Œnchiderea fisierului
+
+Fisierele servesc la transferul de informatie dintre memoria interna si
+suportul extern (periferice). Operatiile de transfer sunt citirea (transferul
+de informatie din fisier Œn memoria interna) si scrierea (transferul de
+informatie din memoria interna Œn fisier).
+
+Operatiile de pozitionare sunt necesare pentru a preciza locul de unde se
+citeste informatia (Œn cazul citirii), respectiv locul de unde Œncepe
+scrierea de informatie pe fisier (in cazul scrierii). Fiecare fisier non-text
+deschis are asociate o zona de memorie, numita buffer, care serveste ca
+intermediar Œntre memoria interna si fisier, continƒnd informatia supusa
+transferului. Toate fisierele au asociat un Œntreg numit contor de pozitie,
+care specifica pozitia curenta din fisier de la care Œncepe transferul.
+
+Exceptƒnd declararea, necesara datorita caracterului puternic tipizat al
+limbajului, toate celelalte operatii enumerate se traduc Œn operatii fizice
+de accesare a suportului pe care se gaseste fisierul, fiind numite generic
+operatii de intrare-iesire. Aceste operatii pot sa provoace mari batai de cap
+programatorilor, motiv pentru care mediile Turbo si Borland Pascal le pun la
+dispozitie o modalitate de verificare a modului de terminare a lor, cu
+ajutorul functiei standard IOResult, care Œntoarce starea ultimei operatii
+de intrare-iesire efectuate.
+
+Declaratia acestei functii este urmatoarea:
+
+  function IOResult: Integer;
+
+si ea Œntoarce:
+- 0 daca ultima operatie de intrare/iesire s-a terminat cu succes
+- o valoare diferita de 0 (de obicei un cod al erorii produse) daca ultima
+  operatie de intrare-iesire a esuat.
+
+Pentru ca programatorul sa poata folosi aceasta functie, trebuie sa se comute
+indicatorul $I de verificare a operatiilor de intrare-iesire pe off. Acest
+lucru se poate face fie incluzƒnd Œn cod directiva de compilare {$I-}, fie
+folosind meniul Options|Compiler|I/O Checking. Uzual, comutatorul $I este
+setat pe on, adica {$I-}.
+
+9.4.2.1. Declararea fisierelor
+
+La nivelul programului sursa Pascal, un fisier este referit printr-o variabila
+fisier, ceea ce am numit anterior identificator logic de fisier. Deoarece
+Pascal este un limbaj puternic tipizat, identificatorul logic de fisier
+trebuie sa fie de una dintre urmatoarele tipuri:
+- text (pentru fisiere text)
+- file of tip_componenta (fisierul este un fisier record Œn care fiecare
+  Œnregistrare este de tipul tip_componenta)
+* file (fisierul este nedefinit, fiind considerat ca o succesiune de octeti -
+  stream)
+
+Declararea variabilelor fisier se face uzual, folosind cuvƒntul rezervat var.
+
+Variabilele fisier nu se pot folosi decƒt Œn operatiile specifice lucrului cu
+fisiere. Mai exact, o variabila fisier se initializeaza prin operatia de
+deschidere a fisierului si Œsi pierde valoarea la Œnchiderea acestuia.
+
+  var
+	fis_text: Text;                 { fisier text }
+	fis_intregi = File of Integer;  { fisier de intregi }
+	fis_nedefinit: File;            { fisier nedefinit }
+
+9.4.2.2. Deschiderea unui fisier
+
+Operatia de deschidere a unui fisier este prima operatie care se efectueaza
+asupra acestuia, Œnaintea prelucrarilor propriu-zise la care acesta este
+supus. Menirea acestei operatii este de a stabili
+- modul Œn care este folosit fisierul (citire sau scriere)
+- alocarea buffer-ului si initializarea contorului de pozitie.
+
+In Turbo si Borland Pascal, operatia de deschidere a unui fisier se
+realizeaza Œn doi pasi:
+- initializarea variabilei fisier;
+- deschiderea propriu-zisa a fisierului.
+
+Initializarea variabilei fisier se face cu procedura standard Assign, care
+are declaratia:
+
+  procedure Assign(var var_fis; nume_fis:String);
+
+unde:
+- var_fis este o variabila fisier de oricare tip (identificatorul logic de
+  fisier), iar
+- nume_fis este un sir de caractere ce desemneaza numele extern al fisierului
+  (specificatorul de fisier)
+
+Dupa executia procedurii, var_fis va fi initializata, fiind asociata
+fisierului extern nume_fis; cu alte cuvinte, orice operatie pe var_fis va
+Œnsemna de fapt lucrul cu fisierul nume_fis. Asocierea ramƒne valabila pƒna
+cƒnd se Œnchide fisierul referit de var_fis sau pƒna cƒnd var_fis apare Œntr-o
+alta procedura Assign.
+
+Daca nume_fis este sirul de caractere vid, var_fis va fi asociata unuia dintre
+fisierele sistem. Daca nume_fis este numele unui fisier deja deschis, se
+produce o eroare de executie.
+
+Deschiderea propriu-zisa a unui fisier se face Œn mod obisnuit prin apelul
+uneia dintre procedurile standard Reset sau Rewrite.
+
+Procedura standard Reset realizeaza deschiderea unui fisier (de obicei) Œn
+citire. Declaratia sa este:
+
+  procedure Reset(var var_fis);
+
+unde var_fis este o variabila fisier de oricare tip (identificatorul logic de
+fisier), asociat Œn prealabil unui fisier extern prin apelul procedurii
+Assign.
+
+Reset deschide fisierul extern asociat variabilei var_fis. Daca fisierul
+respectiv este deja deschis, el se Œnchide Œn prealabil si apoi are loc
+deschiderea. Contorul de pozitie al fisierului se seteaza pe Œnceputul
+fisierului. Reset produce o eroare de intrare-iesire daca fisierul extern nu
+exista. In cazul fisierelor text, Reset produce deschiderea acestora numai Œn
+citire.
+
+Pentru fisierele non-text, Unit-ul System contine variabila FileMode, care
+contine informatia privitoare la modul de deschidere a acestora prin Reset:
+- 0 - Read only (numai citire)
+- 1 - Write only (numai scriere)
+- 2 - Read/Write (valoare implicita).
+
+Aceasta variabila se poate seta de catre programator prin operatia de
+atribuire.
+
+Functia Exista din programul CitireT (9.4.2.3) verifica daca fisierul
+specificat prin parametrul NumeFisier (care reprezinta un specificator
+complet de fisier) exista pe perifericul specificat Œn el. Daca perifericul
+si calea lipsesc, atunci se considera ca fisierul este Œn directorul curent.
+
+Procedura standard Rewrite realizeaza deschiderea unui fisier Œn scriere.
+Declaratia sa este:
+
+  procedure Rewrite(var var_fis);
+
+unde var_fis este o variabila fisier de oricare tip (identificatorul logic de
+fisier), asociat Œn prealabil unui fisier extern prin apelul procedurii
+Assign.
+
+Rewrite creeaza fisierul extern asociat variabilei var_fis. Daca fisierul
+respectiv exista, atunci el se sterge si se creeaza un fisier vid. Daca el
+este deja deschis, atunci se Œnchide Œn prealabil si apoi este re-creat.
+Contorul de pozitie al fisierului se seteaza pe Œnceputul fisierului.
+In cazul fisierelor text, Rewrite produce deschiderea acestora numai Œn
+scriere.
+
+9.4.2.3. Inchiderea unui fisier
+
+Operatia de Œnchidere a unui fisier semnifica terminarea lucrului cu acesta.
+Prin Œnchidere se realizeaza urmatoarele:
+- transferarea informatiei din buffer pe suport (Œn cazul fisierelor deschise
+  Œn scriere)
+- distrugerea asocierii Œntre variabila fisier si numele extern al fisierului.
+
+Dupa Œnchidere, fisierul se poate folosi din nou, respectƒnd etapele descrise
+anterior. Variabila fisier devine disponibila, ea putƒnd fi folosita Œntr-un
+alt apel al procedurii Assign.
+
+Pentru un fisier deschis Œn citire, prelucrarea sa se termina de regula
+atunci cƒnd s-a ajuns la sfƒrsitul sau. Detectarea sfƒrsitului de fisier se
+face cu functia standard EOF. Declaratia acesteia este:
+
+  function Eof(var var_fis): Boolean;             { fisiere non-text }
+  function Eof [ (var var_fis: Text) ]: Boolean;  { fisiere text }
+
+In cazul fisierelor text, daca var_fis lipseste se considera ca EOF se refera
+la fisierul standard de intrare. Altfel, var_fis va referi un fisier deschis
+Œn prealabil prin Assign si Reset/Rewrite. EOF Œntoarce:
+- True daca contorul de pozitie este dupa ultimul octet din fisier sau daca
+  fisierul este vid
+- False Œn toate celelalte cazuri.
+
+Exemplu: citirea unui fisier text si afisarea acestuia pe ecran;
+
+Program CitireT;
+  var f: text;
+      linie: string;
+      numeFis: String;
+      este: Boolean;
+
+  function Exista(NumeFisier: String): Boolean;
+  { intoarce
+      True  daca fisierul extern reprezentat de NumeFisier exista
+      False altfel
+  }
+    var
+      f: File;
+    begin
+      {$I-}             { comuta pe off indicatorul $I }
+      Assign(f, NumeFisier);
+      FileMode := 0;    { deschide in citire }
+      Reset(f);
+      Close(f);
+      {$I+}
+      Exista := (IOResult = 0) and (NumeFisier <> '')
+    end; { Exista }
+
+ begin
+    WriteLn('CitireT - afisarea unui fisier text pe ecran');
+    Repeat
+      Write('Dati numele fisierului: ');
+      ReadLn(numeFis);
+      este := Exista(numeFis);
+      if not este then WriteLn('Fisier inexistent!');
+    Until este;
+    Assign(f, numeFis);        { asociaza f la numeFis }
+    Reset(f);                  { deschide f in citire }
+    While not Eof(f) do begin  { cat timp nu s-a ajuns la sfarsit }
+      Readln(f, linie);        { citeste o linie din fisier }
+      Writeln(linie)           { scrie linia la iesirea standard }
+    end;
+    Close(f);                  { inchide fisierul }
+  end. { CitireT }
+
+9.4.2.4. Pozitionarea
+
+Operatia de pozitionare se refera la fisierele non-text si are ca efect
+modificarea contorului de pozitie. Modificarea se face Œn doua moduri:
+- implicit, prin operatiile de citire si de scriere; orice operatie de
+  transfer modifica contorul de pozitie, acesta avansƒnd spre capatul
+  fisierului
+- explicit, prin procedura standard Seek.
+
+Mediile Borland pun la dispozitia programatorului o functie si o procedura
+care Œi permit acestuia sa acceseze si sa modifice contorul de pozitie:
+FilePos si Seek. De asemenea, functia FileSize determina dimensiunea unui
+fisier.
+
+Functia FileSize Œntoarce numarul de componente dintr-un fisier. Declaratia
+sa este urmatoarea:
+
+  function FileSize(var var_fis): Longint;
+
+Œn care var_fis este o variabila fisier, asociata unui fisier deschis Œn
+prealabil. FileSize Œntoarce numarul de componente al fisierului. Daca
+fisierul este vid, FileSize Œntoarce 0. Vom discuta Œn paragrafele urmatoare
+semantica exacta a lui FileSize pentru fiecare clasa de fisiere.
+
+Functia FilePos Œntoarce valoarea contorului de pozitie al unui fisier
+non-text. Declaratia sa este:
+
+  function FilePos(var var_fis): Longint;
+
+Œn care var_fis este o variabila fisier, asociata unui fisier deschis Œn
+prealabil. Daca contorul de pozitie este pe Œnceputul fisierului, FilePos va
+Œntoarce 0, iar daca contorul de pozitie este la sfƒrsitul fisierului, atunci
+FilePos(var_fis) va fi egal cu FileSize(var_fis).
+
+Contorul de pozitie al unui fisier non-text se exprima Œn unitati de masura
+proprii tipului de fisier. El semnifica Œnregistrarea curenta din fisier,
+luƒnd valori de la 0 (Œnceputul fisierului, prima Œnregistrare din el) la
+FileSize(var_fis) - 1 (ultima Œnregistrare din fisier). Procedura standard
+Seek realizeaza modificarea contorului de pozitie la o noua valoare,
+specificata ca parametru al acesteia. Declaratia sa este:
+
+  procedure Seek(var var_fis; pozitie: Longint);
+
+Œn care:
+- var_fis este o variabila fisier, asociata unui fisier deschis Œn prealabil
+- pozitie este un Œntreg, cu urmatoarele valori valide:
+  - Œntre 0 si FileSize(var_fis) - 1: contorul de pozitie al fisierului
+    var_fis se va seta la valoarea pozitie
+  - FileSize(var_fis): Œn fisierul var_fis se va adauga (la sfƒrsit) o noua
+    Œnregistrare
+
+Exista, de asemenea, procedura Truncate, care permite trunchierea unui fisier
+non-text. Declaratia sa este:
+
+  procedure Truncate(var var_fis);
+
+Œn care var_fis este o variabila fisier, asociata unui fisier deschis Œn
+prealabil. Truncate pastreaza Œn fisier numai Œnregistrarile de la 0 si pƒna
+la FilePos(var_fis) - 1, eliminƒnd celelalte Œnregistrari din el (daca exista)
+si setƒnd EOF(var_fis) pe True.
+
+9.4.2.5. Citirea
+
+Operatia de citire Œnseamna transferarea de informatie din fisierul extern Œn
+memoria interna a calculatorului. Mai exact, citirea realizeaza initializarea
+unor variabile din programul Pascal cu valori preluate din fisierul extern.
+
+Citirea se face diferit pentru fiecare clasa de fisiere Borland (Turbo) Pascal.
+Ea poate sau nu sa fie Œnsotita de conversii.
+
+9.4.2.6. Scrierea
+
+Operatia de scriere Œnseamna transferarea de informatie din memoria interna a
+calculatorului Œn fisierul extern. Mai exact, scrierea realizeaza memorarea
+valorilor unor variabile din programul Pascal Œn fisierul extern.
+
+Scrierea se face diferit pentru fiecare clasa de fisiere Borland (Turbo)
+Pascal. Ea poate sau nu sa fie Œnsotita de conversii.
+
+9.4.3. Fisiere text
+
+Fisierele text sunt fisiere speciale, care se pot citi sau edita de orice
+editor de texte standard. Un fisier text este o succesiune de caractere ASCII
+organizate Œn linii. Numarul de linii este variabil, iar fiecare linie contine
+un numar variabil de caractere. O linie se termina cu o combinatie speciala de
+caractere (de regula CR+LF, adica ASCII 10 + ASCII 13), iar sfƒrsitul de
+fisier poate fi determinat cu ajutorul functiei EOF. Aceasta poate folosi:
+- functia FileSize (care determina numarul de caractere din fisier)
+- un caracter special de sfƒrsit de fisier (cu codul ASCII 26, recunoscut
+  prin combinatia CTRL+Z de la tastatura).
+
+Nu este obligatoriu, cel putin Œn Turbo Pascal, ca un fisier text sa contina
+terminatorul de sfƒrsit de fisier.
+
+Mediile Borland si Turbo Pascal permit specificarea unui fisier text prin
+cuvƒntul cheie text, care are declaratia:
+
+  type text = file of char;
+
+In Borland si Turbo Pascal sunt disponibile urmatoarele functii si proceduri
+specifice lucrului cu fisierele text:
+- Append (procedura)
+- EOLN (functie)
+- Flush (procedura)
+- Read (procedura)
+- ReadLn (procedura)
+- SeekEOF (functie)
+- SeekEOLN (functie)
+- SetTExtBuf (procedura)
+- Write (procedura)
+- WriteLn (procedura)
+
+In cele ce urmeaza, cu exceptia locurilor unde se face o referire explicita,
+prin var_fis vom desemna o variabila fisier de tip text, deschis Œn prealabil.
+
+Procedura Append este specifica fisierelor text. Ea permite deschiderea unui
+fisier Œn adaugare, adica:
+- deschide fisierul Œn scriere
+- seteaza contorul de pozitie la sfƒrsitul fisierului.
+
+Declaratia sa este:
+
+  procedure Append(var var_fis: Text);
+
+unde var_fis este o variabila fisier de tip text, asociata Œn prealabil
+printr-o procedura Assign unui fisier extern existent. Daca fisierul extern
+nu exista, se produce o eroare de intrare-iesire. Daca var_fis desemneaza un
+fisier deja deschis, acesta se Œnchide Œn prealabil si apoi se executa
+operatiile specifice lui Append.
+
+Daca terminatorul de sfƒrsit de fisier CTRL+Z este prezent, contorul de
+pozitie se seteaza pe pozitia acestuia. Prin urmare, dupa fiecare scriere Œn
+fisier acesta va contine la sfƒrsitul sau terminatorul de fisier.
+
+Functia EOLN Œntoarce statutul de sfƒrsit de linie, adica EOLN
+- Œntoarce True daca :
+  - caracterul curent din fisier (specificat prin contorul de pozitie) este un
+    terminator de linie sau de fisier
+  - Œntre caracterul curent si sfƒrsitul de linie nu exista decƒt spatii
+- Œntoarce False altfel.
+
+Declaratia aceste functii este:
+
+  function EOLN [(var var_fis: Text) ]: Boolean;
+
+Daca var_fis lipseste, se considera ca EOLN se refera la fisierul standard de
+intrare.
+
+Procedura Flush realizeaza transferul fizic de informatie din bufferul unui
+fisier deschis Œn scriere (cu Rewrite sau Append) pe suport. Declaratia sa
+este:
+
+  procedure Flush(var var_fis: Text);
+
+Scrierea pe un fisier text se realizeaza prin intermediul unui buffer. In mod
+normal, scrierea fizica se efectueaza numai atunci cƒnd bufferul este plin.
+Apelƒnd Flush, ne asiguram ca se efectueaza scrierea si cƒnd bufferul nu este
+plin.
+
+Procedura standard Read citeste valori dintr-un fisier text Œntr-una sau mai
+multe variabile. Citirea se efectueaza Œncepƒnd de la contorul de pozitie,
+avansƒndu-se spre sfƒrsitul fisierului. Se pot efectua conversii, Œn functie
+de tipul variabilelor prezente ca parametri ai lui Read. Declaratia procedurii
+este:
+
+  procedure Read( [ var var_fis: Text; ] V1 [, V2,...,Vn ] );
+
+unde V1, V2, ..., Vn sunt variabile pentru care Read este Œn domeniul lor de
+vizibilitate. Citirea se opreste la sfƒrsitul de linie sau de fisier, fara a
+se citi si aceste caractere speciale.
+
+Procedura standard ReadLn este similara procedurii Read, cu exceptia faptului
+ca dupa terminarea citirii trece la linia urmatoare: la Œntƒlnirea
+caracterelor de sfƒrsit de linie le sare, setƒnd contorul de pozitie dupa ele.
+Declaratia procedurii este:
+
+  procedure ReadLn( [ var var_fis: Text; ] V1 [, V2,...,Vn ] );
+
+Dupa executarea lui ReadLn, contorul de pozitie va fi setat pe Œnceputul unei
+noi linii.
+
+Functia SeekEOF Œntoarce True daca s-a ajuns la sfƒrsitul de fisier si False
+altfel. Declaratia sa este:
+
+  function SeekEOF [ (var var_fis: Text) ]: Boolean;
+
+Functia SeekEOLN Œntoarce True daca s-a ajuns la sfƒrsit de linie si False
+altfel. Declaratia sa este:
+
+  function SeekEOLN [ (var var_fis: Text) ]: Boolean;
+
+Procedura SetTextBuf atribuie unui fisier text un buffer de intrare-iesire.
+Uzual, bufferul de I/E pentru fisierele text este de 128 de octeti. Cu cƒt
+bufferul este mai mare, cu atƒt operatiile de citire si de scriere se executa
+mai rapid si printr-un numar mai mic de accese la suportul fizic. Declaratia
+este urmatoarea:
+
+procedure SetTextBuf(var var_fis: Text; var Buf [ ; Lung:   Word ] );
+
+unde:
+- Buf este numele unei variabile (de obicei de tipul unui tablou de caractere)
+  care va fi folosita pe post de buffer
+- Lung este dimensiunea bufferului (Œn octeti)
+
+SetTextBuf trebuie apelata imediat dupa deschiderea fisierului (urmatoarea
+instructiune dupa Reset, Rewrite sau Append).
+
+Procedura Write scrie valoarea uneia sau mai multor variabile Œntr-un fisier
+text. Scrierea se efectueaza Œncepƒnd de la contorul de pozitie, avansƒndu-se
+spre sfƒrsitul fisierului. Se pot efectua conversii, Œn functie de tipul
+variabilelor prezente ca parametri ai lui Write. Declaratia procedurii este:
+
+  procedure Write( [ var var_fis: Text; ] P1 [, P2,...,Pn ] );
+
+unde P1, P2, ..., Pn sunt expresii de formatare, formate din nume de
+variabile sau expresii (de una din tipurile Char, Integer, Real, String si
+Boolean) ce contin variabile Œmpreuna cu specificatori de lungime si de
+numar de zecimale. Pentru tipurile numerice, se face conversia la string
+Œnainte de scrierea Œn fisier. Fisierul trebuie sa fie deschis cu Rewrite
+sau Append. Contorul de pozitie se va mari cu lungimea stringurilor scrise.
+
+O expresie de formatare P are formatul: V:l[:z], unde
+- v este o variabila de tip numeric
+- l este lungimea stringului generat (daca partea Œntreaga a lui v are
+  lungimea mai mare ca l,  atunci l se va seta la lungimea partii Œntregi a
+  lui v - luƒnd Œn considerare si semnul)
+- z este numarul de cifre la partea zecimala (numai pentru variabile reale).
+
+Procedura WriteLn este similara cu Write, scriind la sfƒrsit un terminator de
+linie. Declaratia procedurii este:
+
+  procedure WriteLn( [ var var_fis: Text; ] P1 [, P2,...,Pn ] );
+
+iar semantica ei este:
+
+  Write( var var_fis, P1 [, P2,...,Pn ] );
+  Write( var var_fis, Chr(13), Chr(10) ); { terminator de linie }
+
+Procedurile ReadLn si WriteLn sunt specifice fisierelor text, pe cƒnd
+procedurile Read si Write se folosesc si Œn cazul fisierelor cu tip.
+
+9.4.4. Fisiere cu tip
+
+Fisierele cu tip (pe care le numim si fisiere record) sunt accesate prin
+intermediul unei variabile fisier declarata astfel:
+
+var
+  var_fis: file of tip_componenta;
+
+sau, mai elegant:
+
+type
+  tip_componenta = ... { definitia tipului componentei }
+  tip_fisier = file of tip_componenta;
+var
+  var_fis: tip_fisier;
+
+Fisierele cu tip respecta definitia generala a fisierului, precizata la
+Œnceputul acestei sectiuni: ele contin componente de acelasi tip, notat mai
+sus prin tip_componenta. Tipul componentei poate fi orice tip recunoscut de
+sistemul de tipuri al limbajului, cu exceptia tipului file.
+
+Spre exemplu, urmatoarele tipuri de fisiere sunt tipuri valide:
+
+type
+  fisier_integer = file of Integer;
+  fisier_boolean = file of Boolean;
+  fisier_persoane = file of Persoana; { tipul Persoana din 9.3.4. }
+
+9.4.4.1. Bufferul fisierului
+
+Operatiile efectuate asupra fisierelor cu tip sunt cele discutate general Œn
+9.4.2. Transferul de date Œntre suportul extern (fisierul extern) si memorie
+(variabilele din program) se realizeaza prin intermediul unei zone pe care
+am numit-o buffer (denumirea romƒneasca de pe vremuri era zona tampon).
+
+Pentru un fisier declarat Œn forma:
+
+var
+  var_fis: tip_fisier;
+
+bufferul este o zona de memorie speciala, fara nume, care o vom nota Œn cele
+ce urmeaza cu var_fis^. Initializarea variabilei fisier var_fis se face prin
+apelul procedurii standard Assign; deschiderea fisierului se face folosind
+procedurile standard Reset (Œn citire sau Œn scriere si citire) si Rewrite
+(Œn scriere). Odata cu deschiderea, devine accesibil si bufferul fisierului,
+adica variabila var_fis^.
+
+Bufferul trebuie considerat ca zona de memorie Œn care se citesc informatiile
+din fisierul extern, Œnainte ca acestea sa fie atribuite variabilelor din
+program; similar, Œn buffer sunt depozitate informatiile care se doreste a fi
+scrise Œn fisierul extern, Œnainte ca scrierea sa aiba loc. Ratiunea de a fi
+a bufferului este aceea de a optimiza (Œn general de a micsora) numarul de
+accese la suportul extern, pe care se gaseste fisierul supus prelucrarii.
+De obicei, operatiile fizice de citire si scriere pe suport extern realizeaza
+transferul unei cantitati fixe de informatie, numita bloc. Dimensiunea
+blocului depinde de caracteristicile fizice ale suportului si perifericului
+pe care se memoreaza fisierul. Din punct de vedere logic, adica al fisierului
+prelucrat Œn programul Pascal, o citire sau scriere logica realizeaza
+transferarea unei cantitati de informatie egala cu dimensiunea unei componente a
+fisierului, adica SizeOf(tip_componenta). De regula, dimensiunea bufferului
+este un multiplu al dimensiunii bloc
+
+9.4.4.2. Citirea prin intermediul bufferului
+
+Pentru a simplifica lucrurile, consideram ca dimensiunile blocului,
+bufferului si componentei sunt egale. Folosind declaratia:
+
+ type
+  tip_componenta = Integer;
+  tip_fisier = file of tip_componenta;
+var
+  var_fis: tip_fisier;
+  componenta: tip_componenta;
+
+vom deschide acum Œn citire fisierul TEST.DAT si vom putea accesa deja prima
+componenta a lui:
+
+Begin
+  Assign(var_fis, 'TEST.DAT');
+  Reset(var_fis);
+  componenta := var_fis^
+End.
+
+Deschiderea provoaca si setarea contorului de pozitie pe prima Œnregistrare.
+Pentru a trece la urmatoarea componenta (adica pentru a aduce Œn buffer
+urmatoarea componenta) se foloseste o procedura speciala, numita get.
+
+Semantica acesteia este:
+- aducerea Œn buffer a urmatoarei componente din fisier
+- marirea cu 1 a contorului de pozitie.
+
+Prin urmare, daca dorim o prelucrare completa a fisierului (de exemplu
+afisarea fiecarei componente pe ecran), atunci programul de mai sus s-ar
+scrie astfel:
+
+Begin
+  Assign(var_fis, 'TEST.DAT');
+  Reset(var_fis);
+  While not Eof(var_fis) do begin
+    componenta := var_fis^;
+    get(var_fis);
+    WriteLn(componenta)
+  end;
+  Close(var_fis)
+end.
+
+Am vazut Œnsa ca Œn Pascal exista procedura standard Read pentru citirea din
+fisier. De fapt, semantica exacta a procedurii Read este data Œn tabelul
+urmator:
+
+-------------------------------------------------------
+Procedura standard              Este echivalenta cu
+-------------------------------------------------------
+Read(var_fis, componenta)       componenta := var_fis^;
+                                get(var_fis);
+-------------------------------------------------------
+
+Procedura get detecteaza sfƒrsitul de fisier: cƒnd nu mai exista o urmatoare
+Œnregistrare de citit, ea nu va Œntoarce nimic, iar functia Eof(var_fis) va
+Œntoarce True, deci citirea fisierului se termina.
+
+Folosind procedura standard Read, programul de mai sus se scrie astfel:
+
+Begin
+  Assign(var_fis, 'TEST.DAT');
+  Reset(var_fis);
+  While not Eof(var_fis) do begin
+    Read(var_fis, componenta);
+    WriteLn(componenta)
+  end;
+  Close(var_fis)
+end.
+
+9.4.4.3. Scrierea Œn fisier
+
+Folosind aceleasi declaratii:
+
+type
+  tip_componenta = Integer;
+  tip_fisier = file of tip_componenta;
+var
+  var_fis: tip_fisier;
+  componenta: tip_componenta;
+  i: Integer;
+
+vom deschide acum Œn scriere fisierul TEST.DAT si vom pune prima componenta a
+lui Œn buffer:
+
+Begin
+  Assign(var_fis, 'TEST.DAT');
+  Rewrite(var_fis);
+  var_fis^ := componenta
+End.
+
+Deschiderea Œn scriere provoaca stergerea fisierului (daca acesta exista) si
+setarea contorului de pozitie pe 0. Pentru a scrie o componenta Œn fisier
+este nevoie ca aceasta sa fie trecuta prima data Œn buffer (lucru realizat de
+ultima instructiune din program), dupa care se foloseste o procedura speciala,
+numita put. Semantica acesteia este:
+- scrierea continutului bufferului Œn fisier
+- marirea cu 1 a contorului de pozitie.
+Prin urmare, daca dorim o prelucrare completa a fisierului (de exemplu
+scrierea fiecarei componente Œn el), atunci programul de mai sus s--ar scrie
+astfel:
+
+Begin
+  Assign(var_fis, 'TEST.DAT');
+  Rewrite(var_fis);
+  For i := 1 to 10 do begin
+    componenta := i;
+    var_fis^ := componenta;
+    put(var_fis)
+  end;
+  Close(var_fis)
+end.
+
+Am vazut Œnsa ca Œn Pascal exista procedura standard Write pentru scrierea Œn
+fisier. De fapt, semantica exacta a procedurii Write este data Œn tabelul
+urmator:
+
+-------------------------------------------------------
+Procedura standard                Este echivalenta cu
+-------------------------------------------------------
+Write(var_fis, componenta)        var_fis^ := componenta;
+                                  put(var_fis);
+-------------------------------------------------------
+
+In scriere, sfƒrsitul de fisier trebuie marcat. Acest lucru este efectuat de
+procedura standard Close.
+
+Folosind procedura standard Write, programul de mai sus se scrie astfel:
+
+Begin
+  Assign(var_fis, 'TEST.DAT');
+  Rewrite(var_fis);
+  For i := 1 to 10 do begin
+    componenta := i;
+    Write(var_fis, componenta)
+  end;
+  Close(var_fis)
+end.
+
+9.4.5. Fisiere fara tip (stream)
+
+Fisierele fara tip pot fi considerate ca fiind fisiere cu tip in care o
+inregistrare are un octet, si tipul ei este Byte
+
+type
+  file = file of byte;
+
+Deoarece este greoaie manipularea inregistrarilor de 1 byte, la fisierele
+fara tip se foloseste un parametru nou, dimensiunea inregistrarii (bufferului),
+numit in engleza RecSize. Acest parametru se precizeaza la deschiderea
+fisierului. Daca nu este precizat, se considera implicit valoarea 128.
+Procedurile standard Reset si Rewrite au forma generala:
+
+  procedure Reset(var var_fis [: File; Recsize: Word ] );
+  procedure Rewrite(var F: File [; Recsize: Word ] );
+
+Pentru citirea si scrierea din fisierele fara tip se folosesc proceduri
+specifice, BlockRead si BlockWrite.
+
+Procedura BlockRead are sintaxa:
+
+ procedure BlockRead(var F: File; var Buf; Count: Word [; var Result: Word]);
+
+unde:
+   F        Variabila fisier fara tip
+   Buf      variabila de orice tip (de obicei un tablou de byte), de
+            lungime cel putin egala cu RecSize
+   Count    expresie de tip Word
+   Result   variabila de tip Word
+
+Semantica acestei proceduri este urmatoarea: se citesc cel mult Count
+inregistrari (de lungime RecSize fiecare) din fisierul F in variabila Buf
+(care joaca rolul bufferului). Numarul efectiv de inregistrari citite este
+intors in parametrul optional de iesire Result. Daca acesta lipseste, se
+declanseaza o eroare de intrare/iesire (detectabila prin folosirea lui
+IOResult) daca numarul de inregistrari citite este mai mic decat Count.
+Pentru ca operatia sa aiba sens, dimensiunea bufferului Buf trebuie sa
+fie cel putin egala cu Count * RecSize octeti, dar nu mai mare decat 64K:
+
+65535 ò> SizeOf(Buf) ò> Count * RecSize
+
+Daca Count * RecSize > 65535 se declanseaza o eroare de intrare/iesire.
+
+Parametrul de iesire Result va avea valoarea (daca este prezent in apel)
+  - egala cu Count daca din fisier s-a putut transfera numarul de octeti
+    precizat
+  - mai mic decat Count daca in timpul transferului s-a detectat sfarsitul
+    de fisier; Result va contine numarul de inregistrari complete citit
+
+Dupa terminarea transferului, contorul de pozitie al acestuia se mareste
+cu Result inregistrari.
+
+Procedura BlockWrite are sintaxa:
+
+ procedure BlockWrite(var F: File; var Buf; Count: Word [; var Result: Word]);
+
+unde:
+   F        Variabila fisier fara tip
+   Buf      variabila de orice tip (de obicei un tablou de byte), de
+            lungime cel putin egala cu RecSize
+   Count    expresie de tip Word
+   Result   variabila de tip Word
+
+Semantica acestei proceduri este urmatoarea: se scriu cel mult Count
+inregistrari (de lungime RecSize fiecare) din variabila Buf in fisierul F.
+Numarul efectiv de inregistrari scrise este intors in parametrul optional de
+iesire Result. Daca acesta lipseste, se declanseaza o eroare de intrare/iesire
+(detectabila prin folosirea lui IOResult) daca numarul de inregistrari scrise
+este mai mic decat Count.
+
+Pentru ca operatia sa aiba sens, dimensiunea bufferului Buf trebuie sa
+fie cel putin egala cu Count * RecSize octeti, dar nu mai mare decat 64K:
+
+65535 ò > SizeOf(Buf) ò >= Count * RecSize
+
+Daca Count * RecSize > 65535 se declanseaza o eroare de intrare/iesire.
+
+Parametrul de iesire Result va avea valoarea (daca este prezent in apel)
+  - egala cu Count daca s-a putut transfera in fisier numarul de octeti
+    precizat
+  - mai mic decat Count daca suportul pe care se face transferul se umple;
+    Result va contine numarul de inregistrari complete scris
+
+Dupa terminarea transferului, contorul de pozitie al acestuia se mareste
+cu Result inregistrari.
+
+9.4.6. Fisierele sistem
+
+Sistemul de operare MS-DOS are doua fisiere standard: de intrare (tastatura),
+de unde se preia informatia de prelucrat, si de iesire (ecranul monitorului),
+unde se afiseaza rezultatul prelucrarilor.
+
+In versiunea standard a limbajului Pascal cele doua fisiere se specifica Œn
+antetul programului:
+
+program  Nume(input, output);
+
+In Turbo Pascal, aceasta specificare este implicita si poate sa lipseasca.
+Unit-ul System contine doua variabile fisier de tip text, cu numele
+respective:
+
+Var
+  Input:  Text           { Input standard file }
+  Output: Text           { Output standard file }
+
+In Unit-ul Printer, exista o variabila fisier de tip text care desemneaza
+imprimanta sistem:
+
+  var   Lst : text;      { System printer }
+

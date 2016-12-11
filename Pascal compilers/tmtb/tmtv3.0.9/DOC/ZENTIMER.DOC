@@ -1,0 +1,298 @@
+******************************************************************************
+                           The Zen Timer Pro Uint
+                                 Revision 2.7
+
+             Written by Vadim Bodrov, TMT Development Corporation
+               Copyright (C) 1995-99 TMT Development Corporation
+                             All rights reserved.
+
+            Original C/C++ Code by Kendall Bennett, SciTech Software
+             Portions Copyright (C) 1991-1997 SciTech Software, Inc.
+                             All rights reserved.
+******************************************************************************
+
+
+                            ABOUT ZENTIMER UNIT
+
+ ZTIMER.PAS is a full-featured port to TMT Pascal of ZTimer library by
+ SciTech Software.
+
+                                  FEATURES
+
+ þ High resolution Zen Timer (based on code frombook "Zen of Assembly
+   Language" Volume 1, Knowledge by Michael Abrash).
+ þ Ultra long Zen Timer (interface to the BIOS Timer Tick for timing code
+   that takes up to 24 hours).
+ þ RDTSC support (uses supports the Intel RDTSC instruction, for high
+   precision timing).
+ þ Routines to obtain CPU information.
+ þ LZTimer and ULZTimer objects (provide a set of Pascal objects to
+   manipulate the Zen Timers).
+
+                            SYSTEM REQUIREMENTS
+
+ This unit required an IBM PC or compatible with Intel 80386 or higher
+ processur.
+
+                            PROGRAMMING LANGUAGE
+
+ This ZenTimer unit can be compiled with TMT Pascal (32-bit protected mode
+ DOS compiler). Supports following extenders:
+ - DOS32 v3.3
+ - PMODE-based
+ - PMODE/W-based
+ - WDOSX-based
+
+                          ZENTIMER UNIT REFERENCE
+
+This text based on MegaGraph Graphics Library Reference Manual Copyright (c)
+1996 SciTech Software Inc.
+
+procedure LZDelay (Value: DWord)
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Delays a specified number of 1e-6 sec.
+
+function LZTimerCount: DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current count for the Long Period Zen Timer.
+
+Return Value
+ Count that has elapsed in microseconds.
+
+Description
+ Returns the current count that has elapsed between calls to LZTimerOn and
+ LZTimerOff in microseconds.
+
+procedure ZTimerInit
+ßßßßßßßßßßßßßßßßßßßß
+Initializes the Zen Timer library.
+
+Description
+ This function initializes the Zen Timer library, and must be called before
+ any of the remaining Zen Timer library functions are called.
+
+function LZTimerLap: DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current count for the Long Period Zen Timer and keeps it running.
+
+Return Value
+ Count that has elapsed in microseconds.
+
+Description
+ Returns the current count that has elapsed since the last call to LZTimerOn
+ in microseconds. The time continues to run after this function is called so
+ you can call this function repeatedly.
+
+procedure LZTimerOff
+ßßßßßßßßßßßßßßßßßßßß
+Stops the Long Period Zen Timer counting.
+
+Description
+ Stops the Long Period Zen Timer counting and latches the count. Once you have
+ stopped the timer you can read the count with LZTimerCount. If you need
+ highly accurate timing, you should use the on and off functions rather than
+ the lap function since the lap function does not subtract the overhead of
+ the function calls from the timed count.
+
+procedure LZTimerOn
+ßßßßßßßßßßßßßßßßßßß
+Starts the Long Period Zen Timer counting.
+
+Description
+ Starts the Long Period Zen Timer counting. Once you have started the timer,
+ you can stop it with LZTimerOff or you can latch the current count with
+ LZTimerLap.
+
+ The Long Period Zen Timer uses a number of different high precision timing
+ mechanisms to obtain microsecond accurate timings results whenever possible.
+ The following different techniques are used depending on the runtime
+ environment and CPU on the target machine. If the target system has a Pentium
+ CPU installed which supports the Read Time Stamp Counter instruction (RDTSC),
+ the Zen Timer library will use this to obtain the maximum timing precision
+ available.
+
+ If the Pentium RDTSC instruction is not available, we then do all timing
+ using the old style 8253 timer chip. The 8253 timer routines provide highly
+ accurate timings results in pure DOS mode, however in a DOS box under Windows
+ or other Operating Systems the virtualization of the timer can produce
+ inaccurate results.
+
+-----------------------------------------------------------------------------
+Note: Because the Long Period Zen Timer stores the results in a 32-bit
+      unsigned integer, you can only time periods of up to 2^32 microseconds,
+      or about 1hr 20mins. For timing longer periods use the Ultra Long
+      Period Zen Timer.
+-----------------------------------------------------------------------------
+
+function LZTimerResolution: Double
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the resolution of the Ultra Long Period Zen Timer.
+
+Return Value
+ Resolution of the timer in seconds per timer count.
+
+Description
+ Returns the resolution of the Long Period Zen Timer as a floating point
+ value measured in seconds per timer count. This function always returns 1e-6.
+
+procedure ULZDelay (Value: DWord)
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Delays a specified number of 0.054925 sec.
+
+function ULZElapsedTime(start, finish: DWord): DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Compute the elapsed time between two timer counts.
+
+Parameters
+ start        Starting time for elapsed count
+ finish       Ending time for elapsed count
+
+Return Value
+ Elapsed timer in resolution counts.
+
+Description
+ Returns the elapsed time for the Ultra Long Period Zen Timer in units of the
+ timers resolution (1/18th of a second under DOS). This function correctly
+ computes the difference even if a midnight boundary has been crossed during
+ the timing period.
+
+function ULZReadTime: DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Reads the current time from the Ultra Long Period Zen Timer.
+
+Return Value
+ Current timer value in resolution counts.
+
+Description
+ Reads the current Ultra Long Period Zen Timer and returns it_s current count.
+ You can use the ULZElapsedTime function to find the elapsed time between two
+ timer count readings.
+
+function ULZTimerCount: DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current count for the Ultra Long Period Zen Timer.
+
+Return Value
+ Count that has elapsed in resolution counts.
+
+Description
+ Returns the current count that has elapsed between calls to ULZTimerOn and
+ ULZTimerOff in resolution counts.
+
+function ULZTimerLap: DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current count for the Ultra Long Period Zen Timer and keeps it
+running.
+
+Return Value
+ Count that has elapsed in resolution counts.
+
+Description
+ Returns the current count that has elapsed since the last call to ULZTimerOn
+ in microseconds. The time continues to run after this function is called so
+ you can call this function repeatedly.
+
+procedure ULZTimerOff
+ßßßßßßßßßßßßßßßßßßßßß
+Stops the Long Period Zen Timer counting.
+
+Description
+ Stops the Ultra Long Period Zen Timer counting and latches the count. Once
+ you have stopped the timer you can read the count with ULZTimerCount.
+
+procedure ULZTimerOn
+ßßßßßßßßßßßßßßßßßßßß
+Starts the Ultra Long Period Zen Timer counting.
+
+Description
+ Starts the Ultra Long Period Zen Timer counting. Once you have started the
+ timer, you can stop it with ULZTimerOff or you can latch the current count
+ with ULZTimerLap.
+
+ The Ultra Long Period Zen Timer uses the available operating system services
+ to obtain accurate timings results with as much precision as the operating
+ system provides, but with enough granularity to time longer periods of time
+ than the Long Period Zen Timer. Note that the resolution of the timer ticks
+ is not constant between different platforms, and you should use the
+ ULZTimerResolution function to determine the number of seconds in a single
+ tick of the timer, and use this to convert the timer counts to seconds.
+
+ Under 32-bit DOS, we use the system timer tick which runs at 18.2 times per
+ second. Given that the timer count is returned as an unsigned 32-bit integer,
+ this we can time intervals that are a maximum of 2^32 * (1/18.2) in length
+ (or about 65,550 hours or 2731 days!).
+
+function ULZTimerResolution: Double
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the resolution of the Ultra Long Period Zen Timer.
+
+Return Value
+ Resolution of the timer in seconds per timer count.
+
+Description
+ Returns the resolution of the Ultra Long Period Zen Timer as a floating
+ point value measured in seconds per timer count. This function always
+ returns 0.054925.
+
+function CPU_getCPUIDFeatures: DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns CPUID festures (family/model/stepping/features).
+
+function CPU_getProcessorSpeed: DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the speed of the processor in Mhz.
+
+Return Value
+ Processor speed in Mhz.
+
+Description
+ This function returns the speed of the CPU in Mhz. Note that if the speed
+ cannot be determined, this function will return 0.
+
+function CPU_getProcessorType: DWord
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the type of processor in the system.
+
+Return Value
+ Numerical identifier for the installed processor
+
+Description
+ Returns the type of processor in the system. Note that if the CPU is an
+ unknown Pentium family processor that we don't have an enumeration for, the
+ return value will be greater than or equal to the value of CPU_UnkPentium
+ (depending on the value returned by the CPUID instruction).
+
+ Following constans are defined:
+
+  CPU_unknown     = 0;            -- Unknown proccessor
+  CPU_i386        = 1;            -- Intel 80386 processor
+  CPU_i486        = 2;            -- Intel 80486 processor
+  CPU_Pentium     = 3;            -- Intel Pentium(R) processor
+  CPU_PentiumPro  = 4;            -- Intel PentiumPro(R) processor
+  CPU_PentiumII   = 5;            -- Intel PentiumII(R) processor
+  CPU_UnkPentium  = 6;            -- Unknown Intel Pentium family processor
+
+ Also defined CpuTypes array strings.
+
+  CpuTypes: array [0..6] of string =
+ (
+  'Unknown',
+  'Intel 80386',
+  'Intel 80486',
+  'Intel Pentium(R)',
+  'Intel PentiumPro(R)',
+  'Intel PentiumII(R)',
+  'Unknown Pentium'
+ );
+
+function CPU_haveMMX: Boolean
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns true if the processor supports Intel MMX extensions.
+
+Return Value
+ True if MMX is available, false if not.
+
+Description
+ This function determines if the processor supports the Intel MMX extended
+ instruction set. If the processor is not an Intel or Intel clone CPU, this
+ function will always return false.

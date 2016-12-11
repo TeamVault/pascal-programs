@@ -1,0 +1,27 @@
+What's New in TMT Pascal Lite 3.90
+------------------------------------------------------------------------
+Compiler changes
+* All known bugs have been fixed.
+* The quality of the generated code has been improved.
+* True floating-point calling conventions have been implemented. The Single, Double and Extended type arguments are passed to a function/procedure by value, but not by reference as in previous versions of the compiler. However it's still possible to use the old-style conventions by means of the arg_no_fp_on_stack calling convention specifier.
+* The reserved word packed has been added.
+* The reserved word out has been added.
+* The "-uses" command-line compiler directive has been added. It allows inclusion of additional RTL units in the application.
+* By default the procedural types now are 32-bit sized (see arg_proc_based for details).
+* The Integer type has been changed to 32-bit.
+* The Real type has been changed to 64-bit.
+* New ByteBool, WordBool, LongBool and Real48.
+* A possibility to define special writing and printing procedures for any custom type was added (see __reader and __writer for details).
+
+RTL changes
+* All known bugs have been fixed.
+* Following procedures and functions have been added to the System unit:
+  - CompareMem
+  - QSort
+  - SwapArgs
+* The following units have been added:
+  - CompMath
+  - Use16
+
+IDE for Windows (IDEW32)
+* Many improvements have been made.

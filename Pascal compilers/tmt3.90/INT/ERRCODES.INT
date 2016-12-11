@@ -1,0 +1,77 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal 3 Runtime Library                           *)
+(*       Error Codes Unit                                       *)
+(*       Targets: MS-DOS only                                   *)
+(*                                                              *)
+(*       Copyright (c) 1995,98 TMT Development Corporation      *)
+(*       Author: Anton Moscal                                   *)
+(*                                                              *)
+(****************************************************************)
+
+unit ErrCodes;
+
+interface
+
+const
+  INVALID_FUNCTION_NUMBER           =   1;
+  FILE_NOT_FOUND                    =   2;
+  PATH_NOT_FOUND                    =   3;
+  TOO_MANY_OPEN_FILES               =   4;
+  FILE_ACCESS_DENIED                =   5;
+  INVALID_FILE_HANDLE               =   6;
+  INVALID_FILE_ACCESS_CODE          =  12;
+  INVALID_DRIVE_NUMBER              =  15;
+  CANNOT_REMOVE_CURRENT_DIRECTORY   =  16;
+  CANNOT_RENAME_ACROSS_DRIVES       =  17;
+  NO_MORE_FILES                     =  18;
+  DISK_READ_ERROR                   = 100;
+  DISK_WRITE_ERROR                  = 101;
+  FILE_NOT_ASSIGNED                 = 102;
+  FILE_NOT_OPEN                     = 103;
+  FILE_NOT_OPEN_FOR_INPUT           = 104;
+  FILE_NOT_OPEN_FOR_OUTPUT          = 105;
+  INVALID_NUMERIC_FORMAT            = 106;
+  DISK_IS_WRITE_PROTECTED           = 150;
+  BAD_DRIVE_REQUEST_STRUCT_LENGTH   = 151;
+  DRIVE_NOT_READY                   = 152;
+  CRC_ERROR_IN_DATA                 = 154;
+  DISK_SEEK_ERROR                   = 156;
+  UNKNOWN_MEDIA_TYPE                = 157;
+  SECTOR_NOT_FOUND                  = 158;
+  PRINTER_OUT_OF_PAPER              = 159;
+  DEVICE_WRITE_FAULT                = 160;
+  DEVICE_READ_FAULT                 = 161;
+  HARDWARE_FAILURE                  = 162;
+  DIVISION_BY_ZERO                  = 200;
+  RANGE_CHECK_ERROR                 = 201;
+  STACK_OVERFLOW_ERROR              = 202;
+  HEAP_OVERFLOW_ERROR               = 203;
+  INVALID_POINTER_OPERATION         = 204;
+  FLOATING_POINT_OVERFLOW           = 205;
+  FLOATING_POINT_UNDERFLOW          = 206;
+  INVALID_FLOATING_POINT_OPERATION  = 207;
+  OVERLAY_MANAGER_NOT_INSTALLED     = 208;
+  OVERLAY_FILE_READ_ERROR           = 209;
+  OBJECT_NOT_INITIALIZED            = 210;
+  CALL_TO_ABSTRACT_METHOD           = 211;
+  STREAM_REGISTRATION_ERROR         = 212;
+  COLLECTION_INDEX_OUT_OF_RANGE     = 213;
+  COLLECTION_OVERFLOW_ERROR         = 214;
+  ARITHMETIC_OVERFLOW_ERROR         = 215;
+  GENERAL_PROTECTION_FAULT          = 216;
+  INVALID_OPERATION_CODE            = 217;
+  FILE_IO_ERROR                     = 300;
+  NONMATCHED_ARRAY_BOUNDS           = 301;
+  NON_LOCAL_PROCEDURE_POINTER       = 302;
+  PROCEDURE_POINTER_OUT_OF_SCOPE    = 303;
+  FUNCTION_NOT_IMPLEMENTED          = 304;
+  BREAKPOINT_ERROR                  = 305;
+  BREAK_BY_CTRL_C                   = 306;
+  BREAK_BY_CTRL_BREAK               = 307;
+  BREAK_BY_OTHER_PROCESS            = 308;
+  NO_FLOATING_POINT_PROCESSOR       = 309;
+
+function Error_Msg(Err: DWord): string;
+
+implementation

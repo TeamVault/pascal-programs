@@ -1,0 +1,890 @@
+                         Pascal Compiler for MS DOS
+                              [ Version 3.90 ]
+
+                        TMT Development Corporation
+
+                    Thank you for choosing our compiler!
+
+
+Introduction
+------------
+
+The TMT Pascal compiler is a fast compiler for the Pascal language.
+The compiler emits 32-bit code and supports many language extensions
+from Borland Pascal (BP), as well as more powerful extensions.
+
+Ordering the TMT Pascal compiler
+--------------------------------
+
+   The Lite version of the TMT Pascal compiler is not freeware, although it
+   is free for personal use. You have to pay a registration fee of $49, to
+   use the compiler for commercial applications.
+
+   A license will get you the current version of the compiler plus all
+   updates as they are released until the next major version.
+
+   To order the TMT Pascal compiler for commercial usage, send an email to
+   sales@tmt.com with your credit card number and its expiration date
+   (VISA, MC, AMEX, DISCOVER). Alternatively, call 1-631-689-3172 or send
+   a check or money order to:
+
+   TMT Development Corp.
+   19 POPLAR AVE,
+   Stony Brook, NY 11790-1751
+
+   Foreign orders: if you are paying by check, please make sure
+   that your check is in US dollars and drawn on a US bank.
+
+   Postal orders: please make sure that your order specifies a contact
+   email account.
+
+   PO's: we will accept PO's from qualified institutions in the US and Canada.
+   Please verify that your PO will be accepted before issuing it.
+
+
+Compiler installation and running
+---------------------------------
+
+   The Pascal distribution is contained in the tmtpXXXd.zip archive.
+   (XXX being the version number) Please read the license.doc file before
+   installing the compiler.
+
+   Follow these instructions to run the installation process.
+
+      - create the \TMTPL directory on one of your drives (we will call
+        it the x: drive) using the command:
+            x> md TMTPL
+
+      - copy the tmtpXXXd.zip file into the TMTPL directory:
+
+            x> copy  tmtpXXXd.zip x:\TMTPL
+            x> x:
+            x> cd \TMTPL
+
+      - run the PKUNZIP program to decompress the tmtpXXXd.zip
+
+            x:\TMTPL> pkunzip -d tmtpXXXd
+
+        (the switch "-d" unpacks with subdirectories)
+
+      - modify the PATH statement in autoexec.bat, to include the
+                x:\TMTPL\BIN
+         subdirectory, if you so desire.
+
+      - go to \TMTPL\SAMPLES\HELLO,
+        compile the simple test program, "HELLO.PAS", and run it:
+
+           x:\TMTPL> tmtpc hello
+           x:\TMTPL> hello
+
+      - read the entire manual.dos file before using the compiler for
+        any "real" application development.
+
+
+Contents of the distribution
+----------------------------
+  * documentation:
+      manual.dos       - description of the TMTPC compiler
+      license.doc      - license agreement
+      readme           - this file
+
+  * executable:
+     The subdirectory BIN contains following files:
+
+       binobj32.exe     - 32-bit BIN to OBJ converter
+       dos4gw.exe       - the DOS/4GW protected mode extender (used by
+                          the compiler)
+       grep.exe         - Grep utility
+       idew32.exe       - TMT Pascal Integrated Development Environment (IDE)
+                          for Windows'9x/NT/2000
+       tmt32.exe        - WDOSX-based MS-DOS extender
+       tmtpack.exe      - an executable packer
+       tmtpc.exe        - the compiler itself
+       touch.exe        - a touch utility
+       vesainfo.exe     - a VESA info utility
+       tmtp.cfg         - the compiler configuration file
+
+  * standard library object modules:
+     The subdirectory UNITS\ contains the precompiled RTL files with .FPD
+     extensions. It also contains a few stub files for popular MS-DOS
+     extenders.
+
+      comp.fpd         - a complex mathematics unit
+      crt.fpd          - a text mode screen interface.
+      debug.fpd        - a post-mortem dump unit and other debugging
+                         functions
+      dpmilib.fpd      - the DPMI unit
+      dos.fpd          - the Dos unit
+      errcodes.fpd     - run-time error codes
+      graph.fpd        - a SVGA graphics unit
+      keyboard.fpd     - keyboard handling procedures
+      math.fpd         - various mathematics functions
+      mcgalib.fpd      - a simple MCGA graphics unit
+      mouse.fpd        - mouse handling procedures
+      printer.fpd      - the printer unit
+      strings.fpd      - string handling functions
+      system.fpd       - the System unit
+      use32.fpd        - define type Integer as 32-bit etc.
+      windos.fpd       - the WinDos unit
+      zentimer.fpd     - high resolution timing unit
+
+      passtub.exe      - a PMODE-based stub file
+      pmwstub.exe      - a PMODE/W-based stub file
+      tmt32.exe        - a WDOSX-based MS-DOS stub file
+      tmtstub.exe      - another WDOSX-based stub file
+      wstub.exe        - a DOS/4GW-based stub file
+
+  * examples:
+     The subdirectory SAMPLES\ contains a lot of examples.
+
+  * on-line help:
+     subdirectory HELP\ contains the on-line help file (WinHelp format),
+     which is used by IDEW32.EXE.
+
+  * unit interfaces:
+     subdirectory INT\ contains interface declarations of standard run-time
+     library (RTL) units.
+
+  * TMT Pascal Multi-target demo:
+     The subdirectory TMTMDEMO\ contains a lot of examples compiled with
+     TMT Pascal Multi-target for Win32 and OS/2 operating systems.
+
+  * sources:
+     subdirectory SOURCE\ contains of a some RTL units.
+
+  * related documenation:
+     subdirectory DOC\ contains documentation files on supported DOS
+     extenders and some library units.
+
+   Running the compiler:
+   --------------------
+
+  The compiler is invoked with the "tmtpc" command:
+
+  tmtpc [switches] <main file>
+
+  where the following switches can be used:
+
+    -m   - make modified units (default option)
+    -b   - build the whole program
+    -c   - single compilation (without linkage)
+
+After that the suite of object files with .FPD extensions will be
+established in the directory with the sources, and the executable file
+will be created in the current directory (if the switch -c is not set).
+
+Out of memory message
+
+If you receive message "not enough memory for compilation", you have to
+either:
+
+   - increase the amount of free extended memory (for example, decrease
+     the "cash" of your hard disk), or
+   - decrease the value of the EXEMAK and OBJMAX parameters in the
+     configuration file.
+
+
+Configuration file
+------------------
+
+Before compiling, the compiler reads the settings from the special file -
+tmtp.cfg. It searches for this file at the beginning of the current directory and
+then, if it doesn't find it, in the start directory.
+
+The configuration file "tmtp.cfg" contains the compilation parameters:
+one command per line. Empty lines are possible. Comment lines begin with
+the ';' symbol.
+
+The following parameters can be used in the tmtp.cfg:
+
+    toggle settings:
+       ac+/-      - Ada-style comments
+       amd+/-     - AMD 3DNow! assmbler instructions
+       cc+/-      - C/C++ style comments
+       d+/-       - debug information
+       i+/-       - then automatic input/output result checking
+       l+/-       - local debug symbols
+       map+/-     - the map file generation
+       mmx+/-     - MMX assmbler instructions
+       oa+/-      - objects and structures align
+       optreg+/-  - the register optimization
+       optfrm+/-  - the stack frame optimization
+       opt+/-     - all optimization (optreg+ & optfrm+)
+       p+/-       - open string params
+       q+/-       - the overflow checking
+       r+/-       - the range checking
+       t+/-       - typed pointers
+       tpo+/-     - typed Inc/Dec operations
+       v+/-       - strict var checking
+       w+/-       - the puting of warning messages
+       x+/-       - extended syntax
+
+    Default settings: a+, r-, i+, p+, t-, x+, b-, tpo+, map-, opt+, logo+,
+                      mmx+, amd+, w+, oa-, d+, l+, q-, v+, ac-, cc+
+
+    file path search specification:
+
+       srcpath    <search_path> - specifies path for the source file search
+       objpath    <search_path> - specifies path for the object file (.FPD)
+                                  and STUBs search
+       objimppath <search_path> - specifies path for the OBJ import file
+                                  search by use of a $L directive
+
+
+       pseudo-devices SYS: and SRC: can be used in the path line:
+
+         SYS: means the TMTPC compiler directory,
+         SRC: means the application program directory.
+
+       defaults:  srcpath     src:;sys:
+                  objpath     src:;sys:
+                  objimppath  src:;sys:
+
+
+    buffer size specification:
+
+       objmax <size>    - specifies the size of the buffer for object
+                          modules (fpd-files). This parameter must be
+                          about one and a half times the size of the
+                          largest fpd-file from the project.
+
+       exemax <size>    - specifies the maximum size of the executable
+                          module.
+
+       defaults:   objmax 1024K
+                   exemax 1024K
+
+       These values are enough for ordinary work.  But if you receive
+       a message about overflowing of these buffers, you'll have to
+       increase them.  If you receive the message about unsufficient memory
+       for the compilation, you can try to decrease them.
+
+    stack size specification:
+
+       stack <stack_size> - specifies size of the application stack
+       default:    32K
+
+    start up block (stub) name specification:
+
+       stub  <stub_name>  - specifies the STUB name for the linker.
+
+                            default: PMWSTUB.EXE
+
+                            use the OBJPATH option to specify the seacrh path
+                            for the stub files
+
+    Symbol definition:
+
+       def <symbol name>
+
+       The following symbols are predefined:
+           __TMT__ :    always
+           __VER3__:    always for version 3.xx
+           __DOS__ :    for DOS target
+
+    error message format specification:
+
+       errmw+ - specifies the MetaWare Pascal format of the error message:
+
+                   E "HELLO.PAS" L4/C16: type mismatch
+
+       errmw- - specifies BP-like format of the error message:
+
+                   textcolor (lightred+'a');
+                              
+                   Error: HELLO.PAS (line 4, col 16): type mismatch
+
+       This parameter allows use of the MultiEdit program as a shell
+       when the errmw+ parameter is set.
+
+       The default is:  errmw-
+
+     Output of the TMTSTUB.EXE logo specification:
+
+       logo+  -  enables output of the TMTSTUB logo during the running of
+                 the emitted program.
+       logo-  -  disables output of the TMTSTUB logo during the running of
+                 the emitted program.
+
+       The default is: logo+
+
+Memory organization
+-------------------
+
+The segment registers are not used in the protected mode.  Instead all
+address space is separated into 4Kb pages.
+
+For example:
+
+        procedure clr_video (filler: char);
+           var i: integer;
+        begin
+           for i := 0 to 80*25-1 do
+               mem [$B8000+i*2] := filler;
+        end;
+
+This procedure fills the video memory of the VGA adapter with the
+filler symbol.
+
+Note that the linear address $B8000 is used as the physical address - not
+the segment address $B800.
+
+Absolute memory addressing Mem, MemW, MemL, and MemD pseudo-arrays may be
+used in BP-compatible manner:
+
+  var x: type absolute seg:offs
+  Mem[seg:offs]
+
+Here the effective address is computed as seg*16+offs. The Ptr(seg, offs)
+function works similarly. The Seg(v) function still always returns 0. These
+new functions should substantially simplify the conversion of the programs
+that use absolute addressing.
+
+Some another special variables are described in the SYSTEM unit.
+The _psp variable contains the logical 32-bit address of the PSP of the
+program, and the _environ variable contains the environment address.
+
+Although you can access the interrupt vectors by using this method,
+we do not suggest doing this.
+
+
+    Also keep in mind that MS-DOS interrupt handlers use memory
+    addresses in the 1st Mb of physical memory while your program
+    and its data are loaded beyond the 1st Mb. TMTSTUB intercepts
+    and correctly handles some, but not all, calls to MS-DOS.
+    Thus, if you are using Intr() or MsDos() calls, or call MS-DOS from
+    the assembler, you will need to modify your code.
+
+Calling conventions
+-------------------
+
+Calling conventions match those in Borland Pascal with the following
+differences:
+
+     all parameters use 4 bytes on the stack, or a multiple of 4 (BP:2)
+
+     all procedures must preserve the contents of registers ebx, ecx, edx,
+     ds, and es!
+
+     the direction bit should be cleared after exiting a procedure,
+     if it has been modified by it.
+
+
+Language syntax of TMT Pascal
+-----------------------------
+
+While the Language syntax of TMT Pascal is in general compatible with BP 7.0,
+there are some differences. Below is the list, divided into three groups:
+limitations, extensions, and incompatibilities.
+
+   1. Limitations:
+
+Not implemented are MARK and RELEASE.
+
+The INLINE() operator in implemented in a partial form:
+    INLINE (byte/byte/...);
+(No references to variables/constants are allowed).
+
+The import of object modules does not support all 32bit object formats.
+We recommend using TASM which is fully supported, excepting
+usage of SEG addresses.
+
+   2. Extensions:
+
+ADA-style comments are supported:  -- comment
+For example:
+
+      space := ' ';  -- initialize filler char
+
+Almost everywhere where Pascal's syntax allows a type identifier, we
+also allow a type descriptor. The compiler will produce a warning if you
+use this feature.
+
+!!! Keep in mind that the rules of type equivalence stay in force.
+
+Procedural values contain the address of the local environment (frame).
+Thus, any local procedures can be used in procedural values. Procedural
+declarations in the style
+
+    procedure p (function f (a:real):real); ...
+
+are also realized.
+
+The procedural value from a method of object can be obtained by
+selecting this method from some object value (not from a type). The
+parameters of this procedural value must match the parameters of the
+method.  The invocation of such a procedural value is an invocation of the
+corresponding method of the object.  The reference to the object is
+transferred through the base of the procedural value.
+
+You can use only global procedural values to initialize a type constant.
+
+!!! Procedural values may be used only while the environment where
+they were formed is still in existence.  Thus, for local procedures
+-- until the exit from the block, in which they are described; for
+methods -- while the underlying object still exists.
+
+see also "incompatibilities."
+
+With TMT Pascal you can use any statement as a procedure body,
+except for the assignment and the procedure calls.
+
+The RESULT variable in the body of such functions denotes the variable
+that contains the return value.  The RESULT is of the function return type
+and may be used as a variable without any restrictions.
+
+With TMT Pascal you can enter the procedure body directly as a procedure
+parameter.  The procedure or function header (if not specified) takes the
+procedural parameter type.  If the procedure header is specified, the
+procedure name is omitted.  Example:
+
+function integral (function f (a:real):real; low, high, step: real): real;
+begin ... end;
+
+    ...
+    writeln (integral (
+         function (x:real):real; begin result := sqrt (x) end,
+    0, 10, 0.1));
+
+    writeln (integral (begin result := sqrt (a) end, 0, 10, 0.1));
+
+    writeln (integral (
+         function;        -- function keyword needed
+             var x: real; -- for local declaration
+         begin x := sqrt (a); result := x end,
+    0, 10, 0.1));
+
+    writeln (integral (
+         declare;         -- other way
+             var x: real; -- for local variable declaration
+         begin x := sqrt (a); result := x end,
+    0, 10, 0.1));
+
+TMT Pascal allows exit from a local procedure to the one that contains it.
+This feature is listed in the Pascal's ANSI standard but not realized in
+BP. Together with procedural values, this is very useful for error handling:
+
+Program test;
+    Var on_eof: procedure;
+    Function read_char: char;
+        Var c: char;
+    Begin
+        If Eof (Input) Then on_eof;
+        read (c);
+        read_char := c;
+    End;
+
+    Procedure p;
+        Label eof_reached;
+        Procedure go_eof; Begin goto eof_reached; End;
+    Begin
+        on_eof := go_eof;
+        While True Do Write (read_char);
+    Eof_reached:
+        Writeln ('*** EOF ***');
+        on_eof := NIL;
+    End;
+
+Begin
+    p;
+End.
+
+Restriction: BREAK and CONTINUE operators cannot be used for exit
+from a procedure. Use GOTO instead.
+
+Example:
+
+        for i := 1 to 10 do
+            writeln (integral (  -- function integral from previous example
+                if a < 0 then break else result := sqrt (a), -- incorrect
+            i, i + 1, 0.01));
+
+        declare
+            label L;
+        begin
+            for i := 1 to 10 do
+                writeln (integral (
+                    if a < 0 then goto L else result := sqrt (a), -- correct
+                i, i + 1, 0.01));
+        L: end;
+
+Functions may return any values of any type, including structures and arrays.
+
+The new operator DECLARE
+
+   DECLARE
+       <declaration part>
+   BEGIN
+       <statement list>
+   END
+
+allows one to describe local variables and procedures anywhere in the
+program.  Use of "DECLARE" leads to more readable programs and conserves
+the stack space.
+
+Functions length, chr, ord may be used as variables. For example:
+
+         chr (i) := ' ';   is equivalent to   i := ord (' ');
+         ord (c) := 255;   is equivalent to   c := chr (255);
+         length (s) := 10; is equivalent to   s [0] := chr (10);
+
+
+The main program may contain "interface" and "implementation".
+This allows access to the variables of the main program from other
+modules:
+
+    program Test;
+    interface
+    var
+      global: Integer;
+    implementation
+    uses Unit_test;
+    begin
+       Unit_test.write;
+    end.
+
+    unit Unit_test;
+    interface
+    procedure Write_global;
+    implementation
+    uses Test;
+      procedure Write_global;
+      begin
+          Write(test.global);
+      end;
+    end.
+
+!!! Here the name of the file that contains the text of the main program
+must be identical with the name that follows the keyword "program".
+
+New type: DWORD - an unsigned 32-bit integer (same as unsigned long in C).
+It can be useful in many cases, but keep in mind that during arithmetic
+operations between DWORD's and LONGINT's both arguments are casted to
+LONGINT's. This may cause an error.
+
+ABSOLUTE may refer to fields of records and objects.  Also, the
+address of a global record/object field can be used within the initialization
+of typed constants.  Furthermore one can use recursive initialization:
+
+type
+  rec = record
+          next: ^rec;
+          buffer: array [1..10] of char;
+          buf_adr: pointer;
+        end;
+
+const
+  cyclic: rec = (next: @cyclic; buf_adr: @cyclic.buffer);
+
+In initialization of structures and objects the fields may go in
+an arbitrary order. If a field is not listed, it is zeroed up.
+
+The syntax of the STR operator has been extended:
+
+    STR (value[:width[:precision]], ..., dest);
+
+Here STR (name:2, ':', ext:3, dst); is equivalent to
+
+        STR (name:2, temp1);
+        STR (':',    temp2);
+        STR (ext:3,  temp3);
+        dst := temp1 + temp2 + temp3;
+
+Negative field widths in WRITE, WRITELN, and STR left align the value within
+its field.
+
+!!! The Strings unit contains additional functions which may be more
+    convenient than the STR operator.
+
+     Multidimensional open arrays:
+
+You can now use in procedure parameters and functions descriptions
+"array (<dim>) of <type>", where <dim> is a positive integer constant, defining
+the number of dimensions,  nd <type> is the type of the array elements.
+To determine the upper bounds of the array, use the "high (array)" function.
+It returns a vector of longints ("array [0..<dim>-1] of longint") containing
+the upper bounds. The lower bounds are always set to 0. The vector of the lower
+bounds can be obtained with a similar function "low".
+
+Example:
+
+procedure print_vector (v: array (1) of double);
+var i: integer;
+begin
+    for i := 0 to high (v) [0] do write (v [i]:10:6, ' ');
+    writeln;
+end;
+
+procedure print_matrix (m: array (2) of double);
+var i: integer;
+begin
+    for i := 0 to high (m) [0] do print_vector (m [i]);
+    writeln;
+end;
+
+const a: array [1..3, 1..3] of double = ((1,0,2),(2,1,0),(1,2,1));
+
+begin
+    print_matrix (a);
+end.
+
+You can find an example program for solving a system of linear equations in
+the directory SAMPLES\LIN_EQ.
+
+User defined operations.
+
+TMT Pascal allows redefining of the standard operations on predefined types and ¨
+overloading of these operationg for new types. For this, we use the construction
+
+    OVERLOAD:
+
+The syntax is:
+
+    OVERLOAD op_sign = qualified procedure identifier;
+
+Where the op_sign is one of the standard operation symbols:
+
+     + - / * = <> < > <= >= AND OR XOR SHL SHR MOD DIV IN NOT
+     +:=   -:=   *:=   /:=
+
+When a re-defined operation is used, TMT Pascal uses the last definition that
+could be applied toward operants of given types. For example, this fragment
+
+    FUNCTION add2_rr (a, b:    REAL):    REAL; result := (a + b) * 2;
+    FUNCTION add2_ii (a, b: INTEGER): INTEGER; result := (a + b) * 2;
+
+    OVERLOAD + = add_rr;
+    OVERLOAD + = add_ii;
+
+redefines the "+" operation. Notice that the order of OVERLOAD's is important.
+The reverse order
+
+    OVERLOAD + = add_ii;
+    OVERLOAD + = add_rr;
+
+will cause "add_rr" used *always* since integers can always be cast into
+reals.
+
+In the SOURCES subdirectory you can find the source of the COMP module which
+realizes the complex numbers and defines the operations on them.
+
+Operations +:=, -:=, *:= and /:= have the lowest precedence (lower, than the comparison
+operations) and are right-associative. The operations "+:=" and "-:=" are
+predefined for all integer and real types; the operations "*:=" and "/:="
+are predefined for all real types, with the obvious meaning.
+
+See also description of Strings unit.
+
+
+     NEW: Iterated typed array constats:
+
+     you can use the notation "..." in the array initialization.
+The ellipses should be the last element in the initialization list. If
+used, the remaining elements of the array are filled up with the
+last given value that preceded the ellipses. Ellipses cannot be the first
+element of the initialization list.
+
+Example:
+
+const a: array [1..10, 1..10] of integer = (
+    (1,...), (2,...), (3,...), (4, 5, 6, ...), (0, ...), ...
+);
+
+fills up the 10 by 10 array as follows:
+
+        1 1 1 1 1 1 1 1 1 1
+        2 2 2 2 2 2 2 2 2 2
+        3 3 3 3 3 3 3 3 3 3
+        4 5 6 6 6 6 6 6 6 6
+        0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0
+
+    3. Incompatibilities:
+
+Procedural values is 8 byte long and has the following format:
+
+0   +-----------------------+
+    | The entry point       |
+4   +-----------------------+
+    | The local environment |
+8   +-----------------------+
+
+However, a pointer to a procedure is only 4 byte long and contains only the
+address of the entry point. The @ operator verifies that the procedure is
+global. Otherwise a range error is generated.
+
+Furthermore, the stack frame structure and parameter passing conventions
+differ from those in BP.
+
+Thus the approach used in TVision and CLassLib for writing iterators
+cannot be used. However, we offer this correct and reliable (and more
+standard) way:
+
+     Type list = object
+                     next: ^list;
+                     procedure for_all (procedure body (var v));
+                 end;
+
+     Procedure list.for_all;
+         Var p: ^list;
+     Begin
+         p := @self;
+         repeat
+             body (p);
+             p := p^.next;
+         end;
+     End;
+
+     ...
+
+     Type int_list = object (list)
+                         value: integer;
+                         function first_positive: ^int_list;
+                     end;
+
+     Function int_list.first_positive;
+         Label OK;
+         Var res: ^int_list;
+         Procedure do_item (var v);
+         Begin
+             If int_list (v).value > 0 Then
+             Begin
+                 res := @v;
+                 GoTo OK;
+             End
+         End;
+     Begin
+         res := nil;
+         for_all (do_item);
+     OK:
+         first_positive := res;
+     End;
+
+     ...
+
+
+
+Since in the flat model there are no segments, SEG() always returns 0,
+while PTR() ignores its first parameter.
+
+!!! Be careful with these functions: in practice, any use of PTR() or SEG()
+    in your program may require a program modification.
+
+Pseudo-array Mem and MemW are used as follows:
+
+    i := MemW [<linear address>]
+
+Note that the segment is not given. Furthermore, the pseudo-arrays
+MemD and PortD of type DWORD are available.
+
+See "Memory organization" for more details.
+
+
+Built-in assembler
+------------------
+
+The built-in assembler of TMT Pascal is 32-bit.  It is compatible
+with the BP's built-in assembler with the following differences:
+
+Since the program created by Pascal is executed in the flat model,
+the far call and jump commands as well as the @Code and @Data symbols
+are not implemented.
+
+The ret command:
+
+The ret command without arguments is considered as a ret <parameter block
+size> command.  If you need to write the ret command without size you should
+set 0 explicitly:
+
+      ret 0
+
+Code-procedure
+
+Besides the assembler-routine you can use the code-routine.  It has the
+following differences: the compiler doesn't emit the frame command on
+enter and return from the routine (including the ret command), and the local
+parameters are based on ESP at the moment of entry.
+
+Example:
+
+    function hi (n: word); code;
+    asm
+        mov al, byte ptr [n+1]
+        ret
+    end;
+
+
+Possible problems during usage
+------------------------------
+
+Programs, generated by TMT Pascal abend under OS/2. Correction:
+- ensure that in "memory settings" EMS_MEMORY_LIMIT is not equal to 0.
+
+
+Run-time errors codes
+---------------------
+
+  1    Invalid function number
+  2    File not found
+  3    Path not found
+  4    Too many open files
+  5    File access denied
+  6    Invalid file handle
+ 12    Invalid file access code
+ 15    Invalid drive number
+ 16    Cannot remove current directory
+ 17    Cannot rename across drives
+ 18    No more files
+100    Disk read error
+101    Disk write error
+102    File not assigned
+103    File not open
+104    File not open for input
+105    File not open for output
+106    Invalid numeric format
+150    Disk is write protected
+151    Bad drive request struct length
+152    Drive not ready
+154    CRC error in data
+156    Disk seek error
+157    Unknown media type
+158    Sector not found
+159    Printer out of paper
+160    Device write fault
+161    Device read fault
+162    Hardware failure
+200    Division by zero
+201    Range check error
+202    Stack overflow error
+203    Heap overflow error
+204    Invalid pointer operation
+205    Floating point overflow
+206    Floating point underflow
+207    Invalid floating point operation
+208    Overlay manager not installed
+209    Overlay file read error
+210    Object not initialized
+211    Call to abstract method
+212    Stream registration error
+213    Collection index out of range
+214    Collection overflow error
+215    Arithmetic overflow error
+216    General protection fault
+217    Invalid operation_code
+300    File I/O error
+301    Nonmatched array bounds
+302    Non local procedure pointer
+303    Procedure pointer out of scope
+304    Function not implemented
+305    Breakpoint error
+306    Break by ctrl/C
+307    Break by ctrl break
+308    Break by other process
+309    No floating point coprocessor
+
+
+                              TMT Development Corporation (http://www.tmt.com)

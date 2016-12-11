@@ -1,0 +1,344 @@
+*** pcom.p	Wed Aug 26 21:32:43 1992
+--- pcom.pas	Wed Aug 26 21:32:43 1992
+***************
+*** 1,2
+! (*$c+,t-,d-,l-*)
+   (***********************************************
+
+--- 1,2 -----
+! 
+   (***********************************************
+***************
+*** 48,50
+     stackelsize =      1;
+!    strglgth    =     16;
+     sethigh     =     47;
+
+--- 48,50 -----
+     stackelsize =      1;
+!    strglgth    =     80;
+     sethigh     =     47;
+***************
+*** 117,119
+  
+!      structure = packed record
+  		   marked: boolean;   (*for test phase only*)
+
+--- 117,119 -----
+  
+!      structure = record
+  		   marked: boolean;   (*for test phase only*)
+***************
+*** 141,143
+  
+!      identifier = packed record
+  		   name: alpha; llink, rlink: ctp;
+
+--- 141,143 -----
+  
+!      identifier = record
+  		   name: alpha; llink, rlink: ctp;
+***************
+*** 175,177
+       testp = ^ testpointer;
+!      testpointer = packed record
+  		     elt1,elt2 : stp;
+
+--- 175,177 -----
+       testp = ^ testpointer;
+!      testpointer = record
+  		     elt1,elt2 : stp;
+***************
+*** 193,195
+  var
+! (*    prr: text; (* comment this out when compiling with pcom *)
+  				    (*returned by source program scanner
+
+--- 193,195 -----
+  var
+!     prr: text; (* comment this out when compiling with pcom *)
+  				    (*returned by source program scanner 
+***************
+*** 251,253
+        array [disprange] of
+! 	packed record	       (*=blck:   id is variable id*)
+  	  fname: ctp; flabel: lbp;  (*=crec:   id is field id in record with*)
+
+--- 251,253 -----
+        array [disprange] of
+! 	record	       (*=blck:   id is variable id*)
+  	  fname: ctp; flabel: lbp;  (*=crec:   id is field id in record with*)
+***************
+*** 266,268
+        array [1..10] of
+! 	packed record pos: integer;
+  		      nmr: 1..400
+
+--- 266,268 -----
+        array [1..10] of
+! 	record pos: integer;
+  		      nmr: 1..400
+***************
+*** 354,356
+  	digit: packed array [1..strglgth] of char;
+! 	string: packed array [1..strglgth] of char;
+  	lvp: csp; test: boolean;
+
+--- 354,356 -----
+  	digit: packed array [1..strglgth] of char;
+! 	thestring: packed array [1..strglgth] of char;
+  	lvp: csp; test: boolean;
+***************
+*** 362,365
+        if not eof(input) then
+!        begin eol := eoln(input); read(input,ch);
+! 	if list then write(output,ch);
+  	chcnt := chcnt + 1
+
+--- 362,374 -----
+        if not eof(input) then
+!        begin 
+!          eol := eoln(input); 
+!          IF eol THEN
+!            BEGIN
+!              ch := ' ';
+!              Readln(input);
+!            END
+!          ELSE
+!            read(input,ch);
+! 	if list then 
+!     write(output,ch);
+  	chcnt := chcnt + 1
+***************
+*** 411,413
+  	    if k < 8 then
+! 	     begin k := k + 1; id[k] := ch end ;
+  	    nextch
+
+--- 420,428 -----
+  	    if k < 8 then
+! 	     begin 
+!          k := k + 1; 
+!          IF (ch >= 'A') AND (ch <= 'Z') THEN
+!            id[k] := CHR( ORD(ch) - ORD('A') + ORD('a') )
+!          ELSE
+!            id[k] := ch 
+!        end ;
+  	    nextch
+***************
+*** 484,486
+  	    repeat nextch; lgth := lgth + 1;
+! 		   if lgth <= strglgth then string[lgth] := ch
+  	    until (eol) or (ch = '''');
+
+--- 499,501 -----
+  	    repeat nextch; lgth := lgth + 1;
+! 		   if lgth <= strglgth then thestring[lgth] := ch
+  	    until (eol) or (ch = '''');
+***************
+*** 490,492
+  	  if lgth = 0 then error(205) else
+! 	  if lgth = 1 then val.ival := ord(string[1])
+  	  else
+
+--- 505,507 -----
+  	  if lgth = 0 then error(205) else
+! 	  if lgth = 1 then val.ival := ord(thestring[1])
+  	  else
+***************
+*** 497,499
+  		begin slgth := lgth;
+! 		  for i := 1 to lgth do sval[i] := string[i]
+  		end;
+
+--- 512,514 -----
+  		begin slgth := lgth;
+! 		  for i := 1 to lgth do sval[i] := thestring[i]
+  		end;
+***************
+*** 590,591
+      var lcp: ctp;
+    begin
+
+--- 605,607 -----
+      var lcp: ctp;
++         disx : integer;
+    begin
+***************
+*** 609,611
+      if prterr then
+!       begin error(104);
+  	(*to avoid returning nil, reference an entry
+
+--- 625,629 -----
+      if prterr then
+!       begin 
+!         error(104);
+!         writeln(id);
+  	(*to avoid returning nil, reference an entry
+***************
+*** 1017,1020
+  
+!     function string(fsp: stp) : boolean;
+!     begin string := false;
+        if fsp <> nil then
+
+--- 1035,1038 -----
+  
+!     function isstring(fsp: stp) : boolean;
+!     begin isstring := false;
+        if fsp <> nil then
+***************
+*** 1021,1023
+  	if fsp^.form = arrays then
+! 	  if comptypes(fsp^.aeltype,charptr) then string := true
+      end (*string*) ;
+
+--- 1039,1041 -----
+  	if fsp^.form = arrays then
+! 	  if comptypes(fsp^.aeltype,charptr) then isstring := true
+      end (*string*) ;
+***************
+*** 1072,1074
+  			  begin rangetype := idtype; form := subrange;
+! 			    if string(rangetype) then
+  			      begin error(148); rangetype := nil end;
+
+--- 1090,1092 -----
+  			  begin rangetype := idtype; form := subrange;
+! 			    if isstring(rangetype) then
+  			      begin error(148); rangetype := nil end;
+***************
+*** 1089,1091
+  		    constant(fsys + [colon],lsp1,lvalu);
+! 		    if string(lsp1) then
+  		      begin error(148); lsp1 := nil end;
+
+--- 1107,1109 -----
+  		    constant(fsys + [colon],lsp1,lvalu);
+! 		    if isstring(lsp1) then
+  		      begin error(148); lsp1 := nil end;
+***************
+*** 1180,1182
+  			displ := displ+lsp1^.size;
+! 			if (lsp1^.form <= subrange) or string(lsp1) then
+  			  begin if comptypes(realptr,lsp1) then error(109)
+
+--- 1198,1200 -----
+  			displ := displ+lsp1^.size;
+! 			if (lsp1^.form <= subrange) or isstring(lsp1) then
+  			  begin if comptypes(realptr,lsp1) then error(109)
+***************
+*** 1182,1184
+  			  begin if comptypes(realptr,lsp1) then error(109)
+! 			    else if string(lsp1) then error(399);
+  			    lcp^.idtype := lsp1; lsp^.tagfieldp := lcp;
+
+--- 1200,1202 -----
+  			  begin if comptypes(realptr,lsp1) then error(109)
+! 			    else if isstring(lsp1) then error(399);
+  			    lcp^.idtype := lsp1; lsp^.tagfieldp := lcp;
+***************
+*** 2013,2015
+  	      case kind of
+! 		cst:   if string(typtr) then
+  			 if cstptrix >= cstoccmax then error(254)
+
+--- 2031,2033 -----
+  	      case kind of
+! 		cst:   if isstring(typtr) then
+  			 if cstptrix >= cstoccmax then error(254)
+***************
+*** 2373,2375
+  			  else
+! 			    if string(lsp) then
+  			      begin len := lsp^.size div charmax;
+
+--- 2391,2393 -----
+  			  else
+! 			    if isstring(lsp) then
+  			      begin len := lsp^.size div charmax;
+***************
+*** 2478,2480
+  		    if lsp^.tagfieldp <> nil then
+! 		      if string(lsp1) or (lsp1 = realptr) then error(159)
+  		      else
+
+--- 2496,2498 -----
+  		    if lsp^.tagfieldp <> nil then
+! 		      if isstring(lsp1) or (lsp1 = realptr) then error(159)
+  		      else
+***************
+*** 3076,3078
+  			    begin
+! 			      if not string(lattr.typtr)
+  				then error(134);
+
+--- 3094,3096 -----
+  			    begin
+! 			      if not isstring(lattr.typtr)
+  				then error(134);
+***************
+*** 3202,3204
+  	  type cip = ^caseinfo;
+! 	       caseinfo = packed
+  			  record next: cip;
+
+--- 3220,3222 -----
+  	  type cip = ^caseinfo;
+! 	       caseinfo = 
+  			  record next: cip;
+***************
+*** 3909,3910
+      var i : integer;
+      begin
+
+--- 3927,3929 -----
+      var i : integer;
++         c : char;
+      begin
+***************
+*** 3911,3931
+        for i := ordminchar to ordmaxchar do chartp[chr(i)] := illegal;
+!       chartp['a'] := letter  ;
+!       chartp['b'] := letter  ; chartp['c'] := letter  ;
+!       chartp['d'] := letter  ; chartp['e'] := letter  ;
+!       chartp['f'] := letter  ; chartp['g'] := letter  ;
+!       chartp['h'] := letter  ; chartp['i'] := letter  ;
+!       chartp['j'] := letter  ; chartp['k'] := letter  ;
+!       chartp['l'] := letter  ; chartp['m'] := letter  ;
+!       chartp['n'] := letter  ; chartp['o'] := letter  ;
+!       chartp['p'] := letter  ; chartp['q'] := letter  ;
+!       chartp['r'] := letter  ; chartp['s'] := letter  ;
+!       chartp['t'] := letter  ; chartp['u'] := letter  ;
+!       chartp['v'] := letter  ; chartp['w'] := letter  ;
+!       chartp['x'] := letter  ; chartp['y'] := letter  ;
+!       chartp['z'] := letter  ; chartp['0'] := number  ;
+!       chartp['1'] := number  ; chartp['2'] := number  ;
+!       chartp['3'] := number  ; chartp['4'] := number  ;
+!       chartp['5'] := number  ; chartp['6'] := number  ;
+!       chartp['7'] := number  ; chartp['8'] := number  ;
+!       chartp['9'] := number  ; chartp['+'] := special ;
+        chartp['-'] := special ; chartp['*'] := special ;
+
+--- 3930,3939 -----
+        for i := ordminchar to ordmaxchar do chartp[chr(i)] := illegal;
+!       for c := 'a' TO 'z' DO
+!         chartp[c] := letter;
+!       for c := 'A' TO 'Z' DO
+!         chartp[c] := letter;
+!       for c := '0' TO '9' DO
+!         chartp[c] := number;
+! 
+!       chartp['+'] := special ;
+        chartp['-'] := special ; chartp['*'] := special ;
+***************
+*** 3994,3996
+  
+!   (*compile:*) (*rewrite(prr); (*comment this out when compiling with pcom *)
+    (**********)
+
+--- 4002,4004 -----
+  
+!   (*compile:*) rewrite(prr,'pcode'); (*comment this out when compiling with pcom *)
+    (**********)

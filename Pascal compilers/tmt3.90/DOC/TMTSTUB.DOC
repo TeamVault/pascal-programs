@@ -1,0 +1,939 @@
+                            TMTSTUB DOS EXTENDER
+                            --------------------
+                         by Rustam Gadeyev, 15 May 98
+
+
+                                INTRODUCTION
+                                ------------
+
+TMTSTUB is based on the WDOSX 0.94 extender by TIPPACH. This extender
+is intended as a replacement of PASSTUB, the PMODE-based extender, which
+comes with TMT Pascal. This extender supports all functions, which are
+supported by PASSTUB, but some new functions and new features are added.
+The main advantage of TMTSTUB version 0.31 is its exceptions support. Because
+of this a hanging program is terminated with the correct registers output.
+
+Unlike the old PASSTUB there is function 800h of DPMI service
+(MapPhysicalToLinear) is supported. This function is required for support of
+LFB modes support. Note however that LFB modes are not supported by the GRAPH unit
+of the restricted (free) version of TMT PASCAL. Buy the unrestricted version
+to get access to LFB.
+
+The LOGO- option in PLT.CFG disables output of the TMTSTUB logo during the
+running of the emitted program.
+
+The size of the stub-file is only 12436 bytes.
+
+ A some statistics about speed of MEMAVAIL:
+
+program test; {$Q-,R-}
+function ticks:longint;
+begin
+ {$ifndef __TMT__}
+ ticks:=meml[$40:$6c];
+ {$else}
+ ticks:=memd[$40:$6c+_zero]; {the _zero variable is not required for TMTSTUB}
+ {$endif}
+end;
+var tt,i,temp:longint;
+begin
+ i:=0;
+ tt:=ticks; while tt=ticks do;
+ tt:=ticks+20;
+ while tt>ticks do
+ begin
+  temp:=memavail;
+  temp:=memavail;
+  inc(i);
+ end;
+ writeln(i);
+end.
+
+    Results for 20 ticks of the timer on a iPentium-133 24mb:
+               Raw DOS  XMS(HIMEM) VCPI (EMM386, QEMM)  DPMI(WIN95) Extender
+PASSTUB      - 30021,   6488,      ???,         6,         47       PMODE3.07
+DOS32        - 1235,    998,       749,         334,       47       DOS32
+TMTSTUB31    - 16152,   16151,     16223,       16224,     82       WDOSX
+PMWSTUB      - 25571,   24107,     25544,       25563,     47       PMODE/W
+
+BP7.0 (Prot) - 143907,  143907,    143844,      143860,    143000   RTM
+BP7.0 (Real) - 1147008, 1147011,   1146926,     1147000,   1130000  real
+
+
+
+-----------------------------------------------------------------------------
+WARNING! PASSTUB will not work with IDE, which comes with TMT Pascal. You may
+use this extender with unrestricted version of TMT Pascal to compile your own
+programs using PLT.EXE only. Do not use TMTSTUB extender for program
+debugging. You shold use PMWSTUB.EXE (PMODE/W-based extender) for program
+debugging with IDE.
+------------------------------------------------------------------------------
+
+
+                                TMTSTUB API
+                                -----------
+As shown above, TMTSTUB supports all functions, which are supported
+by PASSTUB extenders, but some new functions and new features are
+added.
+
+
+1. Supported DOS32 API (from file API.DOC by Adam Seychell)
+
+                          SET CURRENT FILE POSITION          V3.0+
+     AH = 42h
+     AL = origin of move
+         00h start of file
+         01h current file position
+         02h end of file
+     BX = file handle
+     EDX = offset from origin of new file position
+Return: CF clear if successful
+            EAX = new file position in bytes from start of file
+        CF set on error
+            AX = error code (01h,06h)
+Notes:    The normal real mode DOS function uses CX:DX as the
+          position of the file to seek and returns DX:AX with the
+          new value of the position. This protected mode version
+          uses EDX in place of CX:DX and uses EAX in place of
+          DX:AX.
+
+                    LOAD AND/OR EXECUTE PROGRAM              V3.0+
+     AH = 4Bh
+     AL = type of load
+         00h load and execute
+         01h load but do not execute
+     DS:EDX -> ASCIZ program name (must include extension)
+     DS:EDI -> Program environment to copy for child process (copy
+               caller's environment if EDI = zero )
+     DS:ESI -> pointer to command tail to be copied into child's
+               PSP
+Return: CF clear if successful
+
+        CF set on error
+            AX = error code (01h,02h,05h,08h,0Ah,0Bh)
+
+Notes:    Unlike DOS's 4Bh function this does not require a
+          parameter block to be set up. The environment and
+          command tail are pointed to by DS:EDI and DS:ESI
+          respectively. See the examples distributed with DOS32 on
+          how this function may be used. It seems that MS-DOS will
+          redirect the current DTA address after this function is
+          called. When this service is called the current DTA
+          address will be reset to the default area of 80h bytes
+          ahead the PSP address.
+     o    The command line string is expected in the Pascal string
+          format. The first byte represents the number of
+          characters in the string followed by the actual string .
+
+                   GET DOS32 ADDRESS INFORMATION            V3.01+
+
+ IN:    AX = EE02h
+
+ OUT:   EBX = 32bit linear address of the program segment
+        EDX = Total size in bytes of the programs .EXE file after
+               linking.
+        ESI = Offset address of PSP ( Program Segment Prefix )
+        EDI = Offset address of Program Environment
+        ECX = Offset address of the programs .EXE file name and
+               path (in ASCIZ format, i.e. terminates with a zero)
+         AX = Real mode segment value of the 8Kb buffer that is
+               used by the file read/write services.
+
+Notes:
+  o  All offset addresses returned are relative to the main
+     program segment.
+  o  The .EXE file size is generally used for loading extra data
+     appended to the original application's .EXE file. The
+     application may simply seek to this position to access the
+     appended data.
+  o  The .EXE file name pointed by ECX is actually the file name
+     contained in the last string of the Environment segment
+     pointed to by EDI.
+  o  The PSP address points to the original PSP set up by DOS.
+     Thus pointers stored in here still contain real mode
+     (segment:offset) values. Also this PSP address may not be the
+     same address returned by DOSs Int 21h AH=62h (Get PSP) since
+     DOS32 may of been loaded by a parent stub program.
+  o  Since the segment address returned in AX points to the 8Kb
+     buffer used by the virtualized 32bit file read/write service
+     (INT 21h AH=3Fh/40h) then the contents of this buffer will be
+     distroyed apon call to these  services. However, the
+     application may make temporary use of the buffer rather than
+     allocating a separate DOS block for transferring data between
+     real mode and protected mode. The near pointer of the buffer
+     will be equal to (16*AX - EBX)
+  o  This function may be called in a protected mode interrupt
+     handler.
+
+                  UNDO PREVIOUS MEMORY ALLOCATION           v3.00+
+
+
+        This function will free the previously allocated memory
+block ( function AX =EE41h ) or DMA buffer ( function AX=EE42h )
+If this function is called multiple times then memory will be
+deallocated in reverse order to when allocated. For example, if a
+memory block was allocated followed by a DMA buffer then at first
+time this function is called the DMA buffer would be freed, a
+second call to this function will free the memory block, a third
+call will return an error ( Carry set ) because at this point no
+memory is being allocated.
+
+ IN:  AX = EE40h
+
+ OUT:  If function successful carry flag is cleared
+       If unsuccessful the carry flag is set
+
+ Notes:
+    o     This function will fail if there is no memory allocated.
+    o     All memory will automatically be freed when then
+          application terminates.
+
+
+
+                      ALLOCATE A MEMORY BLOCK               V3.00+
+
+        The entire application code,data and stack is initially
+contained in one large memory block. This service here is used for
+allocating extra memory blocks for the application.
+
+ IN:  AX = EE42h
+      EDX = Size of the memory block requested to allocate in
+          bytes.
+
+OUT:  EAX = The actual allocated size of the memory block in bytes
+      EDX = Near pointer to the base address of the block relative
+            to the main program segment.
+
+     If the returned size was less than the requested size then
+     the Carry flag is set otherwise the carry flag is cleared.
+
+ Notes:
+  o  The value expected in EDX will be rounded off to the next
+     4KB boundary.  Example, allocating 51001h bytes will actually
+     allocate 52000h bytes.
+  o  Never call this function in a interrupt handler or after
+     using the terminated and stay resident function ( AX=EE30h ).
+  o  If EAX is returned with zero then no memory was allocated and
+     contents of EDX are undefined.
+  o  The function will fail if the requested size is zero.
+  o  No more than 64 allocations can be made. If the application
+     requires a faster more versatile memory management then
+     please use Peter Anderson's memory sub-functions from PAL
+     library. See example files on how to use. This function here
+     is should used a minimum number of times.
+  o  When not running under a DPMI server ( i.e  Raw,XMS or VCPI )
+     then extended memory is allocated before conventional memory
+     is. For example, if there is no more extended memory free
+     then conventional memory will be allocated. In either case
+     DOS32 sets up the 386 page tables such that the allocated
+     memory is addressed in a straight linear block when it may
+     actually be physically scattered throughout RAM.
+
+
+Attention! Function 42h and 4Bh int 21h have other register values
+           for compatibility with DOS32, TMT Pascal. See above.
+
+
+
+2. Supported WDOSX API (from README.TXT by Wuschel a.k.a Michael Tippach)
+
+
+2.1. INTERRUPTS AND EXCEPTIONS
+
+- If you're running in plain DOS without a DPMI host, WDOSX will install its -
+- built in DPMI host. The following section describes the behaviour of the   -
+- WDOSX DPMI host in certain situations. While running under Windows etc.    -
+- things are depending on the DPMI host the system provides.                 -
+
+If a protected  mode IRQ handler has been installed by your program,  hardware
+interrupts  occuring  in real mode or V86 mode are  passed up to it. Otherwise
+the real (V86) mode handler is called.
+
+WDOSX can  handle a  maximum mode switch nesting level of 16.  This may be im-
+portant to know  when doing  mode switches  from within an IRQ handler or even
+allowing an IRQ handler to be interrupted again.
+
+All software interrupts up to 0Fh are  interpreted  as exceptions, so doing an
+INT 5 to invoke the  printscreen handler will trigger a bounds check exception
+instead. You may want to use the DPMI translation  services to get INT 5 doing
+the expected things.
+
+Unlike the DPMI spec says, exceptions 0..7 are not passed down to realmode.
+
+If an exception  handler has been installed by your program, it will be called
+in a DPMI compliant manner.  Otherwise  the  default  handler  will take over,
+causing a register dump and program termination as usual.
+
+Because your program is running on privilege level 0 when WDOSX  installed its
+own DPMI host,  there will be no  stack  switch  done by the CPU  itself if an
+exception occurs.  This will cause the  system to crash with a triple fault if
+your program's stack is corrupted at this point.  Most stack faults will crash
+the machine either because of this.
+
+Exception 0F will be passed down to real mode under  any  cirmstances. This is
+because of a nice feature of the interrupt  controller beeing able to generate
+spurious IRQ 7's.
+
+
+2.2. MEMORY LAYOUT
+
+If WDOSX is  running its built in DPMI host,  the initial linear start address
+of your program's memory block is 400000h. Under Windows etc. it can be pretty
+much anywhere so don't make assumptions here.
+
+At startup, ESP will  point to to the top of the  memory block,  IOW accessing
+the memory location at  [esp]  will be an invalid  operation which may cause a
+page fault, while accessing [esp-4] (by pushing a value etc.) is fine.
+
+The cs: ds: (= ss:)  descriptors  are initialized with a limit of 4G. However,
+Windows NT 3.5, for instance, does alter the descriptor limits internally. So,
+if you like to know the true limits, use the LSL instruction.
+
+Some documentations do recommend the use of negative offsets for accessing the
+video memory or any other memory region in the first megabyte.  Be warned that
+there are some pitfalls with this method.   The DPMI host is allowed to change
+the linear base address of your segment if you resize it.  So, your previously
+calculated  negative offsets will become  invalid and you need to  recalculate
+them.  A more  hassle  free variant is to  allocate  a  descriptor with a base
+address of 0 and a limit of 4G that'll let you access  virtually  anything you
+want.
+
+Never call  INT 31/0503 to resize the segment you're currently running in!  To
+keep you away from doing this with your initial segment, I just don't tell you
+the handle the DPMI host returned when WDOSX allocated the memory block.
+
+WDOSX provides an easy to use API function  (INT 21/FFFF) that lets you resize
+your initial segment. It MUST be called from within your initial segment, too!
+Well, it isn't a good idea to have more than one DPMI memory block either,  so
+what? (The debugger uses two of them, but this is another issue.)
+
+
+3. THE WDOSX API
+
+The WDOSX API could be divided into 3 parts:
+
+- DPMI 0.9 API
+- Extended INT 21H DOS API
+- Other functions
+
+Currently, almost all DPMI functions as described in the DPMI0.9 specification
+are supported by WDOSX. Plus, I included function 801h due to popular demand.
+
+If you're not familiar with DPMI, pull the spec from:
+
+ftp://x2ftp.oulu.fi/pub/msdos/programming/specs/dpmispec.arj
+
+The  extended INT 21H is  implemented  in a way similar to other DOS extenders
+that provide an extended INT 21H DOS API. Just to answer a FAQ:  DOS functions
+that do not need segment  register  passing in either  direction can be called
+directly and are thus supported "by nature"! This may sound obvious to some of
+you, but it just isn't to everyone.
+
+
+3.1. DPMI 0.9 FUNCTIONS SUPPORTED
+
+0000h   ALLOC LDT DESCRIPTORS
+0001h   FREE LDT DESKRIPTORS
+0002h   SEGMENT -> SELECTOR
+0003h   GET SELECTOR INCRMENT
+0006h   GET SEGMENT BASE
+0007h   SET SEGMENT BASE
+0008h   SET SEGMENT LIMIT
+0009h   SET ACCESS RIGHTS
+000Ah   CREATE ALIAS
+000Bh   GET DESCRIPTOR
+000Ch   SET DESCRIPTOR
+0100h   ALLOC DOS- MEM
+0101h   FREE DOS- MEM
+0102h   MODIFY DOS- MEM
+0200h   GET REALMODE INTERRUPT VECTOR
+0201h   SET REALMODE INTERRUPT VECTOR
+0202h   GET EXCEPTION HANDLER
+0203h   SET EXCEPTION HANDLER
+0204h   GET PM INTERRUPT VECTOR
+0205h   SET PM INTERRUPT VECTOR
+0300h   SIMULATE REAL MODE INTERRUPT
+0301h   CALL REALMODE PROCEDURE (RETF)
+0302h   CALL REALMODE PROCEDURE (IRET)
+0303h   ALLOCATE REALMODE CALLBACK
+0304h   FREE REALMODE CALLBACK
+0400h   GET DPMI VERSION
+0500h   GET FREE MEM
+0501h   ALLOC MEM
+0502h   FREE MEM
+0503h   RESIZE MEM
+0600h   LOCK LINEAR REGION
+0601h   UNLOCK LINEAR REGION
+0602h   UNLOCK REALMODE REGION
+0603h   RELOCK REALMODE REGION
+0604h   GET PHYSICAL PAGE SIZE
+0702h   MARK PAGE PAGEABLE
+0703h   DISCARD PAGE
+0800h   MAP PHYSICAL REGION
+0801h   UNMAP PHYSICAL REGION
+0900h   GET AND DISABLE VI STATE
+0901h   GET AND ENABLE VI STATE
+0902h   GET VI STATE
+
+3.2. EXTENDED DOS API
+
+Overview:
+
+Function 09h - Write string to console
+Function 1Ah - Set disk transfer area address
+Function 1Bh - Get allocation information for default drive
+Function 1Ch - Get allocation information for specific drive
+Function 1Fh - Get drive parameter block for default drive
+Function 25h - Set interrupt vector
+Function 2Fh - Get disk transfer area address
+Function 32h - Get drive parameter block for specific drive
+Function 34h - Get address of InDos flag
+Function 35h - Get interrupt vector
+Function 39h - Create subdirectory
+Function 3Ah - Remove subdirectory
+Function 3Bh - Change current directory
+Function 3Ch - Create new file
+Function 3Dh - Open existing file
+Function 3Fh - Read from file
+Function 40h - Write to file
+Function 41h - Delete file
+Function 43h - Get/set file attributes
+Function 44h - IOCTL
+Function 47h - Get current directory
+Function 48h - Allocate DOS memory block
+Function 49h - Free DOS memory block
+Function 4Ah - Resize DOS memory block
+Function 4Bh - Load and execute child program
+Function 4Eh - Find first matching file
+Function 4Fh - Find next matching file
+Function 56h - Rename file
+Function 5Ah - Create temporary file
+Function 5Bh - Create new file
+
+
+- Detailed list of WDOSX extended DOS API functions:
+
+
+Function 09h - Write string to console
+--------------------------------------
+
+     AH = 09h
+     DS:EDX -> '$'-terminated string
+
+Note: The size of the string must be less or equal 16k since this is the
+transfer buffer size of WDOSX.
+
+Function 1Ah - Set disk transfer area address
+---------------------------------------------
+
+     AH = 1Ah
+     DS:EDX -> Disk Transfer Area
+
+Note: WDOSX will keep an internal buffer for the DTA. Upon any Find First/
+Find Next call, WDOSX does the necessary copying to make this call
+transparent for the user program.
+
+Function 1Bh - Get allocation information for default drive
+-----------------------------------------------------------
+
+     AH = 1Bh
+
+Returns
+
+     AL = sectors per cluster
+     CX = bytes per sector
+     DX = total number of clusters
+     DS:EBX -> media ID byte
+
+Function 1Ch - Get allocation information for specific drive
+------------------------------------------------------------
+
+     AH = 1Bh
+     DL = drive (0 = default, 1 = A: etc.)
+
+Returns
+
+     AL = sectors per cluster
+     CX = bytes per sector
+     DX = total number of clusters
+     DS:EBX -> media ID byte
+
+Function 1Fh - Get drive parameter block for default drive
+----------------------------------------------------------
+
+     AH = 1Fh
+
+Returns
+
+     AL = status (0 = success, -1 = invalid drive)
+     DS:EBX -> Drive Parameter Block
+
+Function 25h - Set interrupt vector
+-----------------------------------
+
+     AH = 25h
+     AL = interrupt number
+     DS:EDX -> new interrupt handler
+
+Note: This function sets the protected mode interrupt vector using DPMI call
+      0205h.
+
+Function 2Fh - Get disk transfer area address
+---------------------------------------------
+
+     AH = 2Fh
+
+Returns
+
+     ES:EBX -> Disk Transfer Area
+
+Note: If no DTA address is set, the default DTA address at PSP:80h will be
+      returned, otherwise the return pointer is the same as last passed to
+      function 1Ah.
+
+Function 32h - Get drive parameter block for specific drive
+-----------------------------------------------------------
+
+     AH = 32h
+     DL = drive number (0 = default, 1 = A: etc.)
+
+Returns
+
+     AL = status (0 = success, -1 = invalid drive)
+     DS:EBX -> Drive Parameter Block
+
+Function 34h - Get address of InDos flag
+----------------------------------------
+
+     AH = 34h
+
+Returns
+
+     ES:EBX -> InDos flag
+
+Function 35h - Get interrupt vector
+-----------------------------------
+
+     AH = 35h
+     AL = interrupt number
+
+Returns
+
+     ES:EBX -> address of interrupt handler
+
+Note: This function returns the address of the protected mode interrupt
+      handler as obtained using DPMI call 0204h.
+
+Function 39h - Create subdirectory
+----------------------------------
+
+     AH = 39h
+     DS:EDX -> ASCIZ pathname
+
+Returns
+
+     CF = clear on success, set on error (AX = error code)
+
+Function 3Ah - Remove subdirectory
+----------------------------------
+
+     AH = 3Ah
+     DS:EDX -> ASCIZ pathname
+
+Returns
+
+     CF = clear on success, set on error (AX = error code)
+
+Function 3Bh - Change current directory
+---------------------------------------
+
+     AH = 3Bh
+     DS:EDX -> ASCIZ pathname
+
+Returns
+
+     CF = clear on success, set on error (AX = error code)
+
+Function 3Ch - Create new file
+------------------------------
+
+     AH = 3Ch
+     CX = file attributes
+     DS:EDX -> ASCIZ filename
+
+Returns
+
+     CF = clear on success (AX = file handle)
+     CF = set on error (AX = error code)
+
+Function 3Dh - Open existing file
+---------------------------------
+
+     AH = 3Dh
+     AL = access mode
+     DS:EDX -> ASCIZ filename
+
+Returns
+
+     CF = clear on success (AX = file handle) set on error (AX = error
+     code)
+
+Function 3Fh - Read from file
+-----------------------------
+
+     AH = 3Fh
+     BX = file handle
+     ECX = number of bytes to read
+     DS:EDX -> data buffer
+
+Returns
+
+     CF = clear on success (EAX = number of bytes actually read)
+     CF = set on error (AX = error code)
+
+Note: This function allowes for reading up to 4 gigabytes at once (in
+      theory, that is.) There is no 64k limitation as in pure DOS.
+
+Function 40h - Write to file
+----------------------------
+
+     AH = 40h
+     BX = file handle
+     ECX = number of bytes to write
+     DS:EDX -> data buffer
+
+Returns
+
+     CF = clear on success (EAX = number of bytes actually written)
+     CF = set on error (AX = error code)
+
+Note: This function allowes for writing up to 4 gigabytes at once (in theory,
+      that is.) There is no 64k limitation as in pure DOS.
+
+Function 41h - Delete file
+--------------------------
+
+     AH = 41h
+     DS:EDX -> ASCIZ filename
+
+Returns
+
+     CF = clear on success, set on error (AX = error code)
+
+Function 43h - Get/set file attributes
+--------------------------------------
+
+     AH = 43h
+     AL = subfunction (0 = get, 1 = set)
+     DS:EDX -> ASCIZ filename
+
+     IF AL = 1:  CX = file attributes
+
+Returns
+
+     CF = clear on success, set on error (AX = error code)
+     CX = file attributes
+
+Function 44h - IOCTL
+--------------------
+
+     AH = 44h
+     AL = subfunction
+
+The following subfunctions are extended:
+
+     AL = 2 (read from character device control channel)
+     BX = file handle
+     ECX = number of bytes to read
+     DS:EDX -> buffer
+
+Returns
+
+     CF = clear on success (EAX = number of bytes actually read)
+     CF = set on error (AX = error code)
+
+Note: This function allowes for reading up to 4 gigabytes at once (in theory,
+      that is.) There is no 64k limitation as in pure DOS. Before calling the
+      actual DOS function, max (ECX,16k) bytes will be copied from DS:EDX into
+      the real mode transfer buffer to allow for passing request structures.
+
+     AL = 3 (write to character device control channel)
+     BX = file handle
+     ECX = number of bytes to write
+     DS:EDX -> data buffer
+
+Returns
+
+     CF = clear on success (EAX = number of bytes actually written)
+     CF = set on error (AX = error code)
+
+Note: This function allowes for writing up to 4 gigabytes at once (in theory,
+      that is.) There is no 64k limitation as in pure DOS.
+
+     AL = 4 (read from block device control channel)
+     BL = drive number (0 = default, 1 = A: etc.)
+     ECX = number of bytes to read
+     DS:EDX -> buffer
+
+Returns
+
+     CF = clear on success (EAX = number of bytes actually read)
+     CF = set on error (AX = error code)
+
+Note: This function allowes for reading up to 4 gigabytes at once (in theory,
+      that is.) There is no 64k limitation as in pure DOS. Before calling the
+      actual DOS function, max (ECX,16k) bytes will be copied from DS:EDX into
+      the real mode transfer buffer to allow for passing request structures.
+
+     AL = 5 (write to block device control channel)
+     BL = drive number (0 = default, 1 = A: etc.)
+     ECX = number of bytes to write
+     DS:EDX -> data buffer
+
+Returns
+
+     CF = clear on success (EAX = number of bytes actually written)
+     CF = set on error (AX = error code)
+
+Note: This function allowes for writing up to 4 gigabytes at once (in theory,
+      that is.) There is no 64k limitation as in pure DOS.
+
+Function 47h - Get current directory
+------------------------------------
+
+     AH = 47h
+     DL = drive number (0 = default, 1 = A: etc.)
+     DS:ESI -> 64 byte buffer to receive ASCIZ pathname
+
+Returns
+
+     CF = clear on success, set on error (AX = error code)
+
+Function 48h - Allocate DOS memory block
+----------------------------------------
+
+     AH = 48h
+     BX = number of paragraphs to allocate
+
+Returns
+
+     CF = clear on success, (AX = selector of allocated block)
+     CF = set on error, (AX = error code, bx = size of largest block)
+
+Function 49h - Free DOS memory block
+------------------------------------
+
+     AH = 49h
+     ES = selector of block to free
+
+Returns
+
+     CF = clear on success, set on error (AX = error code)
+
+Function 4Ah - Resize DOS memory block
+--------------------------------------
+
+     AH = 4Ah
+     BX = new size in paragraphs
+     ES = selector of block to resize
+
+Returns
+
+     CF = clear on success set on error, (AX = error code, bx = max. size
+     available)
+
+Function 4Bh - Load and execute child program
+---------------------------------------------
+
+     AH = 4BH
+     AL = 0 (other subfunctions NOT supported)
+     DS:EDX -> ASCIZ filename of the program to execute
+     ES:EBX -> parameter block (see below)
+
+Returns
+
+     CF clear on success, set on error (AX = error code)
+
+Note: Unlike under pure DOS, under WDOSX the format of the parameter block is
+      as follows:
+
+Offset 00000000: 48 bit protected mode far pointer to evironment string to use
+Offset 00000006: 48 bit protected mode far pointer to command tail to use
+
+This is the method most other DOS extenders also use, so there should be no
+significant compatibility problems.
+
+Function 4Eh - Find first matching file
+---------------------------------------
+
+     AH = 4Eh
+     AL = flag used by APPEND
+     CX = attribute mask
+     DS:EDX -> ASCIZ file name (may include path and wildcards)
+
+Returns
+
+     CF = clear on success (DTA as set with function 1Ah filled)
+     CF = set on error (AX = error code)
+
+Function 4Fh - Find next matching file
+--------------------------------------
+
+     AH = 4Fh
+     DTA as set with function 1Ah contains information from previous Find
+     First call (function 4Eh)
+
+Returns
+
+     CF = clear on success (DTA as set with function 1Ah filled)
+     CF = set on error (AX = error code)
+
+Function 56h - Rename file
+--------------------------
+
+     AH = 56h
+     DS:EDX -> ASCIZ filename
+     ES:EDI -> ASCIZ new filename
+
+Returns
+
+     CF = clear on success, set on error (AX = error code)
+
+Function 5Ah - Create temporary file
+------------------------------------
+
+     AH = 5Ah
+     CX = attributes
+     DS:EDX -> buffer containing path name ending with "\" + 13 zero bytes
+
+Returns
+
+     CF = clear on success, filename appended to path name in buffer (AX =
+     file handle)
+     CF = set on error (AX = error code)
+
+Function 5Bh - Create new file
+------------------------------
+
+     AH = 5Bh
+     CX = attributes
+     DS:EDX -> ASCIZ filename
+
+Returns
+
+     CF = clear on success, (AX = file handle)
+     CF = set on error (AX = error code)
+
+
+3.3 EXTENDED MOUSE FUNCTIONS
+----------------------------
+
+WDOSX extends the following INT 33H functions:
+
+AX = 0009H Define Graphics Cursor
+AX = 000CH Set Costum Event Handler
+AX = 0016H Save Mouse Driver State
+AX = 0017H Restore Mouse Driver State
+
+
+Function 0009H Define Graphics Cursor
+-------------------------------------
+
+     AX = 0009H
+     ES:EDX -> mouse pointer bitmap
+     BX = hot spot column
+     CX = hot spot row
+
+Function 000CH Set Custom Event Handler
+---------------------------------------
+
+     AX = 000CH
+     ES:EDX -> FAR routine
+     CX = call mask
+
+Note: Calling this function with an address of 0000:00000000 will uninstall
+      any previously installed handler.
+
+Function 0016H Save Mouse Driver State
+--------------------------------------
+
+     AX = 0016H
+     ES:EDX -> state save buffer
+     BX = size of buffer
+
+Function 0017H Restore Mouse Driver State
+-----------------------------------------
+
+     AX = 0017H
+     ES:EDX -> buffer containing saved state
+     BX = size of buffer
+
+
+3.4. OTHER WDOSX FUNCTIONS
+--------------------------
+
+
+INT 21H / AX = 0FFFFH "Resize Initial Memory Block"
+---------------------------------------------------
+
+     AX  = 0FFFFH
+     EDX = new size in bytes
+
+Returns
+
+     CF = clear on success, memory block size changed and selectors fixed
+     CF = set on error
+
+Note: This function is needed since a DPMI application cannot change the size
+      of the memory block it is currently running in. Should not be used from
+      inside HLL code since the runtime library will take care of memory
+      allocation issues and may become seriously confused about you using this
+      call together with malloc(), getmem() or whatsoever.
+
+
+INT 31H / AX = EEFFH  "DOS Extender Identification Call"
+--------------------------------------------------------
+
+     AX = EEFFh
+
+Returns
+
+     CF  = clear
+     EAX = 'WDSX'
+     ES:EBX = far pointer to ASCIIZ copyright string
+     CH = memory allocation type (0=INT15, 1=XMS, 2=VCPI, 3=DPMI)
+     CL = CPU (3=386, 4=486, ... )
+     DH = extender major version ( currently 0 )
+     DL = extender minor version ( currently 94 decimal )
+
+Note: This call is also supported by some other DOS extenders so it might
+      provide a resonable solution for a program to identify the underlying
+      DOS extender at runtime.
+
+
+4.  FUTURE PLANS
+----------------
+
+At the top of my current wish list there are:
+
+1. True flat model (zero based) for the other relocatable executable formats
+   (the PE formats, that is), as the WATCOM variant of WDOSX already has.
+
+   The main concern is to accomplish this while staying backwards compatible
+   with earlier versions. However,  non- relocatable formats like MZ or flat
+   form binary will never run with zero based descriptors since there simply
+   is no way to relocate these kinds of executables.
+
+2. Improvements on the Win32 emulator. This might/might not  include support
+   for DLLs and the ability for you to add new functions to the emulation.
+
+   This is difficult since I'll have to bring the source code for the Win32
+   emulator in a human readable form so I can release it.
+
+3. A change in British law to allow public houses having still opened after
+   11 if (and only if) they've got Radeberger Beer (the _real_ thing!)
+
+That's all. Enjoy!
+
+Wuschel a.k.a Michael Tippach
+Rustam Gadeyev 15 May 98

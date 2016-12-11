@@ -1,0 +1,134 @@
+l   3
+ ent   1   l   4
+ ent   2   l   5
+ ldci 1
+ ldci 10
+ lda   0       6
+ csp         wri
+ lca' iterations                                                                     '
+i   10
+ ldci 11
+ ldci 11
+ lda   0       6
+ csp         wrs
+ lda   0       6
+ csp         wln
+ ldci 1
+ sroi       8200
+ ldci 1
+ stri  0    8205
+l   6
+i   20
+ ldoi       8200
+ lodi  0    8205
+ leqi
+ fjp       l   7
+ ldci 0
+ sroi       8201
+ ldci 0
+ sroi       8204
+ ldci 8190
+ stri  0    8206
+l   8
+i   30
+ ldoi       8204
+ lodi  0    8206
+ leqi
+ fjp       l   9
+ lao           9
+ ldoi       8204
+ chki  0    8190
+ ixa           1
+ ldcb 1
+ chkb  0       1
+i   40
+ stob
+ ldoi       8204
+ inci          1
+ sroi       8204
+ ujp       l   8
+l   9
+ ldci 0
+ sroi       8204
+ ldci 8190
+ stri  0    8206
+l  10
+ ldoi       8204
+i   50
+ lodi  0    8206
+ leqi
+ fjp       l  11
+ lao           9
+ ldoi       8204
+ chki  0    8190
+ ixa           1
+ indb          0
+ fjp       l  12
+ ldoi       8204
+i   60
+ ldoi       8204
+ adi
+ ldci 3
+ adi
+ sroi       8203
+ ldoi       8204
+ ldoi       8203
+ adi
+ sroi       8202
+l  13
+ ldoi       8202
+i   70
+ ldci 8190
+ leqi
+ fjp       l  14
+ lao           9
+ ldoi       8202
+ chki  0    8190
+ ixa           1
+ ldcb 0
+ chkb  0       1
+ stob
+i   80
+ ldoi       8202
+ ldoi       8203
+ adi
+ sroi       8202
+ ujp       l  13
+l  14
+ ldoi       8201
+ ldci 1
+ adi
+ sroi       8201
+l  12
+ ldoi       8204
+i   90
+ inci          1
+ sroi       8204
+ ujp       l  10
+l  11
+ ldoi       8200
+ inci          1
+ sroi       8200
+ ujp       l   6
+l   7
+ ldoi       8201
+ ldci 10
+ lda   0       6
+i  100
+ csp         wri
+ lca' primes                                                                         '
+ ldci 7
+ ldci 7
+ lda   0       6
+ csp         wrs
+ lda   0       6
+ csp         wln
+ retp
+l   4=8207
+l   5=9
+q
+i    0
+ mst           0
+ cup   0   l   3
+ stp
+q

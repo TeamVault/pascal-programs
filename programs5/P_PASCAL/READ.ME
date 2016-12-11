@@ -1,0 +1,487 @@
+l
+                       ALL RIGHTS RESERVED.
+
+DISCLAIMER:
+
+     These programs are  provided to the public domain  as a ser-
+     vice  to   programmers.  They  may  be   copied  freely  and
+     distributed  for  educational  purposes  with  the following
+     restrictions:
+
+     1. Commercial resale of  these programs, or incorporation of
+     these programs into other  systems for commercial resale, in
+     source code or  in compiled versions of the  source code, is
+     prohibited.
+
+     2.  Charges for  reproduced copies  must be  limited to cost
+     (disks, postage and handling).
+
+     3.  Any modifications  to the  programs from  the originally
+     distributed version  must be clearly indicated,  both in the
+     source  code and  the documentation.  Any such modifications
+     should  retain the  genealogy of  the program,  both in  the
+     source code, sign-on message, and documentation.
+
+     4.  All  documentation  and   notices  supplied  with  these
+     programs must be included in any reproduced versions.
+
+     5.  All warranties  connected with  these programs  are dis-
+     claimed. In particular, the author assumes no responsibility
+     that  the programs  will operate  as documented,  nor is the
+     author  responsible for  direct, indirect,  or consequential
+     damages.  Any  and  all  risk  associated  with  using these
+     programs, in whole or in part, is the user's.
+
+
+=================================================================
+
+Note: Directions for using this  system are included below and in
+the a:\samples directory. For information about advanced versions
+of this  system, or about versions  customized to run efficiently
+on computers with different  architectures, contact the author at
+the address given below.
+
+This  is  a  portable  Standard  Pascal  system,  with some C ex-
+tensions.  It implements  advanced Pascal  capabilities, such  as
+procedures  and  functions  passed   as  parameters,  and  allows
+"conformant arrays" to be passed  as pointers. Records and arrays
+are all automatically  packed down to the character  level. The C
+extensions, such  as masking and shifting  operations, the `halt'
+command,  the `system'  call, and  C-style file  inclusion during
+translation,  are illustrated  by examples  in the  demonstration
+programs of the a:\samples directory.  This version of the system
+is limited to  seven open data and textfiles  at any point during
+program execution.  The full version, that  permits as many files
+as available from your operating  system, and comes with portable
+ANSI C source code, can be ordered from the address at the end of
+this file.
+
+Modern college-level  Pascal programming textbooks,  such as "Oh!
+Pascal", by  Cooper and Clancy, give  examples of Pascal programs
+that will run on this system.
+
+The enclosed  Pascal to p-code translator  and p-code interpreter
+is a companion system to the  Pascal to C translator, that can be
+ordered from the address at the end of this file.
+
+These portable systems are written entirely in ANSI C. The Pascal
+to C translator is based on the p-code interpreter, but generates
+optimizable C code that runs  almost as fast as programs compiled
+directly from C code. The source is written to be compiled easily
+under the DOS 3.2 and  later operating systems (and other systems
+also, with minor changes in the "pascal.h" and "p-code.h" files).
+
+K & R versions of the system can be obtained from the author.
+
+As  a  demonstration  of  this,  the  "primes.exe" program in the
+\samples  directory  of  this  diskette  was  compiled  from  the
+"\samples\primes.pas" program after a Pascal to C translation.
+
+
+=================================================================
+
+DIRECTIONS
+
+The following reserved words and standard names are recognized by
+the system and operate in a standard fashion (with exceptions for
+pack and unpack):
+
+Standard Names:
+
+false,    true,     input,    output,   get,      put,      reset,
+rewrite,  read,     write,    pack,     unpack,   new,      dispose,
+readln,   writeln,  page,     mark,     release,  halt,     abs,
+sqr,      round,    trunc,    odd,      ord,      chr,      pred,
+succ,     eof,      eoln,     system,   sin,      cos,      exp,
+sqrt,     ln,       arctan,   integer,  real,     char,     boolean,
+text,     nil,      maxint,   sethigh,  ordmaxchar
+
+
+Reserved Words:
+
+if,       do,       of,       to,       in,       or,       and,
+not,      xor,      shl,      shr,      end,      for,      var,
+div,      mod,      set,      then,     else,     with,     goto,
+case,     type,     file,     begin,    until,    while,    array,
+const,    label,    repeat,   record,   downto,   packed,   forward,
+program,  function, procedure
+
+
+1) Typing `TRANSLATE <Enter>' will  bring up the following direc-
+tions for use:
+
+
+Portable ISO Standard Pascal in C, version 3.8, May 31 1990.
+All rights reserved.
+
+The calling sequence is
+
+  translator  source.pas  object.pcd  [optional directives]
+or
+  translator con  object.pcd /c+  [optional directives]
+
+with `source.pas'  or `con' (the  keyboard) as the  Pascal source
+code file and `object.pcd' serving as the output `p-code' file.
+
+The source and  output file names are optionally  followed by one
+or more Pascal translator directives from the list below:
+
+/c+ Generate P-Code                /l- Turn Off Program Listing
+/o+ Send P-Code to Source Listing  /t+ Print Translator Symbol Tables
+/d+ All Run-Time Checks            /y+ Special Error Messages
+/z+ Run-Time Zero Division Checks  /s+ Run-Time Stack Checks
+/r+ Run-Time Set Element/Index/Pointer Range Checks
+
+Note  that c-  (syntax-checking only)  is the  default c  option.
+Here,  the  usual  C  command-line  convention  applies, in which
+options are separated by blanks and  are preceded by either a `-'
+or a `/'.
+
+
+2)  Typing `INTERPRET <Enter>' will bring up the following direc-
+tions for use:
+
+Near arrays Pascal P-Code interpreter, version 3.8, May 31 1990.
+All rights reserved.
+
+The correct calling sequence is:
+
+ interpreter a_program.pcd [path1][pr1] ... [pathn][prn]
+
+with  executable p-code  stored in  the file  a_program.pcd and n
+[optional] external files pr1 through  prn. Files pr1 through prn
+may have path prefixes appropriate  to your operating system. The
+pr1  through  prn  names  are  declared  in  the Pascal "Program"
+statement, and any information about the directories in which the
+files are located  is included on the command  line. The standard
+Pascal Input and Output files behave exactly like the C stdin and
+stdout files.
+
+A more elaborate explanation follows below.
+
+
+NOTES ON USING THE TRANSLATOR:
+
+
+FEATURES AND RESTRICTIONS
+
+This is a standard Pascal in C implementation compatible with the
+Pascal taught in college textbooks  such as Oh! Pascal! by Cooper
+and Clancy. The C implementation is portable, which means that it
+will compile and  operate correctly on any computer  with a stan-
+dard ANSI C compiler, and  will automatically adjust to different
+CPU architectures.
+
+This implementation limits sets to 64 members on 16-bit machines,
+and string  constants to no  more than 80  characters apiece. Any
+mix  of upper  and lower  case identifiers  and reserved words is
+legal,  but only  the first  eight characters  of identifiers are
+significant. European ascii alphabet letters may be used in iden-
+tifiers. The  predeclared constant "Maxint" has  a value of 32767
+for 16-bit CPUs  like the 8086, which means  that any long arith-
+metic  must  be  done  using  REAL  numbers.  Anticipated  future
+releases of this system will support long arithmetic.
+
+Additional  minor restrictions:  procedures and  functions may be
+passed as parameters, with the restrictions mentioned in standard
+Pascal textbooks  for this capability;  e. g., 'Read',  'Readln',
+'Write', and 'Writeln'  may not be passed as  parameters, but may
+occur within  procedures/functions passed as  parameters. See the
+"prfnparm.pas" program in the  \samples directory for examples of
+functions  and procedures  passed as  parameters and  the use  of
+textfiles.
+
+The  `halt' or  `halt(integer_value)' command,  available on many
+Pascal systems  as a nonstandard capability,  is also implemented
+on this system, and behaves  like the C `exit' procedure. ('halt'
+with no parameter  is translated to `exit(0)', and  `halt' with a
+parameter is the corresponding call on `exit').
+
+The 'Packed' and  'Unpacked' keywords may be used,  but they have
+no effect;  instead, all character and  boolean arrays are stored
+as packed  character arrays. Pack and  Unpack are implemented for
+standard Pascal data types, but  the packing of Boolean arrays as
+`bit  arrays' is  not supported.  An example  of "do it yourself"
+packing and unpacking of bit  arrays using the shifting and mask-
+ing   operators   is   included   in   the   \samples   directory
+("truefalse.pas").
+
+See  the yesno.pas  program in  the a:\samples  directory for ex-
+amples of  string assignment and comparison  (ISO standard Pascal
+version).
+
+A  "System(packed_char_array)" function identical  in behavior to
+the C  version of "system(char *)"  is implemented. If you  use a
+Pascal packed char array instead of a string constant as argument
+to the "System" function, be sure to intialize your array proper-
+ly with a blank string constant of the correct size.
+
+This new  version supports standard  Pascal data and  text files,
+both  as  external  Pascal  files  and  as  local  files that are
+automatically deleted at the end  of the procedure or function in
+which  they  are  declared.  The  external  Pascal file names are
+limited  to  eight  letters  and  must  appear  in the first line
+"program xxxxx(a, b, ...);" statement. (These file namea may also
+apear on the command line with Unix or Dos path prefixes.)
+
+Pascal "Reset" is implemented by  rewinding the file and then is-
+suing  a Pascal  "GET." A  Pascal "Rewrite"  deletes the file and
+then reopens it.
+
+The standard Pascal "New"  and "Dispose" procedures are available
+for  acquiring individual  data nodes  and returning  them to the
+Pascal heap. (The "optimized" use of  New, in which only parts of
+a record are  allocated IS supported, but  users are cautioned to
+debug their programs  first using the simple version  of New.) In
+addition, "Mark" and "Release" are available for use in returning
+entire blocks of data to  the heap, rather than individual nodes.
+Programs can  be written using only  "New" and "Dispose", without
+mention  of  "Mark"  and  "Release".  Or,  "New" (and optionally,
+"Dispose") can be used in combination with "Mark" and "Release".
+
+However,  while "New"  and "Dispose"  are relatively well-behaved
+operations,  "Mark" and  "Release" have  to be  used carefully as
+paired operations  that have side-effects. One  of these side ef-
+fects is  that all data  nodes acquired by  "New" after a  "Mark"
+operation are automatically disposed of by the call on "Release".
+Furthermore, calls  on "Mark" and  "Release" are only  defined if
+they  are paired  so each  call on  "Mark" is  balanced by a cor-
+responding  call on  "Release". (The  a:\samples listtest.pas and
+newtest.pas programs are examples of their use.)
+
+The  enclosed   "Near  arrays"  version  of   the  Pascal  p-code
+interpreter has  approximately 15,000 bytes  of Pascal heap  area
+available for  "New" and "Dispose", the  "Far arrays" version has
+62,400 bytes, and the "Huge arrays" version has 142,400 bytes.
+
+Some small source program examples  are included in the "samples"
+directory on  this diskette. They illustrate  the general form of
+programs accepted  by the translator and  the required translator
+options directives to precede programs.
+
+=================================================================
+
+TRANSLATOR OPTIONS:
+
+In this  Pascal system, translator  options can appear  either on
+the command line,  as noted above, or within  the program. Pascal
+options behave  like C pragmas. Program  examples in the \samples
+file  illustrate the  use of  translator options.  In particular,
+"pi.pas" shows how to turn the translator listing on and off dur-
+ing translation of that  program, and "factorial.pas" illustrates
+use  of the  {$i+'file_name'} option  for including  files within
+your programs.
+
+  (*$ ... *) or {$ ... }
+
+where the " ... " in the middle is some sequence of the following
+options separated by commas:
+
+
+       a+ causes division by zero tests to be inserted before all
+       all run-time code for real and integer division.
+
+       c+ causes p-code  to be written to the  ".pcd" file. If c+
+       does  not appear,  or if  c- or  c is  written, the source
+       program will  be checked for  correctness, but not  trans-
+       lated.
+
+       d+ causes the translator to put  all a+, r+, and s+ checks
+       into  the  run-time  code.  These  checks  are  useful for
+       program debugging,  but can cause programs  to run slowly.
+       They  are partly  responsible for  Pascal's reputation for
+       slowness.  Eliminating  these  checks  via  the  d- option
+       improves  program  execution  speed  and  allows "flexible
+       dimension" arrays (when no  range checking occurs). The d+
+       option  can  be  turned  on  and  off  locally within your
+       program by following it with a d- option.
+
+       i+ causes the file whose quoted name follows to be read by
+       the translator:
+
+        i.  e., {$i+'a:\samples\round.p'}
+
+       includes the  round.p file at  that point in  the program.
+       The  file source  code has  to be  to be  correct for that
+       point  in the  program where  its insertion  occurs. Up to
+       seven levels  of file inclusion  from any source  file are
+       allowed by the system. (For examples  of how to use the i+
+       option,  refer to  the 'a:\samples\factorial.pas'  and the
+       'a:\samples\truefalse.pas' files. The  C '#include' pragma
+       behaves in similar fashion.)
+
+       l+ causes  the program to  be listed to  the "stdout" file
+       (the monitor screen). The  listing can be re-directed from
+       the screen to the line printer using the ">" redi- rection
+       operator  on the  command line.  l+ is  the default option
+       (the listing  will appear if  l+ is omitted).  To turn off
+       the listing, use l-. Programs will translate several times
+       faster with the screen listing disabled.
+
+       o+ causes  the translator to route  its translation of the
+       source program  to the stdout  file, causing each  execut-
+       able source statement to be followed by the p-code that it
+       generates (the ".pcd" file will  be empty as a result, but
+       must still be mentioned on the translator's command line).
+       Default option is o-.
+
+       r+ causes the translator to  insert run-time tests for set
+       element-,  loop index-,  and pointer-in-range correctness.
+       Setting r- or d- disables these tests.
+
+       s+ causes  the run-time system to  test for stack overflow
+       on entry to all procedures and functions. Setting s- or d-
+       turns off these tests.
+
+       t+ causes the translator to  write out its internal tables
+       listing declared  constants, procedures, and  functions at
+       the end  of the translation  pass. Its use  is to discover
+       what  the translator  believes the  program variables  and
+       procedures to be. Default option is t-.
+
+
+Command line calling sequences for the translator and interpreter
+are as described below. (See also the "a:do.bat" file.)
+
+For the translator:
+==================================================================
+
+    translator  your_source_code.pas  p_code_output.pcd
+
+or
+
+    translator con  p_code_output.pcd
+
+==================================================================
+
+Note that the  .pcd file extension for the  output p-code file in
+the example is necessary to  interface properly with both the in-
+terpreter and the C code generator programs.
+
+With `con' on the command line as illustrated above, programs can
+be typed in from the keyboard  and translated one line at a time,
+but editing is limited to the current line only. Refer to the DOS
+manual description of the "copy  con output_file" command for in-
+formation about how to use the console keyboard for program input
+to the  translator. In particular,  "control-Z" or ^Z  is used as
+the end of file mark to terminate source programs.
+
+Files external to the program  are named in standard Pascal style
+on the "Program xxxxx(Input, Output, File1, File2);" line of your
+Pascal  program. These  external files  are names  of up to eight
+letters  each (the  same as  Pascal identifiers),  and they match
+file names (preceded by optional operating system pathnames) that
+ap- pear on the command line of your program. Thus, for example,
+
+         Program Fileptrs(Input, Output, Prr);
+         ....
+         ....
+         END.
+
+can be called by a command line sequence of the form:
+
+         interpreter fileptrs.pcd c:\xxx\prr
+
+or
+
+         interpreter fileptrs.pcd a:\yyy\zzzz.prr
+
+or even
+
+         interpreter fileptrs.pcd prr
+
+depending on the  file path designation that you,  the user, find
+convenient to use.
+
+Translator  listings  are  sent  to  the  screen,  unless DOS I/O
+redirection is used:
+
+=================================================================
+
+  translator source.pas  object.pcd  >  lpt1 (* parallel printer *)
+
+or
+
+  translator source.pas  object.pcd  >  com1 (* serial printer *)
+
+or
+
+  translator source.pas  object.pcd  >  a:listing.asc
+
+=================================================================
+
+
+
+NOTES ON USING THE Interpreter:
+
+Interpreter command line with optional files in brackets:
+
+=================================================================
+
+   interpreter  p_code_input.pcd [path1][file1] [path2][file2]
+
+=================================================================
+
+The interpreter also has available  the standard Pascal Input and
+Output files,  known in the  C language as  stdin and stdout.  So
+programs translated for the interpreter can access Input (stdin),
+Output (stdout),  and as many external  and internal Pascal files
+as  your  system  will  allow.  See  the a:\samples directory for
+examples of how to use files.
+
+Note that the interpreter has some limitations, most important of
+which is that sets can have up  to 64 members. This is a complete
+Standard Pascal  otherwise. It is intended  as a teaching system,
+with the  p-code interpreter to  be used by  students in compiler
+courses. Thus, the p-code output  from the translator is in ascii
+format, so that it can be  inspected and compared with the source
+code  and used  in conjunction   with the  source code  to p-code
+cross-reference generated in the translator listings.
+
+=================================================================
+
+SOURCES OF INFORMATION:
+
+The reference for a previous  version of the Pacal translator and
+its p-code interpreter, including  comments for the Pascal source
+code, is in the book:
+
+   Pemberton, S. Pascal Implementation. Ellis-Horwood Publishers,
+      Ltd., England, 1981.
+
+The  authors  of  the  Pascal  version  of  the  portable  Pascal
+translator are U.  Ammann, K. Nori, and C.  Jacobi. K. Jensen, N.
+Wirth, and C.  Jacobi wrote the Pascal version  of the p-code in-
+terpreter.
+
+The ANSI C version of these systems implements an advanced p-code
+that is not  compatible with the p-code of  the Pascal system and
+provides numerous  capabilities, e. g.,  procedures and functions
+passed  as parameters,  conformant arrays,  full data  files, not
+included in the Pascal version.
+
+Translator  error  messages  use  the  error  number  format that
+appears  in the  Pascal User  Manual listed  below and in several
+Pascal and C compilers as well:
+
+    Jensen, K. and Wirth,  N.  Pascal  User  Manual  and  Report.
+         Springer Publishing Co., 1974.
+
+=================================================================
+
+As of June, 1990, the price of the DOS version of the full Pascal
+to P-Code Translator/Interpreter with C source code was $50 post-
+paid, and the Pascal to C  translator with C source code was also
+$50 postpaid. (Specify 3-1/2" or  5-1/4" diskettes; if no size is
+specified, 5-1/4" diskettes will be  sent. Payment is by check or
+money order.  Orders from outside  the U. S.  please add $10  per
+order for shipping.)
+
+
+Address for orders and inquiries:
+
+    Victor Schneider
+    Suite 3QD
+    291 Summit Avenue
+    Brighton, MA 02146
+    USA

@@ -1,0 +1,338 @@
+4. Liste simplu inlantuite
+
+4.1. Definitia listei
+4.2. Lista simplu inlantuita
+4.3. Specificarea structurii de lista simplu inlantuita
+
+4.1. Definitia listei
+
+  Lista este o structura liniara si dinamica de date.
+
+  Spunem ca o structura este liniara daca ea este formata din elemente
+  care au o pozitie bine determinata in cadrul structurii:
+    - exista un unic element numit primul;
+    - exista un unic element numit ultimul;
+    - orice element (cu exceptia primului) are un predecesor
+    - orice element (cu exceptia ultimului) are un succesor.
+
+  Spunem ca o structura este dinamica daca numarul de elemente al ei
+  se modifica in timp. Cu alte cuvinte, spatiul de memorie alocat
+  pentru respectiva structura are dimensiunea variabila in timp:
+  in fiecare moment este alocata doar atata memorie cata este necesara
+  pentru a pastra elementele curente ale structurii.
+
+  Putem face o comparatie intre structurile de date tablou si lista.
+  Ambele structuri sunt structuri liniare. Tabloul este o structura
+  statica, pe cand lista este o structura dinamica.
+
+  Tabloul (asa cum este el definit in Pascal) are un numar de elemente
+  cunoscut dinainte. Spunem ca tabloul este o structura statica.
+  Examinand definitia structurii liniare, constatam ca tabloul verifica
+  aceasta definitie:
+    - fiecare element este memorat in tablou intr-o singura locatie,'
+      definita de valoarea unui 'indice'
+    - pentru un tablou cu n elemente, indicii variaza de regula de la
+      1 la n
+    - exista un unic element numit primul, acela cu indicele cel mai
+      mic
+    - exista un unic element numit ultimul, acela cu indicele cel mai
+      mare
+    - primul element al tabloului are indicele 1 si nu are predecesor
+    - ultimul element al tabloului are indicele n si nu are succesor
+    - orice alt element de indice i (1 < i < n) are
+      - un predecesor: elementul de indice i-1
+      - un succesor: elementul de indice i+1
+
+  Tabloul este o structura statica pentru ca inainte de alocarea lui
+  in memorie trebuie cunoscut n - numarul de elemente al sau. Prin
+  urmare, indiferent cate elemente din tablou vor fi folosite efectiv,
+  se va aloca spatiu pentru toate.
+
+  Lista este o structura dinamica: initial ea este vida, deci nu contine
+  nici un element, iar spatiul de memorie alocat are dimensiunea 0.
+  Pe masura ce apar (se produc) elemente care trebuie incluse in lista,
+  se aloca spatiu pentru ele si se face includerea, stabilindu-se prin
+  aceasta pozitia pe care elementul inclus o ocupa in cadrul listei.
+  Nu exista teoretic nici o restrictie privitoare la locul unde se include
+  un nou element in lista; includerea se poate face fie la inceputul ei
+  (inaintea primului element din ea), fie undeva la mijlocul ei (intre
+  primul si ultimul element), fie la sfarsitul listei, dupa ultimul
+  element.
+  In mod analog, din lista se pot scoate elemente. Scoaterea unui element
+  din lista inseamna refacerea legaturilor intre elementul dinaintea
+  si cel de dupa elementul care se scoate.
+
+  Elementele listei se numesc noduri.
+  Lista este astfel organizata incat fiecare nod al ei contine:
+    - informatia utila din nod
+    - adresa nodului precedent (predecesorul nodului curent)
+    - adresa nodului urmator (succesorul nodului curent).
+
+  In terminologia listelor, operatiile de mai sus se numesc:
+    - inserare: adaugarea unui nod nou la lista
+    - stergere: stergerea unui nod din lista
+    - parcurgere (traversare): inspectarea nodurilor din lista, incepand cu
+      primul si terminand cu ultimul.
+
+  Adresele nodului precedent si urmator formeaza ceea ce numim
+  'informatie de inlantuire', iar structura de date lista cu nodurile
+  definite ca mai sus se numeste in practica lista 'dublu inlantuita'.
+  Aceasta inseamna ca, daca ne aflam intr-un nod, putem sa parcurgem
+  lista fie spre inceputul acesteia (folosind adresa nodului precedent)
+  fie spre sfarsitul acesteia (urmand adresa nodului urmator).
+
+4.2. Lista simplu inlantuita
+
+  Lista simplu inlantuita este un caz particular de lista, in nodurile
+  careia se pastreaza fie adresa nodului precedent, fie adresa
+  nodului urmator.
+
+Exemple Pascal:
+
+1. Lista simplu inlantuita in nodurile careia se pastreaza adresa
+   nodului urmator
+
+type
+  TInfo =  ... { tipul de date al informatiei utile din nod }
+  PNod = ^TNod;
+  TNod = Record
+    Info: TInfo;    { camp ce contine informatia utila }
+    Urm: PNod       { adresa nodului urmator }
+  End;
+  ListaCap = Record
+    Cap: PNod
+  End;
+var
+  Lista: ListaCap;
+
+Cap   ÚÄÄÂÄÄ¿    ÚÄÄÂÄÄ¿               ÚÄÄÂÄÄ¿
+ÄÄÄÄÄ>³I1³  ÅÄÄÄ>³I2³  ÅÄÄÄ> ... ÄÄÄÄÄ>³In³  ÅÄÄÄ> NIL
+      ÀÄÄÁÄÄÙ    ÀÄÄÁÄÄÙ               ÀÄÄÁÄÄÙ
+           ³          ³                     ³
+           ³          ³                     ³
+          Urm        Urm                   Urm
+
+Lista.Cap va contine adresa primului nod din lista.
+
+2. Lista simplu inlantuita in nodurile careia se pastreaza adresa
+   nodului precedent
+
+type
+  TInfo =  ... { tipul de date al informatiei utile din nod }
+  PNod = ^TNod;
+  TNod = Record
+    Info: TInfo;    { camp ce contine informatia utila }
+    Prec: PNod      { adresa nodului precedent }
+  End;
+  ListaCoada = Record
+    Coada: PNod
+  End;
+var
+  Lista: ListaCoada;
+
+             nod 1      nod 2                 nod n
+            ÚÄÄÂÄÄ¿    ÚÄÄÂÄÄ¿               ÚÄÄÂÄÄ¿  Coada
+   NIL <ÄÄÄÄÅ  ³I1³<ÄÄÄÅ  ³I2³<ÄÄÄÄ ... <ÄÄÄÄÅ  ³In³<ÄÄÄÄÄÄ
+            ÀÄÄÁÄÄÙ    ÀÄÄÁÄÄÙ               ÀÄÄÁÄÄÙ
+             ³          ³                     ³
+             ³          ³                     ³
+            Prec       Prec                  Prec
+
+Lista.Coada va contine adresa ultimului nod din lista.
+
+  In ambele situatii, se folosesc pointeri pentru declararea unui nod.
+  Tipul pointer isi arata adevarata sa putere la structurile dinamice,
+  tocmai prin faptul ca valoarea sa este adresa unei alte variabile.
+
+  Prin urmare, este naturala definitia nodului ca in exemplul 1:
+
+type
+  TInfo =  ... { tipul de date al informatiei utile din nod }
+  PNod = ^TNod;
+  TNod = Record
+    Info: TInfo;    { camp ce contine informatia utila }
+    Urm: PNod       { adresa nodului urmator }
+  End;
+
+  In aceasta definitie, un nod este considerat ca o inregistrare cu
+  doua campuri:
+    Info: TInfo  este campul ce contine informatia utila din nod
+    Urm: PNod    este campul de contine informatia de inlantuire
+                 (in cazul nostru adresa urmatorului nod)
+
+3. Lista simplu inlantuita in nodurile careia se pastreaza adresa
+   nodului urmator si cu inserare/stergere in/din coada
+
+type
+  TInfo =  Integer; { tipul de date al informatiei utile din nod }
+  PNod = ^TNod;
+  TNod = Record
+    Info: TInfo;    { camp ce contine informatia utila }
+    Urm: PNod       { adresa nodului urmator }
+  End;
+  ListaCapCoada = Record
+    Cap,            { capul listei: folosit la traversare }
+    Coada: PNod     { coada listei: acolo se fac inserari si stergeri }
+  End;
+var
+  Lista: ListaCapCoada;
+                                Coada
+Cap   ÚÄÄÂÄÄ¿    ÚÄÄÂÄÄ¿          ³    ÚÄÄÂÄÄ¿
+ÄÄÄÄÄ>³I1³  ÅÄÄÄ>³I2³  ÅÄÄÄ> ... ÄÁÄÄÄ>³In³  ÅÄÄÄ> NIL
+      ÀÄÄÁÄÄÙ    ÀÄÄÁÄÄÙ               ÀÄÄÁÄÄÙ
+           ³          ³                     ³
+           ³          ³                     ³
+          Urm        Urm                   Urm
+
+Lista.Cap va contine adresa primului nod din lista.
+Lista.Coada va contine adresa ultimului nod din lista.
+
+Implementari de liste simplu inlantuite
+Exemplul 1. Programul LstCap.PAS - lista cu inserare in cap
+Exemplul 2. Programul LstCoada.PAS - lista cu inserare in coada
+Exemplul 3: Programul LstCapCd.PAS - lista cu cap si coada, la care
+            inserarea si stergerea se fac in coada - mai realist
+
+Toate programele implementeaza urmatoarele operatii:
+  GenereazaNod(N, I): Aloca un nod in memoria dinamica si pune in el
+                      informatia utila I
+  Creeaza(L):         Crearea unei liste L vide
+  Insereaza(L, N):    Adaugarea nodului N la lista L
+  Sterge(L):          Stergerea nodului din capul, respectiv coada listei
+  Cauta(L, I):        Cauta in lista L nodul cu informatia utila I
+  Traverseaza(L):     Traverseaza toate nodurile listei L si afiseaza
+                      informatia utila din ele
+  Elibereaza(L):      Dealoca toate elementele listei L, transformand-o
+                      intr-o lista vida
+
+Programul principal al celor trei programe este identic:
+  - afiseaza memoria dinamica disponibila
+  - se creeaza o lista vida
+  - pentru i := 1, 10
+      - se genereaza nodul cu informatia utila i
+      - se adauga la lista nodul generat
+      - se efectueaza o traversare a listei, afisandu-se continutul sau
+        curent
+  - afiseaza memoria dinamica disponibila
+  - cauta in lista elementul cu informatia utila = 7
+      - daca exista, afiseaza informatia utila din urmatorul (precedentul)
+      - daca nu exista, afiseaza mesajul corespunzator
+  - repeta de 5 ori
+      - stergerea elementului din cap (coada)
+      - traversarea listei
+  - afiseaza memoria dinamica disponibila
+  - cauta in lista elementul cu informatia utila = 7
+      - daca exista, afiseaza informatia utila din urmatorul (precedentul)
+      - daca nu exista, afiseaza mesajul corespunzator
+  - elibereaza lista
+  - efectueaza traversarea listei
+  - afiseaza memoria dinamica disponibila
+
+Primele doua programe implementeaza o versiune simpla a listei, in care atat
+inserarea, cat si stergerea se fac la un singur capat, iar traversarea listei
+se face incepand de la capatul respectiv (in ordinea inversa inserarii
+nodurilor in lista: primul nod inserat este ultimul vizitat). Nici una dintre
+implementari nu permit inserarea sau stergerea oricarui nod din lista (asa
+cum am dori sa se comporte aceasta).
+
+Programul LstCapCd.PAS este mai realist, insa nici el nu implementeaza o
+lista cu semantica descrisa mai sus. Traversarea listei se face de la primul
+nod introdus in ea spre ultimul, insa inserarea sau stergerea se face numai
+raportat la ultimul nod din lista, referit de Coada.
+
+Varianta urmatoare de lista corespunde semanticii generale pe care am
+discutat-o la inceput, permitand ca inserarea sau stergerea sa se faca
+oriunde in lista. De asemenea, vom implementa si o operatie care modifica
+informatia utila dintr-un nod. Pentru toate acestea, avem nevoie de un
+pointer numit Cursor, care va referi nodul dupa care urmeaza sa se faca
+inserarea, respectiv sterge nodul referit de Cursor.
+
+4. Lista simplu inlantuita in nodurile careia se pastreaza adresa
+   nodului urmator si cu inserare/stergere relative la Cursor
+
+type
+  TInfo =  Integer; { tipul de date al informatiei utile din nod }
+  PNod = ^TNod;
+  TNod = Record
+    Info: TInfo;    { camp ce contine informatia utila }
+    Urm: PNod       { adresa nodului urmator }
+  End;
+  ListaCapCursor = Record
+    Cap,            { capul listei: folosit la traversare }
+    Cursor: PNod    { nodul curent listei: acolo se fac inserari si stergeri }
+  End;
+var
+  Lista: ListaCapCursor;
+                                Cursor
+Cap   ÚÄÄÂÄ¿    ÚÄÄÂÄ¿          ³    ÚÄÄÂÄ¿               ÚÄÄÂÄ¿
+ÄÄÄÄÄ>³I1³ ÅÄÄÄ>³I2³ ÅÄÄÄ> ... ÄÁÄÄÄ>³Ik³ ÅÄÄÄ> ... ÄÄÄÄÄ>³In³ ÅÄÄÄ> NIL
+      ÀÄÄÁÄÙ    ÀÄÄÁÄÙ               ÀÄÄÁÄÙ               ÀÄÄÁÄÙ
+          ³         ³                    ³                    ³
+          ³         ³                    ³                    ³
+         Urm       Urm                  Urm                  Urm
+
+Lista.Cap va contine adresa primului nod din lista.
+Lista.Cursor va contine adresa nodului curent din lista.
+
+Inserarea unui nod dupa cursor
+
+a) Inainte de inserare:
+     nodul cu informatia Ij este generat, insa nu este inca inserat in lista
+     campul Urm al sau are valoarea Nil
+
+                      Cursor
+Cap   ÚÄÄÂÄ¿          ³    ÚÄÄÂÄ¿    ÚÄÄÂÄ¿               ÚÄÄÂÄ¿
+ÄÄÄÄÄ>³I1³ ÅÄÄÄ> ... ÄÁÄÄÄ>³Ik³ ÅÄÄÄ>³Im³ ÅÄÄÄ> ... ÄÄÄÄÄ>³In³ ÅÄÄÄ> NIL
+      ÀÄÄÁÄÙ               ÀÄÄÁÄÙ    ÀÄÄÁÄÙ               ÀÄÄÁÄÙ
+          ³                                                   ³
+          ³                                                   ³
+         Urm              N     ÚÄÄÂÄ¿                       Urm
+                          ÄÄÄÄÄ>³Ij³ ÅÄÄÄ> NIL
+                                ÀÄÄÁÄÙ
+
+b) Dupa inserare:
+     nodul cu informatia Ij este inserat in lista
+     (1) campul Urm al sau are valoarea Cursor^.Urm
+     (2) campul Cursor^.Urm va referi nodul nou inserat
+     (3) campul Cursor va referi nodul nou inserat
+
+Cap   ÚÄÄÂÄ¿               ÚÄÄÂÄ¿     ÚÄÄÂÄ¿               ÚÄÄÂÄ¿
+ÄÄÄÄÄ>³I1³ ÅÄÄÄ> ... ÄÄÄÄÄ>³Ik³ ³   Ú>³Im³ ÅÄÄÄ> ... ÄÄÄÄÄ>³In³ ÅÄÄÄ> NIL
+      ÀÄÄÁÄÙ               ÀÄÄÁÅÙ   ³ ÀÄÄÁÄÙ               ÀÄÄÁÄÙ
+          ³                   ÚÙ    ³                          ³
+          ³                (2)³     ³(1)                       ³
+         Urm           Cursor ³ ÚÄÄÂÅ¿                        Urm
+                       (3)ÄÄÄÄÁ>³Ij³ ³
+                                ÀÄÄÁÄÙ
+
+Stergerea nodului referit de Cursor
+
+a) Inainte de stergere
+
+                            Cursor
+Cap   ÚÄÄÂÄ¿           ÚÄÄÂÄ¿ ³  ÚÄÄÂÄ¿   ÚÄÄÂÄ¿            ÚÄÄÂÄ¿
+ÄÄÄÄÄ>³I1³ ÅÄÄ> ... ÄÄ>³Ij³ ÅÄÁÄ>³Ik³ ÅÄÄ>³Im³ ÅÄÄ> ... ÄÄÄ>³In³ ÅÄÄ> NIL
+      ÀÄÄÁÄÙ           ÀÄÄÁÄÙ    ÀÄÄÁÄÙ   ÀÄÄÁÄÙ            ÀÄÄÁÄÙ
+          ³                                                     ³
+          ³                                                     ³
+         Urm                                                   Urm
+
+b) Dupa stergere
+     nodul cu informatia Ik (referit de Cursor) este scos din lista
+     (1) cauta nodul p anterior nodului referit de Cursor (Ij)
+     (2) p^.Urm := Cursor^.Urm (elimina nodul referit de cursor)
+     (3) Sterge Cursor^
+     (4) Cursor := Cap
+
+   Cursor
+Cap ³ ÚÄÄÂÄ¿           ÚÄÄÂÄ¿    ÚÄÄÂÄ¿   ÚÄÄÂÄ¿            ÚÄÄÂÄ¿
+ÄÄÄÄÁ>³I1³ ÅÄÄ> ... ÄÄ>³Ij³ ÅÄ¿  ³Ik³ ³ Ú>³Im³ ÅÄÄ> ... ÄÄÄ>³In³ ÅÄÄ> NIL
+      ÀÄÄÁÄÙ           ÀÄÄÁÄÙ ³  ÀÄÄÁÄÙ ³ ÀÄÄÁÄÙ            ÀÄÄÁÄÙ
+          ³                   ³         ³                       ³
+          ³                   ÀÄÄÄÄÄÄÄÄÄÙ                       ³
+         Urm                                                   Urm
+
+Exemplul 4: Programul LsCursor.PAS - lista cu cap si cursor, la care
+            inserarea si stergerea se fac dupa/in nodul curent, referit de
+            cursor - exemplu complet de lista
+

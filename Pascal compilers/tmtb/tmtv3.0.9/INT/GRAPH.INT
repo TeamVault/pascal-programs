@@ -1,0 +1,473 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal 3 Runtime Library                           *)
+(*       Graph Unit                                             *)
+(*                                                              *)
+(*       Copyright (c) 1995,2000 TMT Development Corporation    *)
+(*       Author: Vadim Bodrov                                   *)
+(*                                                              *)
+(****************************************************************)
+
+{$w-,r-,q-,i-,t-,x+,v-,a+,oa-,opt+}
+
+unit Graph;
+
+interface
+
+type
+ (* VBE info block for GetVbeInfo *)
+ VbeInfoType = record
+  VbeSignature       : DWord;
+  VbeVersion         : Word;
+  OemStringPtr       : DWord;
+  Capabilities       : DWord;
+  VideoModePtr       : DWord;
+  TotalMemory        : Word;
+  OEMSoftwareRev     : Word;
+  OEMVendorNamePtr   : DWord;
+  OEMProductNamePtr  : DWord;
+  OEMProductRevPtr   : DWord;
+  Reserved           : array [0..221] of Byte;
+  OEMData            : array [0..255] of Byte;
+ end;
+
+ (* VBE mode info block for GetVbeModeInfo *)
+ VbeModeInfoType = record
+  ModeAttributes     : Word;
+  WinAAttributes     : Byte;
+  WinBAttributes     : Byte;
+  WinGranularity     : Word;
+  WinSize            : Word;
+  WinASegment        : Word;
+  WinBSegment        : Word;
+  WinFuncPtr         : Pointer;
+  BytesPerScanLine   : Word;
+  XResolution        : Word;
+  YResolution        : Word;
+  XCharSize          : Byte;
+  YCharSize          : Byte;
+  NumberOfPlanes     : Byte;
+  BitsPerPixel       : Byte;
+  NumberOfBanks      : Byte;
+  MemoryModel        : Byte;
+  BankSize           : Byte;
+  NumberOfImagePages : Byte;
+  Reserved           : Byte;
+  RedMaskSize        : Byte;
+  RedFieldPosition   : Byte;
+  GreenMaskSize      : Byte;
+  GreenFieldPosition : Byte;
+  BlueMaskSize       : Byte;
+  BlueFieldPosition  : Byte;
+  RsvdMaskSize       : Byte;
+  RsvdFieldPosition  : Byte;
+  DirectColorModeInfo: Byte;
+  PhysBasePtr        : DWord;
+  OffScreenMemOffset : DWord;
+  OffScreenMemSize   : Word;
+  Reserved2          : Array [0..205] of Byte;
+ end;
+
+type
+ GraphModeType = record
+  VideoMode          : Word;
+  HaveLFB            : Boolean;
+  BitsPerPixel       : Byte;
+  XResolution        : Word;
+  YResolution        : Word;
+ end;
+
+ ViewPortType = record
+  X1,Y1,X2,Y2        : LongInt;
+  Clip               : Boolean;
+ end;
+
+ TextSettingsType = record
+  Font               : Pointer;
+  FontSize           : DWord;
+  FirstChar          : DWord;
+  Width              : DWord;
+  Height             : DWord;
+  Space              : DWord;
+  Direction          : DWord;
+  Horiz              : DWord;
+  Vert               : DWord;
+ end;
+
+ FillPatternType = array[1..8] of byte;
+
+ PointType = record
+  X, Y               : LongInt;
+ end;
+
+ RGBType = record
+  Blue,Green,Red,Alignment: Byte;
+ end;
+
+ PaletteType = record
+  Size               : Word;
+  Colors             : Array [0..255] of DWord;
+ end;
+
+ LineSettingsType = record
+  LineStyle          : Word;
+  Pattern            : Word;
+  Thickness          : Word;
+ end;
+
+ FillSettingsType = record
+  Pattern : DWord;
+  Color   : DWord;
+ end;
+
+const
+  MaxVbeModes        = 70;
+
+ (* GraphResult error return codes *)
+  grOK               = 0;
+  grInvalidMode      = 1;
+  grModeNotSupported = 2;
+  grSetModeError     = 3;
+  grLFBSetupError    = 4;
+  grError            = 5;
+  grVESANotFound     = 6;
+  grVESAError        = 7;
+  grNoGraphMem       = 8;
+  grInvalidDriver    = 9;
+  grDirectXNotFound  = 10;
+  grDirectXError     = 11;
+
+ (* VMode constants for SetVideoMode *)
+  LFBorBanked        = 0;
+  BankedOnly         = 1;
+  LFBOnly            = 2;
+
+ (* Clip constants for SetViewPort *)
+  ClipOn             = TRUE;
+  ClipOff            = FALSE;
+
+ (* Top constants for Bar3D *)
+  TopOn              = TRUE;
+  TopOff             = FALSE;
+
+ (* Stile constants for SetLineStyle *)
+  CopyPut            = 0;
+  NormalPut          = 0;
+  XorPut             = 1;
+  OrPut              = 2;
+  AndPut             = 3;
+
+ (* Font constants for SetTextStyle *)
+  SmallFont          = 0;
+  MediumFont         = 1;
+  LargeFont          = 2;
+
+  DefaultFont        : DWord=2;
+  CurrentFont        = $FFFFFFFF;
+
+ (* Direction constants for SetFontStyle *)
+  HorizDir           = 0;
+  VertDir            = 1;
+
+ (* Justify constants for SetTextJustify *)
+  LeftText           = 0;
+  CenterText         = 1;
+  RightText          = 2;
+  BottomText         = 0;
+  TopText            = 2;
+
+ (* Line style constants *)
+  SolidLn            = 0;
+  DottedLn           = 1;
+  CenterLn           = 2;
+  DashedLn           = 3;
+  UserBitLn          = 4;
+
+  NormWidth          = 1;
+  ThickWidth         = 3;
+
+ (* Fill style constants *)
+  EmptyFill          = 0;
+  SolidFill          = 1;
+  LineFill           = 2;
+  LtSlashFill        = 3;
+  SlashFill          = 4;
+  BkSlashFill        = 5;
+  LtBkSlashFill      = 6;
+  HatchFill          = 7;
+  XHatchFill         = 8;
+  InterleaveFill     = 9;
+  WideDotFill        = 10;
+  CloseDotFill       = 11;
+  UserFill           = 12;
+
+  Black              = 0;
+  Blue               = 1;
+  Green              = 2;
+  Cyan               = 3;
+  Red                = 4;
+  Magenta            = 5;
+  Brown              = 6;
+  LightGray          = 7;
+  DarkGray           = 8;
+  LightBlue          = 9;
+  LightGreen         = 10;
+  LightCyan          = 11;
+  LightRed           = 12;
+  LightMagenta       = 13;
+  Yellow             = 14;
+  White              = 15;
+
+ (* Following color constants aren't permanent. They are changes depending on
+ current color mode. *)
+  clBlack:        DWord =0;
+  clBlue:         DWord =1;
+  clGreen:        DWord =2;
+  clCyan:         DWord =3;
+  clRed:          DWord =4;
+  clMagenta:      DWord =5;
+  clBrown:        DWord =6;
+  clLightGray:    DWord =7;
+  clDarkGray:     DWord =8;
+  clLightBlue:    DWord =9;
+  clLightGreen:   DWord =10;
+  clLightCyan:    DWord =11;
+  clLightRed:     DWord =12;
+  clLightMagenta: DWord =13;
+  clYellow:       DWord =14;
+  clWhite:        DWord =15;
+
+ (* Direct color modes info *)
+  DcRedMask       : Byte=0;
+  DcGreenMask     : Byte=0;
+  DcBlueMask      : Byte=0;
+  DcRedPos        : Byte=0;
+  DcGreenPos      : Byte=0;
+  DcBluePos       : Byte=0;
+  DcRedAdjust     : Byte=0;
+  DcGreenAdjust   : Byte=0;
+  DcBlueAdjust    : Byte=0;
+
+ (* Graphic driver constants *)
+  Detect        = 0;
+  CGA           = 1;
+  MCGA          = 2;
+  EGA           = 3;
+  EGA64         = 4;
+  EGAMono       = 5;
+  IBM8514       = 6;
+  HercMono      = 7;
+  ATT400        = 8;
+  VGA           = 9;
+  PC3270        = 10;
+  SVGA256       = 11;
+  SVGA32K       = 12;
+  SVGA64K       = 13;
+  SVGA16M       = 14;
+  SVGA4G        = 15;
+
+ (* Graphic mode constants *)
+  CGAC0         = $00; // 320  x 200  - not supported
+  CGAC          = $01; // 320  x 200  - not supported
+  CGAC2         = $02; // 320  x 200  - not supported
+  CGAC3         = $03; // 320  x 200  - not supported
+  CGAHi         = $04; // 640  x 200  - not supported
+  MCGAC0        = $00; // 320  x 200  - MCGA 320x200x256
+  MCGAC1        = $01; // 320  x 200  - MCGA 320x200x256
+  MCGAC2        = $02; // 320  x 200  - MCGA 320x200x256
+  MCGAC3        = $03; // 320  x 200  - MCGA 320x200x256
+  MCGAMed       = $04; // 640  x 200  - not supported
+  MCGAHi        = $05; // 640  x 480  - not supported
+  EGAMonoHi     = $03; // 640  x 350  - not supported
+  HercMonoHi    = $00; // 720  x 348  - not supported
+  VGALo         = $00; // 640  x 200  - not supported
+  VGAMed        = $01; // 640  x 350  - emulated using VESA 640x350x256
+  EGALo         = $00; // 640  x 200  - not supported
+  EGAHi         = $01; // 640  x 350  - emulated using VESA 640x350x256
+  EGA64Lo       = $00; // 640  x 200  - not supported
+  EGA64Hi       = $01; // 640  x 350  - not supported
+  ATT400C0      = $00; // 320  x 200  - not supported
+  ATT400C1      = $01; // 320  x 200  - not supported
+  ATT400C2      = $02; // 320  x 200  - not supported
+  ATT400C3      = $03; // 320  x 200  - not supported
+  ATT400Med     = $04; // 640  x 200  - not supported
+  ATT400Hi      = $05; // 640  x 400  - not supported
+  IBM8514Lo     = $00; // 640  x 480  - not supported
+  IBM8514Hi     = $01; // 1024 x 768  - not supported
+  PC3270Hi      = $00; // 720  x 350  - not supported
+  VGAHi         = $02; // 640  x 480  - emulated using VESA 640x480x256
+  SVGALo        = $00; // 640  x 480  - SVGA mode
+  SVGAMed       = $01; // 800  x 600  - SVGA mode
+  SVGAHi        = $02; // 1024 x 768  - SVGA mode
+  SVGA0         = $03; // 320  x 200  - SVGA mode
+  SVGA1         = $04; // 320  x 240  - SVGA mode
+  SVGA2         = $05; // 512  x 384  - SVGA mode
+  SVGA3         = $06; // 640  x 350  - SVGA mode
+  SVGA4         = $07; // 640  x 400  - SVGA mode
+  SVGA5         = $08; // 1152 x 864  - SVGA mode
+  SVGA6         = $09; // 1280 x 1024 - SVGA mode
+  SVGA7         = $0A; // 1600 x 1200 - SVGA mode
+
+const
+ DrawBorder:         Boolean  = TRUE;
+
+ function  GraphResult: LongInt;
+ function  GraphErrorMsg(ErrorCode: LongInt): String;
+ procedure ClearViewPort;
+ procedure SetViewPort(X1,Y1,X2,Y2: LongInt; Clip: Boolean);
+ procedure GetViewSettings(var ViewPort: ViewPortType);
+ procedure SetLogicalPage(SX,SY: Word);
+ procedure GetLogicalPage(var SX,SY: Word);
+
+ function  GetPageSize: DWord;
+ procedure SetVisualPage(PageNo: DWord; WaitForRetrace: Boolean);
+ function  GetVisualPage: DWord;
+ procedure SetActivePage(PageNo: DWord);
+ function  GetActivePage: DWord;
+ function  GetMaxColor: DWord;
+ procedure SetColor(Color: DWord);
+ function  GetColor: DWord;
+ procedure SetBkColor(Color: DWord);
+ function  GetBkColor: DWord;
+ procedure SetFillColor(Color: DWord);
+ procedure SetFillPattern(Pattern: FillPatternType; Color: DWord);
+ procedure SetFillStyle(Pattern: DWord; Color: DWord);
+ procedure GetFillPattern(var FillPattern: FillPatternType);
+ procedure GetFillSettings(var FillInfo: FillSettingsType);
+ function  GetFillColor: DWord;
+ procedure SetLineStyle(LineStyle: Word; Pattern: Word; Thickness: Word);
+ procedure GetLineSettings(var LineInfo: LineSettingsType);
+ function  GetMaxX: DWord;
+ function  GetMaxY: DWord;
+ function  GetScreenHeight: DWord;
+ function  GetScreenWidth: DWord;
+ function  GetBitsPerPixel: DWord;
+ function  GetBytesPerScanLine: DWord;
+ function  GetMaxPossibleY: DWord;
+ function  GetMaxPage: DWord;
+ procedure SetWriteMode(WriteMode: DWord);
+ function  GetWriteMode: DWord;
+ procedure SetTranspMode(Mode: Boolean; Color: DWord);
+ procedure GetTranspSettings(var Mode: Boolean; var Color: DWord);
+ procedure SetAspectRatio(AspectRatio: Real);
+ procedure GetAspectRatio(var AspectRatio: Real);
+ procedure SetGraphBufSize(BufSize: DWord);
+ function  GetGraphBufSize: DWord;
+
+ procedure Stretch(Param: Byte);
+ procedure SetScreenStart(X,Y: DWord; WaitForRetrace: Boolean);
+ procedure GetVbeInfo(var VI: VbeInfoType);
+ procedure GetVbeModeInfo(ModeNo: Word; var VMI: VbeModeInfoType);
+ function  GetVbeVersion: DWord;
+ function  GetOemString: String;
+ function  GetOemVendorName: String;
+ function  GetOemProductName: String;
+ function  GetOemProductRev: String;
+ function  GetGraphMode: Word;
+ function  DetectSVGAMode(XRes,YRes,BPP,VMode: DWord): DWord;
+ function  GetVbeCapabilities: DWord;
+ function  GetLfbAddress: DWord;
+ function  TotalVbeModes: DWord;
+ procedure GetVbeModesList(var ModesList);
+ function  TotalVbeMemory: DWord;
+ procedure RestoreCrtMode;
+ function  IsLFBUsed: Boolean;
+ function  GetScreenPtr: Pointer;
+ procedure GraphDefaults;
+ procedure SetSVGAMode(XRes,YRes,BPP,VMode: DWord);
+ procedure SetGraphMode(VbeMode: Word);
+ procedure SetVirtualMode(BuffAddr: Pointer);
+ procedure SetNormalMode;
+ procedure CloseGraph;
+ procedure ClearDevice;
+
+ function  RGBColor(R,G,B: Byte): DWord;
+ procedure AnalizeRGB(Color: Dword; var R,G,B: Byte);
+ procedure SetRGBPalette(Color,R,G,B: Byte);
+ procedure SetPalette(ColorNum: Byte; Color: Word);
+ procedure GetRGBPalette(Color: Byte; var R,G,B: Byte);
+ procedure GetPalette(var Palette: PaletteType);
+ procedure SetAllPalette(var Palette: PaletteType);
+ procedure GetDefaultPalette(var Palette: PaletteType);
+
+ procedure ClearPage;
+ procedure FlipToScreen(Addr: Pointer);
+ procedure FlipToMemory(Addr: Pointer);
+ function  GetX: LongInt;
+ function  GetY: LongInt;
+ procedure PutPixelA(X,Y: LongInt);
+ overload  PutPixel = PutPixelA;
+ procedure PutPixelB(X,Y: LongInt; Color: DWord);
+ overload  PutPixel = PutPixelB;
+ function  GetPixel(X,Y: LongInt): DWord;
+ procedure DrawHLine(X1,X2,Y: LongInt);
+ procedure PutHtextel(X1,X2,Y: LongInt; var Textel);
+ procedure GetHtextel(X1,X2,Y: LongInt; var Textel);
+ procedure PutSprite(X1,Y1,X2,Y2: LongInt; var Sprite);
+ procedure GetSprite(X1,Y1,X2,Y2: LongInt; var Sprite);
+ function  ImageSize(X1,Y1,X2,Y2: DWord): DWord;
+ procedure InvertImage(var BitMap);
+ procedure FlipImageOY(var BitMap);
+ procedure FlipImageOX(var BitMap);
+ procedure PutImage(X,Y: LongInt; var BitMap);
+ procedure GetImage(X,Y,X1,Y1: LongInt; var BitMap);
+ procedure LineA(X1,Y1,X2,Y2: LongInt);
+ overload  Line = LineA;
+ procedure LineB(X1,Y1,X2,Y2: LongInt; Color: DWORD);
+ overload  Line = LineB;
+ procedure MoveTo(X,Y: LongInt);
+ procedure MoveRel(Dx,Dy: LongInt);
+ procedure LineTo(X,Y: LongInt);
+ procedure LineRel(Dx,Dy: LongInt);
+ procedure SetSplineSteps(Steps: DWord);
+ procedure Spline(Nodes: Byte; Points: array of PointType);
+ procedure RectangleA(X1,Y1,X2,Y2: LongInt);
+ overload  Rectangle = RectangleA;
+ procedure RectangleB(X1,Y1,X2,Y2: LongInt; Color: DWORD);
+ overload  Rectangle = RectangleB;
+ procedure Bar(X1,Y1,X2,Y2: LongInt);
+ procedure Bar3D(X1,Y1,X2,Y2: LongInt; Depth: Word; Top: Boolean);
+ procedure Arc(X,Y: LongInt; StAngle, EndAngle, Radius: DWord);
+ procedure Ellipse(X,Y: LongInt; StAngle, EndAngle, XRadius, YRadius: DWord);
+ procedure DrawEllipse(X,Y,A,B: LongInt);
+ procedure FillEllipse(X,Y,A,B: LongInt);
+ procedure CircleA(X, Y: LongInt; Radius: DWord);
+ overload  Circle = CircleA;
+ procedure CircleB(X, Y: LongInt; Radius, Color: DWord);
+ overload  Circle = CircleB;
+ procedure FillCircle(X,Y: LongInt; Radius: DWord);
+ procedure TriangleA(X1, Y1 ,X2, Y2, X3, Y3: LongInt);
+ overload  Triangle = TriangleA;
+ procedure TriangleB(X1, Y1 ,X2, Y2, X3, Y3: LongInt; Color: DWORD);
+ overload  Triangle = TriangleB;
+ procedure FillTriangle(X1,Y1,X2,Y2,X3,Y3: LongInt);
+ procedure DrawPoly(NumVert: DWord; var Vert);
+ procedure FillPoly(NumVert: DWord; var Vert);
+ procedure FloodFill(X,Y: LongInt; Border: DWord);
+ procedure ExpandFill(X,Y: LongInt);
+
+ procedure SetCustomFont(AddrPtr: Pointer; Width,Height,Start,Space: DWord);
+ procedure SetTextStyle(Font, Direction: DWord);
+ procedure SetTextJustify(Horiz, Vert: DWord);
+ procedure GetTextSettings(var TextInfo: TextSettingsType);
+ procedure OutCharXY(X,Y: LongInt; C: Char; Color: DWord);
+ function  TextHeight(TextString: String): DWord;
+ function  TextWidth(TextString: String): DWord;
+ procedure OutText(TextString: String);
+ procedure OutTextXY(X,Y: LongInt; TextString: String);
+
+ procedure Retrace;
+ procedure CliRetrace;
+ procedure HRetrace;
+ procedure CliHRetrace;
+ procedure SetSplitLine(Line: DWord);
+
+ function  GetDriverName: String;
+ function  RegisterBGIDriver(Driver: Pointer): Longint;
+ function  RegisterBGIFont(Driver: Pointer): Longint;
+ function  InstallUserDriver(Name: String; AutoDetectPtr: Pointer): Longint;
+ function  InstallUserFont(FontFileName: String): Longint;
+ procedure DetectGraph(var GraphDriver: Integer; var GraphMode: Integer);
+ procedure InitGraph(var GraphDriver: Integer; var GraphMode: Integer; Dummy: String);
+
+implementation

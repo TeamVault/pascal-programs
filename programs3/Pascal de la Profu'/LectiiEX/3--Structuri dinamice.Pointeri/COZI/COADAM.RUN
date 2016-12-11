@@ -1,0 +1,14 @@
+Procedure Run;
+
+var
+  C: Coada;
+
+Begin
+  WriteLn('Memoria dinamica disponibila este: ', MemAvail, ' byte');
+  Init(C);
+  Operatii(C);
+  Term(C);
+  List(C);
+  WriteLn('Memoria dinamica disponibila este: ', MemAvail, ' byte');
+  ReadLn
+End;

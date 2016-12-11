@@ -1,0 +1,141 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal Runtime Library                             *)
+(*       MSDOS Interface Unit                                   *)
+(*                                                              *)
+(*       Copyright (c) 1995,98 TMT Development Corporation      *)
+(*       Authors: Anton Moscal, Vadim Bodrov                    *)
+(*                                                              *)
+(****************************************************************)
+unit Dos;
+
+interface
+
+{$i-,o+,s-}
+
+uses DosCall, Strings;
+
+const
+  FMCLOSED   = $D7B0;
+  FMINPUT    = $D7B1;
+  FMOUTPUT   = $D7B2;
+  FMINOUT    = $D7B3;
+
+  READONLY   = $0001;
+  HIDDEN     = $0002;
+  SYSFILE    = $0004;
+  VOLUMEID   = $0008;
+  DIRECTORY  = $0010;
+  ARCHIVE    = $0020;
+  ANYFILE    = $003F;
+
+  FCARRY     = $0001;
+  FPARITY    = $0004;
+  FAUXILIARY = $0010;
+  FZERO      = $0040;
+  FSIGN      = $0080;
+  FOVERFLOW  = $0800;
+
+  hmaxpathcomp = 256;
+
+type
+  Comstr  = String[127];
+  PathStr = String[79];
+  DirStr  = String[67];
+  NameStr = String[8];
+  ExtStr  = String[4];
+
+  Registers = DosCall.regs;
+
+  SearchRec = record
+    Fill: array [1..21] of Byte;
+    Attr: Byte;
+    Time: Longint;
+    Size: Longint;
+    Name: String[12];
+  end;
+
+type
+  Int_Vecs =
+    (int00, int02, int04, int05, int06, int1b, int21,
+     int23, int24, int34, int35, int36, int37, int38,
+     int39, int3a, int3b, int3c, int3d, int3e, int3f,
+     int75);
+
+  Exc_Vecs =
+    (exc00, exc02, exc04, exc05, exc06, exc08,
+     exc09, exc0a, exc0b, exc0c, exc0d, exc0e);
+
+const
+  Int_Vecs_No: array [Int_Vecs] of Byte =
+    ($00, $02, $04, $05, $06, $1b, $21,
+     $23, $24, $34, $35, $36, $37, $38,
+     $39, $3a, $3b, $3c, $3d, $3e, $3f,
+     $75);
+
+  Exc_Vecs_No: array [Exc_Vecs] of Byte =
+    ($00, $02, $04, $05, $06, $08,
+     $09, $0a, $0b, $0c, $0d, $0e);
+var
+  Int_Save: array [Int_Vecs] of FarPointer;
+  Exc_Save: array [Exc_Vecs] of FarPointer;
+
+type
+  TSearchRec = SearchRec;
+
+  Datetime = record
+    Year, Month, Day, Hour, Min, Sec: Word;
+  end;
+
+var
+  DosError: Longint := 0;
+
+function  DosVersion: DWord;
+procedure GetDate(var Year, Month, Day, DayOfWeek: Word);
+procedure SetDate(Year, Month, Day: Word);
+procedure GetTime(var Hour, Minute, Second, Sec100: Word);
+procedure SetTime(Hour, Minute, Second, Sec100: Word);
+function  GetClock: Longint;
+procedure SetClock(Clock: Longint);
+procedure GetVerify(var Verify: Boolean);
+procedure SetVerify(Verify: Boolean);
+function  DiskFree(Drive: Byte): DWord;
+function  DiskSize(Drive: Byte): DWord;
+procedure GetFAttr(var F; var Attr: Word);
+procedure SetFAttr(var F; Attr: Word);
+procedure GetFTime(var F; var Time: Longint);
+procedure SetFTime(var F; Time: Longint);
+procedure FindFirst(const Path: String; Attr: Word; var SrchRec: SearchRec);
+procedure FindNext(var SrchRec: SearchRec);
+procedure FindClose(var SrchRec: SearchRec);
+procedure UnpackTime(Src: Longint; var Dst: DateTime);
+procedure PackTime(var Src: DateTime; var Dst: Longint);
+function  FSearch(Path: PathStr; Dirlist: String): PathStr;
+function  FExpand (const Path: PathStr): PathStr;
+procedure FSplit(const Path: PathStr; var Dir: DirStr; var Name: NameStr; var Ext: ExtStr);
+function  EnvCount: Longint;
+function  EnvStr(Index: Longint): String;
+function  GetEnv(EnvVar: String): String;
+procedure Exec(Path: PathStr; Comline: ComStr);
+function  DosExitCode: DWord;
+procedure SwapVectors;
+procedure Keep(ExitCode: DWord);
+procedure GetCBreak(var Break: Boolean);
+procedure SetCBreak(Break: Boolean);
+procedure Intr(IntNo: Byte; var Regs: Registers);
+procedure MsDos(var Regs: Registers);
+procedure ReleaseTimeSlice;
+procedure GetIntVec(IntNo: Byte; var Vector: FarPointer);
+procedure GetIntVecFar(IntNo: Byte; var Vector: FarPointer);
+procedure GetExcVec(IntNo: Byte; var Vector: FarPointer);
+procedure GetExcVecFar(IntNo: Byte; var Vector: FarPointer);
+procedure SetIntVecFar(IntNo: Byte; const Vector: FarPointer);
+Overload  SetIntVec = SetIntVecFar;
+procedure SetIntVecNear(IntNo: Byte; Vector: Pointer);
+Overload  SetIntVec = SetIntVecNear;
+procedure SetExcVecFar(IntNo: Byte; const Vector: FarPointer);
+Overload  SetExcVec = SetExcVecFar;
+procedure SetExcVecNear(IntNo: Byte; Vector: Pointer);
+Overload  SetExcVec = SetExcVecNear;
+
+implementation

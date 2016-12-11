@@ -1,0 +1,403 @@
+=======================================================================
+                      Borland Pascal Utilities
+=======================================================================
+
+-----------------------------------------------------------------------
+                         Table of Contents
+-----------------------------------------------------------------------
+ 1. The TOUCH utility
+ 2. The GREP utility
+     The GREP switches
+     How to search using GREP
+     Examples using GREP
+ 3. The BINOBJ utility
+ 4. The Stand-Alone MAKE Utility
+-----------------------------------------------------------------------
+
+This file describes three stand-alone utility programs that come
+with Borland Pascal: TOUCH, GREP, and BINOBJ.
+
+Note: For information regarding the MAKE utility, see the Tools
+and Utilities Guide.
+
+======================
+ 1. The TOUCH Utility
+======================
+
+There are times when you want to force a particular target file
+to be recompiled or rebuilt, even though no changes have been
+made to its sources. One way to do this is to use the TOUCH
+utility included with Borland Pascal. TOUCH changes the date and
+time of one or more files to the current date and time, making it
+"newer" than the files that depend on it.
+
+To force a target file to be rebuilt, "touch" one of the files
+that target depends on. To touch a file (or files), enter
+
+   touch filename [ filename ... ]
+
+at the DOS prompt. TOUCH will then update the file's creation
+date(s).
+
+Once you do this, you can invoke MAKE to rebuild the touched
+target file(s).
+
+
+=====================
+ 2. The GREP Utility
+=====================
+
+GREP is a powerful search utility that can look for text in
+several files at once.
+
+The command-line syntax for GREP follows:
+
+   GREP [options] searchstring [filespec ... ]
+
+where options consists of one or more single characters preceded
+by a hyphen, searchstring defines the pattern to search for, and
+filespec is the file specification. filespec tells GREP which
+files (or groups of files) to search; it can be an explicit file
+name or a generic file name incorporating the DOS wildcards (?
+and *). You can also enter a path as part of filespec; if you use
+filespec without a path, GREP only searches the current
+directory. If you don't specify filespec, input to GREP must be
+specified by redirecting stdin or piping.
+
+
+ The GREP Switches
+===================
+
+In the command line, options are one or more single characters
+preceded by a hyphen (-). Each individual character is a switch
+that you can turn on or off: type the plus symbol (+) after a
+character to turn the option on, or type a hyphen (-) after the
+character to turn the option off.
+
+The default is on (the + is implied): for example, -R means the
+same thing as -R+. You can list multiple options individually
+like this: -I -D -L). Or you can combine them like this: -ILD or
+-IL -D, and so on). It's all the same to GREP.
+
+Here is a list of the switches and their meanings:
+
+   -C   Count only: Only a count of matching lines is printed.
+        For each file that contains at least one matching line,
+        GREP prints the file name and a count of the number of
+        matching lines. Matching lines are not printed.
+
+   -D   Directories: For each filespec specified on the command
+        line, GREP searches for all files that match the file
+        specification, both in the directory specified and in all
+        subdirectories below the specified directory. If you give
+        a filespec without a path, GREP assumes the files are in
+        the current directory.
+
+   -I   Ignore case: GREP ignores upper/lowercase differences
+        (case folding). GREP treats all letters a-z as being
+        identical to the corresponding letters A-Z in all
+        situations.
+
+   -L   List match files: Only the name of each file containing a
+        match is printed. After GREP finds a match, it prints the
+        file name and processing immediately moves on to the next
+        file.
+
+   -N   Numbers: Each matching line that GREP prints is preceded
+        by its line number.
+
+   -O   UNIX output format: Changes the output format of matching
+        lines to support more easily the UNIX style of
+        command-line piping. All lines of output are preceded by
+        the name of the file which contained the matching line.
+
+   -R   Regular expression search: The text defined by
+        searchstring is treated as a regular expression instead
+        of as a literal string.
+
+   -U   Update options: GREP will combine the options given on
+        the command line with its default options and write these
+        to the GREP.COM file as the new defaults. (In other
+        words, GREP is self-configuring.) This option allows you
+        to tailor the default option settings to your own taste.
+
+   -V   Non-match: Only non-matching lines are printed. Only
+        lines that do not contain the search string are
+        considered to be non-matching lines.
+
+   -W   Word search: Text found which matches the regular
+        expression will be considered a match only if the
+        character immediately preceding and following cannot be
+        part of a word. The default word character set includes
+        A-Z, 9-0, and the underbar (_). An alternate form of this
+        option allows you to specify the set of legal word
+        characters. Its form is -W[set], where set is any valid
+        regular expression set definition. If alphabetic
+        characters are used to define the set, the set will
+        automatically be defined to contain both the upper and
+        lower case values for each letter in the set, regardless
+        of how it is typed, even if the search is case-sensitive.
+        If the -W option is used in combination with the -U
+        option, the new set of legal characters is saved as the
+        default set.
+
+   -Z   Verbose: GREP prints the file name of every file
+        searched. Each matching line is preceded by its line
+        number. A count of matching lines in each file is given,
+        even if the count is zero.
+
+Several of these options are in direct conflict with each other.
+In these cases, the following order applies (the first one is the
+one that takes precedence):
+
+   -Z   -L   -C   -N
+
+Each occurrence of an option overrides the previous definition:
+Its state reflects the way you last set it. At any given time,
+each option can only be on or off.
+
+You can install your preferred default setting for each option in
+GREP.COM with the -U option. For example, if you want GREP to
+always do a verbose search (-Z on), you can install it with the
+following command:
+
+   GREP -U -Z
+
+
+ How to Search Using GREP
+==========================
+
+The value of searchstring defines the pattern GREP will search
+for.  A search string can be either a (via the -R switch) or a
+literal string. In regular expressions, operators govern the
+search; literal strings have no operators.
+
+You can enclose the search string in quotation marks to prevent
+spaces and tabs from being treated as delimiters. Matches will
+not cross line boundaries (a match must be contained in a single
+line).
+
+When the -R switch is used, the search string is treated as a
+regular expression (as opposed to a literal expression), and the
+following symbols take on special meanings:
+
+   ^   A caret at the start of the expression matches the start
+       of a line.
+
+   $   A dollar sign at the end of the expression matches the end
+       of a line.
+
+   .   A period matches any character.
+
+   *   An expression followed by an asterisk wildcard matches
+       zero or more occurrences of that expression: fo* matches
+       f, fo, foo, etc.
+
+   +   An expression followed by a plus sign matches one or more
+       occurrences of that expression: fo+ matches fo, foo, etc.,
+       but not f.
+
+   []  A string enclosed in brackets matches any character in
+       that string, but no others. If the first character in the
+       string is a caret (^), the expression matches any
+       character except the characters in the string. For
+       example, [xyz] matches x, y, and z, while [^xyz] matches a
+       and b, but not x or y. A range of characters can be
+       specified by two characters separated by a hyphen (-).
+       These can be combined to form expressions like [?a-bd-z]
+       to match ? and any letter except c.
+
+   \   The backslash "escape character" tells GREP to search for
+       the literal character that follows it. For example, \.
+       matches a period instead of any character.
+
+   Note: Four characters (?, +, *, and .) do not have any special
+   meaning when used in a set. The character ^ is only treated
+   specially if it immediately follows the beginning of the set
+   (that is, immediately after the [).
+
+Any ordinary character not mentioned in this list matches that
+character. A concatenation of regular expressions is a regular
+expression.
+
+
+ Examples Using GREP
+=====================
+
+The following examples assume all options default to off.
+
+----------------------------------------------------------------
+
+Search String   grep -n function dirdemo.pas
+
+Finds       File DIRDEMO.PAS:
+            51        LessFunc = function(X, Y: DirPtr): Boolean;
+            60      function NumStr(N, D: Integer): String;
+            73      function LessName(X, Y: DirPtr): Boolean;
+            78      function LessSize(X, Y: DirPtr): Boolean;
+            83      function LessTime(X, Y: DirPtr): Boolean;
+
+Remarks     Finds all functions in the file DIRDEMO.PAS. The -N
+            tells GREP to precede each matched line with its line
+            number.
+
+-----------------------------------------------------------------
+
+Search String   grep {\$ dirdemo.pas
+
+Finds       File DIRDEMO.PAS:
+            {$I-,S-}
+            {$M 8192,8192,655360}
+            {$F+}
+            {$F-}
+
+Remarks     Finds all compiler directives in DIRDEMO.PAS. The \
+            (backslash) preceding the $ is necessary. Without it,
+            the $ would indicate the end of the line. All lines
+            with { (curly bracket) as the last character would
+            match this pattern and be printed out.
+
+-----------------------------------------------------------------
+
+Search String   grep -i "^ *function.*).*real" *.pas
+
+Finds       File WORKERS.PAS:
+            function RoundPay(Wages: Real): Real;
+
+Remarks     Finds all lines that begin with zero or more spaces
+            followed by the word function, followed by any string
+            of zero or more characters, followed by a
+            parenthesis, followed by another string of zero or
+            more characters, followed by the word Real, and
+            ignores case. The net effect is to search for all
+            functions returning a Real. See if you can think of
+            other ways to do this.
+
+            The double quotes are necessary because of the space
+            in the pattern string. The quotes tell the DOS
+            command-line processor to treat the intervening
+            characters as a single argument. Without the quotes,
+            DOS will think the search string is actually two
+            arguments, and GREP will think that everything after
+            ^ (the caret character) refers to file names, and
+            will complain
+
+            No files matching: *FUNCTION.*).*.
+
+
+=======================
+ 3. The BINOBJ Utility
+=======================
+
+A utility program called BINOBJ.EXE has been added to convert any
+file to an .OBJ file so it can be linked into a pascal program as
+a "procedure." This is useful if you have a binary data file that
+must reside in the code segment or is too large to make into a
+typed constant array. For example, you can use BINOBJ with the
+Graph unit to link the graphics driver or font files directly
+into your .EXE file. Then, to use your graph program, you need
+only have the .EXE file (see the example BGILINK.PAS).
+
+BINOBJ takes three parameters:
+
+   BINOBJ  <source[.BIN]>  <destination[.OBJ]>  <public name>
+
+where source is the binary file to convert, destination is the
+name of the .OBJ to be produced, and public name is the name of
+the procedure as it will be declared in your pascal program.
+
+The following example, the procedure ShowScreen, takes a pointer
+as a parameter and moves 4000 bytes of data to screen memory. The
+file called MENU.DTA contains the image of the main menu screen
+(80 * 25 * 2 = 4000 bytes).
+
+Here's a simple (no error-checking) version of MYPROG.PAS:
+
+   program MyProg;
+
+   uses Crt;
+
+   procedure ShowScreen(ScreenData : Pointer);
+   { Display a screenful of data--no error-checking! }
+   var
+     ScreenSegment: Word;
+
+   begin
+     if (Lo(LastMode) = 7) then      { Mono? }
+       ScreenSegment := $B000
+     else
+       ScreenSegment := $B800;
+     Move(ScreenData^,               { From pointer }
+      Ptr(ScreenSegment, 0)^,        { To video memory }
+      4000);                         { 80 * 25 * 2 }
+   end;
+
+   var
+     MenuP : Pointer;
+     MenuF : file;
+   begin
+     Assign(MenuF, 'MENU.DTA');      { Open screen data file }
+     Reset(MenuF, 1);
+     GetMem(MenuP, 4000);            { Allocate buffer on heap }
+     BlockRead(MenuF, MenuP^, 4000); { Read screen data }
+     Close(MenuF);
+     ShowScreen(MenuP);              { Display screen }
+   end.
+
+
+The screen data file (MENU.DTA) is opened and then read into a
+buffer on the heap. Both MYPROG.EXE and MENU.DTA must be present
+at run-time for this program to work. You can use BINOBJ to
+convert MENU.DTA to an .OBJ file (MENUDTA.OBJ) and tell it to
+associate the data with a procedure called MenuData. Then you can
+declare the fake external procedure MenuData, which actually
+contains the screen data. Once you link in the .OBJ file with the
+$L compiler directive, MenuData will be 4000 bytes long and
+contain your screen data. First, run BINOBJ on MENU.DTA:
+
+   binobj MENU.DTA MENUDTA MenuData
+
+The first parameter, MENU.DTA, shows a familiar file of screen
+data; the second, MENUDTA, is the name of the .OBJ file to be
+created (since you didn't specify an extension, .OBJ will be
+added). The last parameter, MenuData, is the name of the external
+procedure as it will be declared in your program. Now that you've
+converted MENU.DTA to an .OBJ file, here's what the new
+MYPROG.PAS looks like:
+
+   program MyProg;
+
+   uses Crt;
+
+   procedure ShowScreen(ScreenData : Pointer);
+   { Display a screenful of data--no error checking! }
+   var
+     ScreenSegment: Word;
+   begin
+     if (Lo(LastMode) = 7) then             { Mono? }
+       ScreenSegment := $B000
+     else
+       ScreenSegment := $B800;
+     Move(ScreenData^,                      { From pointer }
+      Ptr(ScreenSegment, 0)^,               { To video memory }
+      4000);                                { 80 * 25 * 2 }
+   end;
+
+   procedure MenuData; external;
+   {$L MENUDTA.OBJ }
+   begin
+     ShowScreen(@MenuData);                 { Display screen }
+   end.
+
+Notice that ShowScreen didn't change at all, and that the ADDRESS
+of your procedure is passed using the @ operator.
+
+================================
+ 4. The Stand-Alone MAKE Utility
+================================
+
+For information on the MAKE utility, please refer to the Tools
+and Utilities Guide.
+
+
+*  *  *  *  *

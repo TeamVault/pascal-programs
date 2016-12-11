@@ -1,0 +1,11 @@
+{ SAMPLE INCLUDE FILE FOR FACTORIAL.PAS: }
+{ IN STANDARD ISO PASCAL, PRED & SUCC }
+{ ARE NOT DEFINED FOR REALS: }
+function fact1(n : real) : real;
+begin
+ if n < 1.0 then
+  fact1 := 1.0
+   else
+    fact1 := n * fact1(n - 1.0)
+end;
+

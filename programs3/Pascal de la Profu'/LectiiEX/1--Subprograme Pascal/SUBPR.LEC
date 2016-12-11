@@ -1,0 +1,2086 @@
+Algoritmica si programare/Semestrul I:
+            Programare Œn limbajul Turbo (Borland) Pascal
+
+1. Generalitati
+2. Elemente de sintaxa
+3. Structura unui program
+4. Tipuri de date predefinite
+5. Expresii
+6. Declaratii si definitii
+7. Instructiuni
+8. Subprograme Pascal
+9. Tipuri de date structurate
+10. Structuri dinamice de date
+11. Elemente de modularizare
+12. Abstractizarea datelor
+13. Programarea orientata pe obiecte
+
+Capitolul 8. Subprograme Pascal
+
+8.1. Proiectarea top-down
+8.2. Abstractizarea subprogramelor
+8.3. Rolul subprogramelor Œntr-un program
+8.4. Declararea si apelarea procedurilor
+8.4.1. Proceduri fara parametri
+8.4.2. Proceduri cu parametri de intrare
+8.4.3. Proceduri cu parametri de intrare si de iesire
+8.5. Declararea si apelarea functiilor
+8.6. Apelarea procedurilor si transmiterea parametrilor. Semantica apelului
+8.6.1. Parametri transmisi prin valoare
+8.6.2. Parametri transmisi prin adresa (referinta)
+8.6.3.Verificarea corespondentei parametrilor formali cu cei actuali
+8.6.4. Variabile globale si locale Œntr-un subprogram
+8.6.5. Reguli de proiectare a subprogramelor
+8.7. Subprograme apelate din subprograme
+8.7.1. Apelul subprogramelor din subprograme. Subprograme locale Œn
+       subprograme
+8.7.2. Apelul recursiv
+8.7.3. Subprograme mutual recursive
+8.8. Tipuri procedurale
+8.8.1. Tipuri Procedure
+8.8.2. Tipuri Function
+
+8.1. Proiectarea top-down
+
+Proiectarea top-down (de sus Œn jos) este o metoda de dezvoltare a programelor
+prin care problema de rezolvat este descompusa Œn subprobleme mai simple
+(care se pot rezolva mai usor). La rƒndul sau, fiecare subproblema poate fi
+din nou descompusa Œn alte subprobleme daca este necesar.
+
+Formal, proiectarea top-down sau descompunerea functionala se poate exprima
+astfel:
+
+Se da o problema P care trebuie rezolvata.
+Problema P se descompune Œn subproblemele P1, P2, ..., Pn astfel Œncƒt:
+
+1) Subproblemele Pi (1 = i = n) sunt deduse din specificarea problemei P
+2) Fiecare subproblema Pi (1 = i = n) se poate rezolva independent
+3) Fiecare subproblema Pi (1 = i = n) este mai simpla decƒt problema initiala
+   P
+4) Solutia problemei P se obtine prin compunerea solutiilor subproblemelor
+   P1, P2, ..., Pn
+5) Pentru o problema data, descompunerea se opreste cƒnd problema se poate
+   rezolva direct
+
+Limbajul Pascal pune la dispozitia programatorului urmatoarele instrumente
+pentru proiectarea top-down:
+
+- subprogramele (procedure si function) care corespund subproblemelor
+- structurile de calcul secventiala, alternativa si repetitiva care se
+  folosesc la compunerea solutiilor subproblemelor
+- instructiunile de apel de subprograme care se folosesc la determinarea
+  solutiilor subproblemelor si la compunerea acestora (Œn cazul apelului
+  recursiv)
+
+O metoda complementara proiectarii top-down este proiectarea bottom-up (de
+jos Œn sus). Aceasta se bazeaza pe existenta solutiilor pentru unele probleme
+simple sub forma unor subprograme. Prin compunerea solutiilor acestor
+subprobleme se obtine solutia problemei initiale fara a fi nevoie de
+rescrierea tuturor subprogramelor necesare.
+
+Exemplul 1): Determinarea solutiei ecuatiei de gradul II.
+
+Definirea problemei este urmatoarea:
+
+  Se considera ecuatia de gradul II de forma a*X^2 + b*X + c = 0, unde a, b
+  si c sunt numere reale. Sa se determine radacinile  ale acesteia.
+
+Analiza problemei
+
+  Problema initiala se poate reformula astfel: se dau coeficientii ecuatiei
+  de gradul II a*X^2 + b*X + c = 0 si se cere sa se determine radacinile
+  x1, x2 ale acesteia, reale sau complexe.
+
+Descompunerea (nivelul 1)
+  Din acest enunt identificam deja trei subprobleme
+    P1: Citirea datelor de intrare (CitesteDate)
+    P2: Determinarea solutiei ecuatiei de gradul II
+    P3: Afisarea solutiei determinate (AfiseazaRezultate)
+
+Solutia problemei initiale P se obtine prin compunerea solutiilor
+subproblemelor P1, P2, P3 (aici compunerea Œnseamna rezolvarea lor Œn
+ordinea enumerarii date).
+
+Arborele de structura al programului este:
+
+                               ÚÄÄÄ¿
+                               ³ P ³
+                               ÀÄÂÄÙ
+                ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+             ÚÄÄÁÄ¿            ÚÄÁÄÄ¿          ÚÄÁÄÄ¿
+             ³ P1 ³            ³ P2 ³          ³ P3 ³
+             ÀÄÄÄÄÙ            ÀÄÄÄÄÙ          ÀÄÄÄÄÙ
+
+Continuarea descompunerii
+
+  Subproblema P1: Citirea coeficientilor ecuatiei de gradul II
+
+    Specificare: Sa se citeasca trei numere reale a, b si  c
+
+    Descompunere (nivelul 2)
+
+       Se identifica Œn acest caz o singura subproblema, numita P4:
+       CitesteReal care va trebui aplicata (rezolvata) de trei ori:
+         1) CitesteReal pentru a
+         2) CitesteReal pentru b
+         3) CitesteReal pentru c
+
+       Subproblema P4 (CitesteReal) este suficient de simpla si nu mai trebuieste
+       descompusa (se poate implementa direct)
+
+    Subproblema P2: Determinarea solutiei ecuatiei de gradul II
+
+	Specificare: Sa se rezolve ecuatia de gradul II cu coeficientii
+                     a, b si c
+
+        Descompunere (nivelul 2)
+
+          Se identifica Œn acest caz doua subprobleme:
+            P5: verifica daca ecuatia este de gradul II (DateCorecte)
+            P6: determina solutia ec. de gradul II (Prelucreaza)
+
+          Solutia subproblemei P2 este
+            Daca DateCorecte atunci Prelucreaza
+
+    Subproblema P3: Afisarea rezultatelor
+
+        Specificare: Sa se afiseze rezultatele rezolvarii ec. de gradul II
+
+        Nu mai este nevoie de descompunere
+
+Arborele de structura al programului este:
+
+                               ÚÄÄÄ¿
+                               ³ P ³
+                               ÀÄÂÄÙ
+                ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+             ÚÄÄÁÄ¿            ÚÄÁÄÄ¿          ÚÄÁÄÄ¿
+             ³ P1 ³            ³ P2 ³          ³ P3 ³
+             ÀÄÄÂÄÙ            ÀÄÂÄÄÙ          ÀÄÄÄÄÙ
+                ³          ÚÄÄÄÄÄÁÄÄÄÄÄÄ¿
+             ÚÄÄÁÄ¿     ÚÄÄÁÄ¿       ÚÄÄÁÄ¿
+             ³ P4 ³     ³ P5 ³       ³ P6 ³
+             ÀÄÄÄÄÙ     ÀÄÄÄÄÙ       ÀÄÄÄÄÙ
+
+8.2. Abstractizarea subprogramelor
+
+Un subprogram poate fi considerat ca o 'cutie neagra' care primeste date de
+intrare si furnizeaza rezultate. Proiectarea unui subprogram se realizeaza
+combinƒnd doua metode:
+- 1) abstractizarea prin parametrizare
+- 2) abstractizarea prin specificare
+
+1) Abstractizarea prin parametrizare Œnseamna identificarea, pentru o problema
+data P, a intrarilor (datelor de intrare) si iesirilor (rezultatelor) acesteia.
+Intrarile si iesirile problemei se vor numi Œn continuare 'parametri'.
+Parametrii asigura generalitatea problemei si independenta de mediul de apel
+(programul care va apela problema data va trebui sa furnizeze doar valori
+concrete pentru parametrii de intrare si sa foloseasca rezultatele furnizate
+de parametrii de iesire). Independenta de mediul de apel asigura reutilizarea
+(solutiei) problemei Œn alte locuri decƒt cel pentru care a fost rezolvata
+initial. Mediul de apel este format din toate variabilele care au in domeniul
+lor de vizibilitate punctul apelului (atƒt cele declarate Œn programul
+apelant, deci locale Œn acesta, cƒt si cele declarate Œn blocuri exterioare
+programului apelant).
+
+Din punctul de vedere al comunicarii cu mediul extern (care Œl poate apela),
+un subprogram P are trei tipuri de parametri
+- parametri de intrare: introduc informatie Œn P fara a fi modificati Œn
+  timpul executiei acestuia (IN)
+- parametri de iesire: scot informatie (rezultate) din P; nu intereseaza
+  valorile cu care acesti parametri intra Œn P (OUT)
+- parametri de intrare-iesire: sunt concomitent parametri de intrare si de
+  iesire pentru P (IN-OUT)
+
+2) Abstractizarea prin specificare ataseaza fiecarei probleme o specificare.
+Specificarea unei probleme asigura independenta folosirii acesteia de modul
+de rezolvare a ei (altfel spus de algoritmul folosit pentru rezolvare). Unei
+aceleiasi specificatii Œi pot corespunde mai multe implementari; toate aceste
+implementari vor avea Œn comun aceeasi maniera de apel a procedurii. Prin
+specificare se precizeaza ce trebuie sa faca problema si nu cum face.
+
+Specificarea contine precizarea numelui problemei, a parametrilor acesteia si
+a unor asertiuni (predicate) numite pre-conditii si post-conditii:
+- pre-conditiile precizeaza cerintele impuse asupra datelor de intrare pentru
+  ca subprogramul sa se execute corect.
+- post-conditiile precizeaza efectele executiei subprogramului asupra datelor
+  de intrare/iesire (care formeaza Œmpreuna starea programului).
+
+De obicei specificarea unei probleme se face dupa ce s-au stabilit parametrii
+acesteia sau simultan cu parametrizarea. Dupa ce specificarea s-a Œncheiat,
+se poate trece la implementarea acesteia. Unei specificari pot sa-i corespunda
+mai multe implementari diferite (folosind, de exemplu, algoritmi diferiti
+pentru transformarea datelor de intrare Œn date de iesire).
+
+Specificarea serveste Œn primul rƒnd celui care foloseste rezolvarea
+problemei. Din acest punct de vedere, ea trebuie privita ca un contract
+Œntre cel care a rezolvat problema si cel care vrea sa foloseasca rezolvarea
+respectiva Œntr-un program. Cƒt timp specificarea nu se schimba, toti clientii
+acesteia (toti programatorii care apeleaza o implementare sau alta a ei) vor
+obtine aceleasi rezultate pe aceleasi date de intrare, folosind acelasi apel
+(indiferent de implementarea folosita).
+
+Parametrizarea si specificarea sunt legate Œntre ele, ambele concurƒnd la
+realizarea a ceea ce am numit 'abstractizarea procedurala'. In paragraful
+urmator vom discuta acest lucru din punctul de vedere al folosirii
+procedurilor (subprogramelor) Œntr-un program.
+
+Pentru exemplul nostru:
+
+Parametrizarea
+P1 - CitesteDate are trei parametri de iesire, care vor fi notati cu
+     a, b si c
+P4 - CitesteReal are un singur parametru de iesire- numarul real citit x
+P5 - DateCorecte are doi parametri:
+      a - coeficientul lui x2 (parametru de intrare)
+      corect - parametru de iesire
+        corect = 0 - ecuatia este de gradul II (a ? 0)
+        corect = 1 - ecuatia nu este de gradul II (a = 0)
+P6 - Prelucreaza are urmatorii parametri
+      a, b, c - coeficientii ecuatiei de gradul II (parametri de intrare)
+      x1, x2 - solutia ecuatiei (parametri de iesire)
+      cod - informatie privind solutia (parametru de iesire)
+         cod = 2 - radacini reale diferite
+         cod = 3 - radacini reale egale
+         cod = 4 - radacini complexe
+P3 - AfiseazaRezultate are urmatorii parametri
+      x1, x2 - solutia ecuatiei (parametri de intrare)
+      cod - informatie privind solutia (parametru de intrare)
+        cod = 1 - ecuatia nu este de gradul II
+        cod = 2 - radacini reale diferite
+        cod = 3 - radacini reale egale
+        cod = 4 - radacini complexe
+
+Specificarea
+
+  P1 - CitesteDate(a, b, c)
+    Pre: True
+    Post: a, b, c î R
+
+  P4 - CitesteReal(x)
+    Pre: True
+    Post: x î R
+
+  P5 - DateCorecte(a, corect)
+    Pre: a î R
+    Post: corect î {0, 1}
+      corect = 1 daca ecuatia este de gradul II
+      corect = 0 Œn caz contrar
+
+  P6 - Prelucreaza(a, b, c, x1, x2, cod)
+    Pre: a, b, c î R si a <> 0
+    Post:
+      x1, x2 solutii ale ecuatiei a*X^2 + b*X + c = 0
+      cod î {2, 3, 4}
+        cod = 2 - radacini reale diferite
+        cod = 3 - radacini reale egale
+        cod = 4 - radacini complexe
+
+  P3 - AfiseazaRezultate(x1, x2, cod)
+    Pre:
+      x1, x2 î R
+      cod î {1, 2, 3, 4}
+    Post: True
+
+8.3. Rolul subprogramelor Œntr-un program
+
+Prima ratiune de folosire a subprogramelor Œntr-un program este mai buna
+structurare a acestuia. Folosind subprograme, corpul programului (numit si
+program principal) se exprima printr-un numar mai mic de instructiuni si
+este mai usor de Œnteles. De asemenea, programul este mai usor de modificat.
+Exemplu: vezi structurile de programe discutate anterior.
+
+A doua ratiune de folosire a subprogramelor Œntr-un program este evitarea
+repetarii unor grupuri de instructiuni identice sau aproape identice.
+Un exemplu foarte simplu este chiar citirea coeficientilor ecuatiei de gradul
+II, care Œnseamna repetarea de trei ori a aceluiasi grup de instructiuni
+(afiseaza mesaj, citeste coeficient). Prin parametrizare, grupurile de
+instructiuni aproape identice se pot transforma Œn subprograme. Folosind
+apoi valori corespunzatoare pentru parametri, fiecare apel realizeaza
+functia sa dorita (grupul de instructiuni specific).
+
+A treia ratiune de folosire a subprogramelor Œntr-un program este refolosirea
+lor (apelarea lor Œn programe diferite). Daca subprogramele sunt suficient de
+generale si daca ele necesita un volum mare de munca (de programare si de
+testare), atunci este rational ca, odata ce au fost realizate, sa se poata
+apela oriunde este nevoie de ele, fara a le rescrie. Pentru aceasta, Turbo
+Pascal pune la dispozitia programatorului (Œncepƒnd din versiunea 4.0)
+modulele (numite unit-uri). Un astfel de modul contine (simplist vorbind)
+subprograme care se pot folosi Œn alte programe. Pentru a le putea folosi,
+este suficient sa includem numele unit-ului Œntr-o fraza Uses pusa la
+Œnceputul zonei de declaratii a programului Pascal. Mediul Turbo Pascal are
+o serie Œntreaga de unit-uri care contin subprograme ce se pot apela Œn
+programele pe care le realizam. Versiunile anterioare (sub 4.0) ofera o
+directiva de compilare ce permite includerea unui fisier sursa (care contine
+numai subprogramul refolosit) Œntr-un alt fisier sursa ($I).
+
+Prin urmare, Œntr-un program Pascal putem folosi urmatoarele categorii de
+subprograme:
+- subprograme standard: se gasesc Œn unit-ul System (care este folosit
+  implicit de catre orice program Turbo Pascal); exemple: Read, ReadLn,
+  Write, WriteLn, functiile matematice, subprogramele de lucru cu stringuri,
+  etc.
+- subprograme locale programului: sunt declarate Œn zona de declaratii a
+  acestuia si se pot folosi (apela) numai Œn programul respectiv
+- subprograme de biblioteca: sunt declarate Œn module (ale mediului sau
+  realizate de programator); se pot apela daca programul contine Œn clauza
+  Uses numele unit-ului (modulului) Œn care sunt declarate.
+
+In toate cazurile, subprogramele se pot apela (folosi) numai dupa ce au fost
+declarate. Apelul de subprogram este considerat Œn Pascal ca instructiune
+simpla si Œnseamna urmatoarele
+
+Program apelant P                   Subprogram SP
+[declaratii]                        [declaratii]
+
+begin ( corpul P }              ÚÄ> begin { corpul SP }
+  ...                           ³      instr_1;
+  apel SP ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ      ...
+  instr_dupa_apel <ÄÄÄÄÄÄÄÄÄÄÄÄÄ¿      instr_n;
+  ...                           ÀÄÄ end; { SP }
+end. { P }
+
+La Œntƒlnirea instructiunii de apel, controlul executiei este predat
+subprogramului apelat (subprogramul SP). Executia instructiunilor din
+programul apelant se opreste si Œncepe executia instructiunilor din corpul
+subprogramului SP. La terminarea executiei corpului SP (atingerea
+instructiunii end; sau Œntƒlnirea unei instructiuni Exit - vezi cap 7), se
+reia executia instructiunilor din programul apelant cu instr_dupa_apel.
+
+Ce variabile se pot folosi Œn corpul SP?
+- variabile locale (cele declarate Œn SP)
+- parametrii SP (daca are)
+- variabilele globale din programul apelant (numai daca SP este subprogram
+  local al lui P)
+
+Din punctul de vedere al comunicarii cu programul apelant, subprogramele se
+pot Œmparti Œn:
+- subprograme care nu folosesc mediul programului apelant (deci nu au nevoie
+  de parametri si nu recurg la folosirea unor variabile globale)
+- subprograme ce comunica cu mediul programului apelant prin variabile globale
+  si/sau parametri
+- subprograme ce comunica cu mediul programului apelant numai prin parametri
+
+Dintre categoriile expuse mai sus, prima si a treia contin subprograme ce se
+pot include Œn module si deci refolosi Œn mai multe programe. In a doua
+categorie (care foloseste variabile locale din programul apelant care sunt
+globale Œn el) se includ subprogramele locale ale acestuia, iar declaratia
+lor trebuie sa apara dupa declaratia variabilelor folosite (atƒt declaratia
+variabilelor globale, cƒt si declaratia de subprogram vor face parte din
+zona de declaratii a programului apelant, Œnsa acele variabile care se
+folosesc Œn corpul subprogramului trebuie declarate Œnainte de declararea
+subprogramului).
+
+Exemplu:
+
+Program P1a;
+ { foloseste un subprogram local, P2 }
+  Var
+    Contor: Integer;
+  Procedure P2;
+    Begin
+      WriteLn('Valoarea lui Contor este', Contor:4)
+    End; {P2}
+  Begin {programul principal}
+    For Contor := 1 To 3 Do P2
+  End; { P1a }
+
+Programul P1a apeleaza subprogramul local P2, care nu are parametri si care
+foloseste variabila globala Contor, declarata Œnainte de declaratia lui P2.
+El va afisa ca rezultat
+
+Valoarea lui Contor este   1
+Valoarea lui Contor este   2
+Valoarea lui Contor este   3
+
+Programul functioneaza corect deoarece P2 este Œn domeniul de vizibilitate al
+variabilei Contor.
+
+Daca Œnsa declaratia variabilei Contor apare dupa declaratia subprogramului P2,
+ca Œn exemplul urmator,
+
+Program P1b;
+ { foloseste un subprogram local, P2 }
+  Procedure P2;
+    Begin
+      WriteLn('Valoarea lui Contor este', Contor:4)
+       { aici se va produce eroare de compilare: Contor este
+         identificator necunoscut }
+    End; {P2}
+  Var
+    Contor: Integer;
+  Begin {programul principal}
+    For Contor := 1 To 3 Do P2
+  End; { P1b }
+
+atunci se va produce o eroare de compilare la compilarea lui P1b, deoarece
+identificatorul Contor (referit acolo) nu este Œnca declarat (P2 nu este Œn
+DoV al variabilei Contor si refera aceasta variabila).
+
+Cum se corecteaza eroarea de mai sus?
+- varianta 1 (nerecomandata): Programul P1a
+- varianta 2 (recomandata): Programul P1c - Contor devine parametru al lui P2
+
+Program P1c;
+ { foloseste un subprogram local, P2 }
+  Procedure P2(C: Integer);
+    Begin
+      WriteLn('Valoarea lui Contor este', C:4)
+    End; {P2}
+  Var
+    Contor: Integer;
+  Begin {programul principal}
+    For Contor := 1 To 3 Do P2(Contor)
+  End; { P1c }
+
+Sfaturi:
+- Concepeti orice subprogram astfel Œncƒt el sa poata fi inclus Œntr-un modul.
+- Nu folositi Œntr-un subprogram variabile globale.
+- In locul variabilelor globale folositi parametri.
+- Pentru a fi siguri ca subprogramele locale nu folosesc variabile globale,
+  puneti declaratiile de variabile (Var) dupa declaratiile de subprograme
+  (ca Œn programul P1c). Aceasta va garanta faptul ca variabilele globale se
+  vor folosi numai Œn corpul programului, nu si Œn subprograme.
+
+In Pascal exista doua feluri de subprograme: procedura si functie.
+Subprogramele de tip procedura realizeaza o operatie bine precizata si apelul
+lor este considerat instructiune simpla. Subprogramele de tip functie
+calculeaza o valoare si apelul lor este considerat operand Œntr-o expresie.
+
+8.4. Declararea si apelarea procedurilor
+
+8.4.1. Proceduri fara parametri
+
+Procedurile fara parametri executa anumite operatii independente de mediul
+programului. Un astfel de exemplu este procedura standard ClrScr aflata Œn
+unit-ul Crt, care realizeaza stergerea ecranului. Alte exemple de proceduri
+standard fara parametri sunt Break, Continue si Exit din unit-ul System
+(discutate Œn cap. 7).
+
+Sintaxa de declarare a unei proceduri fara parametri este:
+
+Procedure Nume_Proc;
+  [declaratii]
+  Begin  { corpul procedurii }
+    instr_1;
+    ...
+    instr_n
+  End; { Nume_Proc }
+
+unde
+- Procedure,  Begin, End sunt cuvinte rezervate
+- Nume_Proc este numele procedurii (identificator)
+- declaratia de procedura introduce un bloc
+- prima linie a procedurii se numeste antet (la fel ca la programul principal)
+- zona declaratii contine declaratiile locale Œn procedura, care vor avea ca
+  DoV blocul procedurii; se pot include aici toate tipurile de declarati
+  discutate [DoV=domeniu de vizibilitate;DuV=durata de viata]
+- instr_1, ..., instr_n sunt instructiuni Pascal (simple sau compuse)
+
+Apelul unei asemenea proceduri se face printr-o instructiune care contine
+doar numele procedurii.
+
+Exemplu:
+
+[declarare]
+Procedure Afiseaza_Titlu;
+  Begin
+    ClrScr;
+    WriteLn('Ce face programul')
+  End; { Afiseaza_Titlu }
+
+[apelare]
+begin
+  ...
+  Afiseaza_Titlu;
+  ....
+End.
+
+Conceperea unei proceduri fara parametri Œnseamna de fapt (pentru limbajul
+Pascal, si nu numai) realizarea unei noi instructiuni simple a limbajului.
+Odata procedura declarata, aceasta Œnseamna pentru Pascal o noua instructiune
+simpla, care grupeaza (se traduce Œn) toate instructiunile continute Œn
+corpul ei. Aceasta este cea mai simpla modalitate de extindere a limbajului
+cu noi instructiuni, din ce Œn ce mai complexe. Unit-urile mediului Turbo
+(Borland) Pascal contin o serie de astfel de proceduri.
+
+8.4.2. Proceduri cu parametri de intrare
+
+Aceste proceduri nu modifica mediul programului care le apeleaza. Rolul lor
+este de a efectua prelucrari, de a verifica anumite conditii sau de a afisa
+anumite rezultate.
+
+Sintaxa de declarare a unei proceduri cu parametri de intrare este:
+
+Procedure Nume_Proc(<lista_parametri_formali>);
+  [declaratii]
+  Begin  { corpul procedurii }
+    instr_1;
+    ...
+    instr_n
+  End; { Nume_Proc }
+
+unde toate precizarile de la procedurile fara parametri ramƒn valabile si
+- lista_parametri_formali este o lista de declaratii de parametri formali de
+  forma:
+
+  <lista_parametri_formali> ::= {<declaratie parametri formali>}
+  <declaratie parametri formali> ::= <lista parametri>:<tip_de_date>;
+
+- ultima <declaratie parametri formali> nu se Œncheie cu ;
+
+Lista de parametri formali se poate transcrie Œn forma:
+
+  <lista_parametri_formali> ::= pf1: t1; pf2: t2; ..., pf_n: t_n
+
+unde pf1, pf2, ..., pf_n sunt parametrii formali, iar t1, t2, ..., t_n sunt
+tipurile de date asociate acestora.
+
+Apelul unei asemenea proceduri se face printr-o instructiune care contine
+numele procedurii, urmata de lista parametrilor actuali:
+
+  Nume_Proc(<lista_parametri_actuali>);
+
+unde <lista_parametri_actuali> este o lista de expresii, care trebuie sa
+corespunda cu <lista_parametri_formali>
+
+<lista_parametri_actuali> ::= pa1, pa2, ..., pa_n
+
+Corespondenta dintre <lista_parametri_actuali> si <lista_parametri_formali>
+Œnseamna urmatoarele (vezi si 8.6.3):
+- cele doua liste trebuie sa aiba acelasi numar de elemente
+- elementul de pe pozitia i din <lista_parametri_actuali> trebuie sa fie de
+  tipul de date ti (cum apare el precizat Œn <lista_parametri_formali>)
+- altfel spus
+   - pa1 trebuie sa fie de tipul t1
+   - pa2 trebuie sa fie de tipul t2
+   - ...
+   - pan trebuie sa fie de tipul t_n
+
+Exemplu:
+
+Program P2a;
+ { foloseste o procedura locala, ScrieSuma }
+  Procedure ScrieSuma(A, B, C: Integer);
+    Var
+      S: Integer;
+    Begin
+      S := A + B + C;
+      WriteLn('Suma numerelor este', S:4);
+      A := 0;
+      B := 0;
+      C := 0
+    End; {ScrieSuma}
+  Var
+    N1, N2, N3: Integer;
+  Begin {programul principal}
+    N1 := 12;
+    N2 := 23;
+    N3 := 34;
+    WriteLn('Se aduna numerele: ', N1:3, N2:3, N3:3);
+    ScrieSuma(N1, N2, N3);
+    WriteLn('S-au adunat numerele: ', N1:3, N2:3, N3:3)
+  End; { P2a }
+
+In exemplul de mai sus, ScrieSuma contine o parte de declaratii locale, Œn
+care este declarata variabila Œntreaga S. Aceasta variabila are ca domeniu de
+vizibilitate corpul procedurii ScrieSuma si poate fi referita numai Œn acesta.
+Daca se Œncearca referirea ei Œn programul principal, se va produce o eroare
+de compilare.
+
+Parametrii formali ai procedurii ScrieSuma sunt declarati astfel:
+
+  A, B, C: Integer,
+
+declaratie echivalenta cu
+
+  A: Integer; B: Integer, C: Integer
+
+(cƒnd mai multi parametri formali consecutivi au acelasi tip de date, ei pot
+fi pusi Œntr-o lista (numele lor se separa prin virgule) si se scrie o singura
+data tipul (la fel ca la declaratia de variabile). Declararea parametrilor
+formali ai procedurii se poate considera tot o declaratie de variabile locale:
+acestia au semnificatie doar atƒta timp cƒt procedura se executa.
+
+Antetul procedurii ScrieSuma stabileste modalitatea Œn care aceasta poate fi
+apelata. Prin urmare am dedus o regula importanta: declaratia de procedura
+stabileste modul de apel al acesteia. Orice apel care nu se conformeaza
+declaratiei va fi respins (Œn cazul limbajului Pascal de catre compilator).
+
+Apelul procedurii ScrieSuma din exemplul de mai sus se conformeaza regulii
+enuntate. Toti parametrii actuali de intrare pot fi orice expresii care se
+pot evalua Œn momentul apelului (Œn cazul nostru ei sunt expresii simple,
+formate din variabile declarate Œn zona de declaratii a programului apelant).
+
+Executia acestui program va produce afisarea urmatoarelor mesaje:
+
+Se aduna numerele:  12 23 34
+Suma numerelor este  69
+S-au adunat numerele:  12 23 34
+
+8.4.3. Proceduri cu parametri de intrare si de iesire
+
+De cele mai multe ori, o procedura trebuie sa efectueze o operatie care
+modifica mediul programului apelant. Am vazut anterior ca acest lucru se poate
+face Œn doua moduri:
+- prin modificarea unei variabile globale (declarata Œn programul apelant
+  Œnainte de declaratia procedurii apelate, care este vizibila Œn corpul
+  procedurii)
+- prin transmiterea modificarii spre programul apelant printr-un parametru de
+  iesire
+
+Apare aici un element nou: cum se poate extrage (scoate) din procedura o
+valoare calculata Œn ea si apoi aceasta sa se faca disponibila Œn programul
+apelant, care sa o poata folosi Œn continuare? Cu alte cuvinte, cum se
+specifica faptul ca un parametru formal de procedura este parametru de iesire?
+
+Limbajul Pascal pune la dispozitia programatorului un mecanism simplu de
+specificare a parametrilor de iesire, prefixƒnd declaratia acestora cu
+cuvƒntul rezervat 'Var'. Pƒna acum am vazut ca 'Var' este folostit pentru a
+preciza declaratii de variabile. Acum apare a doua folosire a sa,
+specificarea parametrilor de iesire.
+
+Sintaxa declaratiei de procedura cu parametri de intrare si de iesire este
+identica cu cea pentru procedurile cu parametri de intrare, cu singura
+deosebire ca declaratiile parametrilor formali de iesire trebuie prefixate cu
+Var. Din nou, daca o procedura are mai multi parametri de iesire de acelasi
+tip, si care sunt consecutivi, declararea acestora se poate condensa.
+
+Apelarea unei proceduri cu parametri de intrare si de iesire se face la fel
+ca Œn cazul procedurilor cu parametri de intrare. Exista Œnca o restrictie
+privitoare la parametrii actuali de iesire. Daca parametrii actuali de intrare
+pot sa fie orice expresii care se pot evalua Œn momentul apelului, parametrii
+actuali de iesire trebuie sa fie obligatoriu variabile care au punctul
+apelului Œn domeniul lor de vizibilitate.
+
+Exemple:
+
+Declaratia de procedura
+
+  Procedure Imparte(a, b: Integer; Var c, r: Integer);
+  {Œmpartirea numerelor a si b produce cƒtul c si restul r}
+
+este echivalenta cu
+
+  Procedure Imparte(a: Integer; b: Integer; Var c: Integer; Var r: Integer);
+
+In declaratiile de mai sus, a si b sunt parametri de intrare, iar c si r sunt
+parametri de iesire.
+
+Exemplul prezentat Œn paragraful precedent se poate rescrie aici astfel:
+
+Program P2b;
+ { foloseste o procedura locala, CalculSuma }
+  Procedure CalculSuma(A, B, C: Integer; Var S: Integer);
+    Begin
+      S := A + B + C;
+      A := 0;
+      B := 0;
+      C := 0
+    End; {CalculSuma}
+  Var
+    N1, N2, N3, Suma: Integer;
+  Begin {programul principal}
+    N1 := 12;
+    N2 := 23;
+    N3 := 34;
+    WriteLn('Se aduna numerele: ', N1:3, N2:3, N3:3);
+    CalculSuma(N1, N2, N3, Suma);
+    WriteLn('Suma numerelor este', Suma:4);
+    WriteLn('S-au adunat numerele: ', N1:3, N2:3, N3:3)
+  End; { P2b }
+
+In exemplul de mai sus, CalculSuma nu mai contine declaratia locala a
+variabilei Œntregi S, aceasta transformƒndu-se Œn parametru de iesire,
+fiind declarat ca atare Œn antetul procedurii.
+
+Parametrii formali ai procedurii CalculSuma sunt declarati astfel
+
+  A, B, C: Integer; var S: Integer.
+
+Aceasta declaratie specifica faptul ca primii trei sunt parametri de intrare,
+iar S este parametru de iesire.
+
+Daca analizam programul principal, constatam ca:
+- s-a declarat o noua variabila Œntreaga, Suma
+- apelul procedurii CalculSuma contine patru parametri actuali, primii trei
+  cu semnificatia din exemplul anterior, iar al patrulea pe post de parametru
+  de iesire (Œn cazul nostru variabila Suma joaca acest rol, valoarea ei
+  fiind folosita Œn continuare pentru afisare
+- afisarea sumei numerelor s-a transferat din subprogram Œn programul apelant
+  (motiv pentru care numele subprogramului s-a schimbat)
+
+Executia acestui program va produce afisarea acelorasi mesaje ca si cele de
+la programul precedent:
+
+Se aduna numerele:  12 23 34
+Suma numerelor este  69
+S-au adunat numerele:  12 23 34
+
+8.5. Declararea si apelarea functiilor
+
+O categorie speciala de subprograme este formata din functii. Scopul unei
+functii este calculul unei valori, care este Œntoarsa (folosita) Œn programul
+apelant. Asemanarile dintre proceduri si functii sunt urmatoarele
+- ambele sunt subprograme
+- declaratiile lor formeaza un bloc
+- ambele au parametri.
+
+Deosebirile dintre proceduri si functii sunt cel putin urmatoarele:
+- functiile Œntorc un singur rezultat, de un tip simplu (Œn  Pascal)
+- apelul de procedura este considerat Œn Pascal instructiune, pe cƒnd apelul
+  de functie este considerat operand Œntr-o expresie
+- functiile nu trebuie sa aiba parametri de iesire
+- la functii trebuie precizat tipul rezultatului intors (calculat), care este
+  folosit in programul apelant
+
+Din punct de vedere sintactic, declaratia de functie are forma:
+
+Function Nume_Functie[(<lista_parametri_formali>)]: tip_rezultat;
+  [declaratii]
+  Begin  { corpul functiei }
+    instr_1;
+    ...
+    instr_n
+  End; { Nume_Functie }
+
+unde
+- Function,  Begin, End sunt cuvinte rezervate
+- Nume_Functie este numele functiei (identificator)
+- lista_parametri_formali este o lista de declaratii de parametri formali
+  (poate sa lipseasca)
+- tip_rezultat este tipul de data al rezultatului Œntors de functie
+  (este obligatoriu)
+- declaratia de functie introduce un bloc
+   - prima linie a declaratiei de functie se numeste antet (la fel ca la
+     programul principal)
+   - zona declaratii contine declaratiile locale Œn functie, care vor avea ca
+     DoV blocul functiei; se pot include aici toate tipurile de declarati
+     discutate
+- instr_1, ..., instr_n sunt instructiuni Pascal (simple sau compuse); Œntre
+  aceste instructiuni trebuie sa apara cel putin odata o instructiune de
+  atribuire de forma
+
+  Nume_Functie := expresie;
+
+Apelul unui subprogram de tip functie se face identic cu cel de procedura,
+adica se scrie numele subprogramului (urmat Œn paranteza de parametrii
+actuali, daca functia are parametri). Ceea ce difera este semnificatia
+apelului: deoarece functia Œntoarce o valoare, apelul de functie are
+semantica unui operator Œntr-o expresie si nu semantica unei instructiuni
+simple, ca apelul de procedura. Prin urmare, apelul de functie poate sa apara
+oriunde poate apare o expresie de tipul sau.
+
+Exemplul urmator este echivalent cu cele prezentate anterior, folosind de
+aceasta data un subprogram de tip functie:
+
+Program P2c;
+ { foloseste o functie locala, CalculSuma }
+  Function CalculSuma(A, B, C: Integer): Integer;
+    Begin
+      CalculSuma := A + B + C;
+      A := 0;
+      B := 0;
+      C := 0
+    End; {CalculSuma}
+  Var
+    N1, N2, N3: Integer;
+  Begin {programul principal}
+    N1 := 12;
+    N2 := 23;
+    N3 := 34;
+    WriteLn('Se aduna numerele: ', N1:3, N2:3, N3:3);
+    WriteLn('Suma numerelor este', CalculSuma(N1, N2, N3):4);
+    WriteLn('S-au adunat numerele: ', N1:3, N2:3, N3:3)
+  End; { P2c }
+
+In exemplul de mai sus, CalculSuma nu mai contine declaratia locala a
+variabilei Œntregi S, si nici declaratia parametrului de iesire S;
+rezultatul Œntors de functie va avea semnificatia lui S din exemplele
+precedente. Acest lucru se specifica folosind Œn corpul functiei numele
+acesteia Œn membrul stƒng al operatiei de atribuire: CalculSuma := A + B + C;.
+
+Parametrii formali ai functiei CalculSuma sunt declarati la fel ca Œn
+exemplul P2a.
+
+Daca analizam programul principal, constatam ca:
+- nu mai este nevoie de variabila Œntreaga Suma
+- apelul functiei CalculSuma apare ca parametru al instructiunii de afisare
+  a rezultatului:
+
+  WriteLn('Suma numerelor este', CalculSuma(N1, N2, N3):4);
+
+Executia acestui program va produce afisarea acelorasi mesaje ca si cele de
+la programele precedente:
+
+Se aduna numerele:  12 23 34
+Suma numerelor este  69
+S-au adunat numerele:  12 23 34
+
+8.6. Apelarea procedurilor si transmiterea parametrilor. Semantica apelului
+
+Apelul unui subprogram Œnseamna
+- determinarea (localizarea) subprogramului apelat (din numele acesteia);
+  reaminitim ca subprogramul apelat poate fi:
+  - subprogram local (ca Œn exemplele P2a, P2b, P2c de mai sus)
+  - subprogram standard (aflat Œn unit-ul System)
+  - subprogram declarat Œntr-un alt unit (al carui nume apare Œntr-o clauza
+    Uses si care a fost Œn prealabil creat - fie ca este un unit al mediului,
+    fie ca este un unit realizat de un programator)
+- verificarea corectitudinii apelului (dupa ce s-a localizat subprogramul,
+  antetul lui este disponibil si deci si lista de parametri formali)
+- evaluarea parametrilor actuali si stabilirea corespondentei dintre acestia
+  si parametrii formali
+- executia subprogramului, Œn care parametrii formali primesc la Œnceput
+  valorile parametrilor actuali
+- la terminarea executiei se preda controlul programului apelant, care
+  continua executia cu instructiunea de dupa apel
+
+In ce cazuri apelul unui subprogram nu este corect (si compilatorul da un
+mesaj de eroare)?
+- subprogramul apelat nu este declarat (sau s-a scris gresit numele Œn apel)
+- lista parametrilor actuali nu corespunde cu lista de parametri formali
+- DoV al subprogramului apelat nu contine punctul (locul) de unde s-a facut
+  apelul
+
+Vom discuta la Œnceput modalitatile de transmitere a parametrilor de intrare
+si de iesire si apoi vom analiza modul cum se face verificarea corespondentei
+parametrilor actuali cu cei formali.
+
+8.6.1. Parametri transmisi prin valoare
+
+Vom comenta Œn cele ce urmeaza programul P2a. Presupunem ca s-a facut
+verificarea corespondentei dintre parametrii actuali din apelul procedurii
+ScrieSuma si ca acestia corespund cu parametrii formali precizati Œn
+declaratia procedurii.
+
+Constatam ca numarul parametrilor actuali si tipul acestora coincid
+(parametru cu parametru), deci din punct de vedere formal conditiile de
+apelare sunt Œndeplinite. Ce se Œntƒmpla mai departe pentru executia
+apelului?
+
+Urmatorul pas este evaluarea parametrilor actuali si punerea lor Œn
+corespondenta cu cei formali. Evaluarea este simpla: parametrii actuali au
+fost initializati anterior, deci au valori bine determinate, iar corespondenta
+se stabileste astfel:
+- N1 este pus Œn corespondenta cu A
+- N2 este pus Œn corespondenta cu B
+- N3 este pus Œn corespondenta cu C
+
+Punerea Œn corespondenta Œnseamna (Œn cazul nostru) copierea valorilor
+parametrilor actuali Œn parametrii formali corespunzatori, deci se poate
+scrie printr-o secventa de atribuiri:
+
+  A := N1;  { atribuie lui A valoarea expresiei N1 }
+  B := N2;  { atribuie lui B valoarea expresiei N2 }
+  C := N3;  { atribuie lui C valoarea expresiei N3 }
+
+Explicatia de mai sus justifica de ce se pot folosi expresii pe post de
+parametri formali: acestea trebuie doar sa se poata evalua Œn momentul
+apelului.
+
+Acum procedura ScrieSuma se poate executa. Prima instructiune din corpul ei
+realizeaza calcului sumei
+
+  S := A + B + C;
+
+care va folosi valorile parametrilor initializate anterior. Valoarea lui S
+este afisata apoi pe ecran Œn a doua instructiune, iar urmatoarele trei
+instructiuni initializeaza pe A, B si C cu 0. Dupa aceasta se Œntƒlneste
+cuvƒntul rezervat 'end', adica s-a terminat corpul procedurii. Prin urmare,
+s-a terminat si executia procedurii ScrieSuma si se revine Œn programul
+apelant, la instructiunea urmatoare apelului. Aceasta va afisa valorile
+dinainte de apel ale variabilelor N1, N2 si N3, cu toate ca parametrii
+corespunzatori lor au fost modificati Œn timpul executiei corpului procedurii
+ScrieSuma.
+
+Motivul pentru care se Œntƒmpla asa este acela ca modificarea valorilor
+parametrilor formali Œn  ScrieSuma nu influenteaza mediul de apel (adica
+valorile parametrilor actuali din programul apelant) deoarece parametrii
+formali sunt tratati drept variabile locale ale subprogramului si ca la
+terminarea executiei acestuia ei se distrug - nu mai are loc o atribuire
+inversa de valori de forma:
+
+  N1 := A:;
+  N2 := B;
+  N3 := C;
+
+Cu alte cuvinte, A, B si C sunt doar copii ale parametrilor actuali N1, N2 si
+N3 si modificarea valorii lor nu influenteaza valorile originalelor.
+
+Aceasta modalitate de transmitere a parametrilor catre un subprogram
+(procedura sau functie) se numeste 'transmitere prin valoare'. Fiecarui
+parametru actual transmis prin valoare Œi corespunde Œn subprogramul apelat
+o pseudo-variabila locala, care are chiar numele parametrului formal
+corespunzator.
+
+Concluzia acestei analize este urmatoarea:
+
+  Parametrii actuali transmisi prin valoare dintr-un program apelant P spre
+  un subprogram apelat SP Œsi pastreaza valorile dinainte de apelul SP,
+  indiferent daca parametrii formali corespunzatori lor se modifica sau nu Œn
+  SP.
+
+8.6.2. Parametri transmisi prin adresa (referinta)
+
+Programul P2b contine o procedura ce are si parametri de iesire. Presupunem
+ca s-a facut verificarea corespondentei dintre parametrii actuali din apelul
+procedurii CalculSuma si ca acestia corespund cu parametrii formali precizati
+Œn declaratia procedurii.
+
+Urmatorul pas este evaluarea parametrilor actuali si punerea lor Œn
+corespondenta cu cei formali. Primii trei parametri actuali au fost
+initializati anterior (si sunt transmisi prin valoare), deci au valori bine
+determinate, iar corespondenta se stabileste astfel:
+- N1 este pus Œn corespondenta cu A
+- N2 este pus Œn corespondenta cu B
+- N3 este pus Œn corespondenta cu C
+
+conform atribuirilor:
+
+  A := N1;  { atribuie lui A valoarea expresiei N1 }
+  B := N2;  { atribuie lui B valoarea expresiei N2 }
+  C := N3;  { atribuie lui C valoarea expresiei N3 }
+
+Al patrulea parametru actual, Suma, este variabila globala Œn P2b care Œnca
+n-a fost initializata. De fapt, pƒna la apelul
+
+  CalculSuma(N1, N2, N3, Suma);
+
+n-am avut nevoie de ea. Mai mult, vrem sa-i determinam valoarea prin acest
+apel si s-o folosim mai departe (afisƒnd-o).
+
+Parametru actual Suma din apel Œi corespunde parametrul formal S din antetul
+procedurii, care este declarata asfel:
+
+  Procedure CalculSuma(A, B, C: Integer; Var S: Integer);
+
+Acum apare deosebirea fata de transmiterea prin valoare. Am spus anterior ca
+S este Œn procedura un parametru formal de iesire si ca am marcat acest lucru
+prefixƒnd Œn antet declaratia lui cu 'Var'. Ce Œnseamna de fapt acest lucru?
+
+Un parametru formal declarat cu Var se transmite prin referinta (adresa),
+adica corespondenta dintre parametrul actual si cel formal Œn acest caz
+Œnseamna egalitate de adresa (si nu de valoare, ca Œn cazul transmiterii prin
+valoare).
+
+Prin urmare, corespondenta dintre parametrul actual Suma din apelul
+procedurii CalculSuma si parametrul formal S din declaratia acesteia se
+stabileste prin atribuirea adresei variabilei Suma (parametrul actual) ca
+adresa a parametrului formal S:
+
+  adresa(S) := adresa(Suma);
+
+Explicatia de mai sus justifica de ce nu se pot folosi expresii pe post de
+parametri formali la parametrii de iesire: o expresie nu are asociata o
+adresa fixa Œn memorie (pe timpul evaluarii sale poate fi de exemplu
+memorata Œntr-un registru al UC). Mai mult, nu se justifica ca un parametru
+de iesire sa fie o expresie.
+
+Acum procedura CalculSuma se poate executa. Prima instructiune din corpul ei
+realizeaza calcului sumei
+
+  S := A + B + C;
+
+care va folosi valorile parametrilor initializate anterior si va modifica
+valoarea variabilei locale S. Dar cum S si Suma au aceeasi adresa (si sunt de
+acelasi tip), se va modifica concomitent si valoarea variabilei Suma (asa cum
+este ea vazuta Œn programul apelant). Urmatoarele trei instructiuni
+initializeaza pe A, B si C cu 0 si executia corpului procedurii se termina,
+revenindu-se Œn programul principal.
+
+Urmatoarea instructiune de dupa apel realizeaza chiar afisarea valorii
+variabilei Suma (care am vazut cum s-a modificat Œn programul apelat).
+
+Modalitate de transmitere a parametrilor catre un subprogram (procedura sau
+functie) explicata Œn aceasta sectiune se numeste 'transmitere prin adresa'
+sau 'transmitere prin referinta'. Pentru fiecare parametru actual 'pa' transmis
+prin referinta, parametrul formal corespunzator 'pf' din subprogramul apelat
+va avea aceeasi adresa cu el:
+
+  adresa(pf) := adresa(pa);
+
+pe toata durata de executie a subprogramului si orice modificare a valorii
+parametrului formal 'pf' Œn subprogram va avea ca efect imediat si
+modificarea valorii parametrului actual 'pa'.
+
+Procedura CalculSuma are atƒt parametri transmisi prin valoare, cƒt si
+parametri transmisi prin referinta. Modul Œn care acestia se comporta este
+ilustrat de rezultatele executiei programului P2b.
+
+Concluzia acestei analize este urmatoarea:
+
+  Parametrii actuali transmisi prin referinta dintr-un program apelant P spre
+  un subprogram apelat SP Œsi modifica valorile simultan cu parametrii formali
+  corespunzatori lor din SP.
+
+8.6.3.Verificarea corespondentei parametrilor formali cu cei actuali
+
+Am Œnceput sa discutam aceasta problema Œn 8.4.2, dar acolo Œnca nu aveam
+toate elementele necesare pentru o prezentare completa a problemei. Acum
+putem sa afirmam ca verificarea se refera la cele doua liste (lista
+parametrilor formali, precizata Œn declararea subprogramului si lista
+parametrilor actuali, precizata Œn apel) si ca se verifica:
+- numarul parametrilor transmisi (acelasi Œn ambele liste)
+- tipul acestora (parametrii de pe pozitia 'i 'din ambele liste trebuie sa
+  fie de acelasi tip)
+- modalitatea de transmitere (parametrii de pe pozitia 'i' din lista de
+  parametri actuali trebuie sa poata fi transmis prin modalitatea de
+  transmitere specificata Œn lista de parametri formali pentru al 'i'-lea
+  parametru formal).
+
+Ne vom referi Œn continuare la programul P2b prezentat anterior. Apelul
+procedurii ScrieSuma stabileste o corespondenta Œntre parametrii formali si
+parametrii actuali. Apelul este realizat prin instructiunea
+
+  ScrieSuma(N1, N2, N3);
+
+si primul pas care-l face compilatorul este sa stabileasca daca apelul este
+corect.
+
+Cum stabileste compilatorul ca apelul s-a facut corect? Ne aducem aminte ca
+Pascal este un limbaj puternic tipizat, ceea ce Œnseamna Œntre altele ca
+tipul oricarei expresii poate fi determinat la compilare. In cazul nostru,
+expresiile care corespund parametrilor actuali sunt chiar identificatori de
+variabile, deci expresii simple. Tipul acestor expresii este dedus Œn acest
+caz chiar din declaratia acestora
+
+  N1, N2, N3: Integer;
+
+ce apare Œn partea de declaratii a programului principal.
+
+8.6.4. Variabile globale si locale Œntr-un subprogram
+
+Am discutat Œn capitolul 6 (Declaratii) despre domeniul de vizibilitate al
+unui identificator Œn general si despre domeniul de vizibilitate si durata de
+viata a variabilelor. Exemplul urmator, pe care-l vom comenta, contine atƒt
+variabile globale cƒt si variabile locale si exista o pereche de declaratii
+pentru aceeasi variabila.
+
+Program P3;
+{ Domeniul de vizibilitate al variabilelor -
+  variabile locale si globale }
+  Var
+    Contor : Integer; { globala }
+    Indice : Integer; { globala }
+
+  Procedure Afiseaza_Date;
+    Var
+      Contor,           { locala }
+      Alta : Integer;   { locala }
+    Begin
+      Contor := 7;
+      Writeln('In Afiseaza_Date Contor =', Contor:5,
+                             '  Indice =',Indice:5);
+    End; { Afiseaza_Date }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+       Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  Begin   { Programul principal }
+    For Indice := 1 to 3 do Begin
+      Contor := Indice;
+      Writeln('In programul principal Contor =',Contor:5,
+                                   '  Indice =',Indice:5);
+      Afiseaza_Date;
+      Writeln('In programul principal Contor =',Contor:5,
+                                   '  Indice =',Indice:5);
+      Writeln;
+    End; { For }
+    Scrie_Sfarsit
+  End. { Programul principal }
+
+{ Rezultatul executiei
+
+In programul principal Contor  =    1  Indice =    1
+In Afiseaza_Date Contor =    7  Index =    1
+In programul principal Contor  =    1  Indice =    1
+
+In programul principal Contor  =    2  Indice =    2
+In Afiseaza_Date Contor =    7  Index =    2
+In programul principal Contor  =    2  Indice =    2
+
+In programul principal Contor  =    3  Indice =    3
+In Afiseaza_Date Contor =    7  Index =    3
+In programul principal Contor  =    3  Indice =    3
+
+Programul s-a terminat
+}
+
+Variabila Contor este declarata de doua ori: odata Œn zona de declaratii a
+programului principal (de unde va rezulta ca este globala) si Œnca odata Œn
+zona de declaratii a procedurii Afiseaza_Date, ceea ce Œnseamna ca este
+locala Œn respectiva procedura. Daca analizam DoV al variabilei Contor
+globala acesta tine de la declaratia sa si pƒna la sfƒrsitul programului
+principal, mai putin procedura Afiseaza_Date, care o redeclara. Aceasta
+Œnseamna ca
+- Œn tot corpul programului principal si al subprogramelor declarate dupa
+  declaratia variabilei globale Contor (cu exceptia blocului procedurii
+  Afiseaza_Date) numele Contor se refera la variabila globala;
+- Œn blocul procedurii Afiseaza_Date, numele Contor se refera la variabila
+  locala, declarata acolo;
+
+Executia programului justifica afirmatiile de mai sus. Tehnic vorbind,
+redeclararea unui identificator Œn DoV al sau are ca efect introducerea unei
+'gauri' Œn acesta; blocul de redeclarare va folosi numele redeclarat Œn
+acceptiunea cea mai recent Œntƒlnita. Acesta este motivul pentru care se
+obtin valori diferite pentru variabila Contor Œn programul principal si Œn
+procedura Afiseaza_Date: este vorba de fapt de doua variabile diferite, cu
+domenii de vizibilitate disjuncte (si cu durate de viata diferite) si care
+au prin urmare adrese diferite Œn memorie, deci valori diferite.
+
+Situatia opusa este atunci cƒnd doua variabile diferite au acceasi adresa de
+memorie si (daca sunt de acelasi tip) aceeasi valoare, care se modifica
+simultan pentru ambele. Este situatia descrisa mai Œnainte a parametrilor
+actuali transmisi prin referinta: atƒt parametrul formal, cƒt si parametrul
+actual (care sunt doua variabile diferite, cu toate atributele ce le definesc)
+au aceeasi adresa din memorie si trebuie sa aiba acelasi tip de date (altfel
+apelul n-ar fi corect).
+
+8.6.5. Reguli de proiectare a subprogramelor
+
+Vom da Œn continuare cƒteva reguli privind proiectarea subprogramelor.
+Aceste reguli privesc declararea acestora (am vazut anterior ca declararea
+este cea care dicteaza modul de apelare). Ne vom referi la:
+- sarcinile realizate de subprogram
+- stabilirea parametrilor subprogramului si a modului de transmitere a
+  acestora
+- alegerea tipului de subprogram (procedura sau functie)
+- stabilirea numelui subprogramului si a parametrilor acestuia
+
+Orice subprogram trebuie sa realizeze o actiune bine determinata (calculul
+unui determinant, determinarea minimului unui sir de numere, rezolvarea unui
+sistem de ecuatii, afisarea unui meniu, etc). Se spune ca subprogramul este
+bine gƒndit daca actiunea realizata de el se poate concentra Œn numele
+acestuia.
+
+Urmatoarea actiune care trebuie Œntreprinsa este stabilirea parametrilor de
+intrare si de iesire. Daca ne gƒndim ca un subprogram este implementarea unui
+subalgoritm, atunci datele de intrare ale subalgoritmului vor fi parametrii
+de intrare, iar rezultatele algoritmului vor fi parametrii de iesire.
+Parametrii de intrare se transmit de obicei prin valoare (cu unele exceptii
+care le vom discuta la vremea lor), iar parametrii de iesire se transmit
+Œntotdeauna prin referinta.
+
+Alegerea tipului subprogramului (procedura sau functie) este Œn strƒnsa
+legatura cu actiunea efectuata si cu numarul de parametri de iesire ai
+subprogramului. Daca subprogramul are un singur parametru de iesire si acesta
+este de un tip simplu de data, atunci subprogramul va fi de tip functie. De
+exemplu: calculul minimului dintr-un sir sau calculul de determinant se pot
+implementa ca subprograme de tip functie. Chiar si afisarea unui meniu se
+poate implementa ca functie, daca Œnsotim afisarea de selectarea unei optiuni
+din meniu (caz Œn care functia va Œntoarce codul optiunii selectate). Daca
+Œnsa subprogramul are mai multi parametri de iesire sau daca tipul
+parametrului de iesire este unul structurat, atunci el va fi proiectat ca
+procedura.
+
+Atƒt numele subprogramului, cƒt si numele parametrilor sai trebuie sa fie
+sugestive. Numele subprogramului procedura va desemna o actiune, pe cƒnd
+numele subprogramului functie poate desemna obiectul (valoarea) Œntoarsa.
+
+Una din deosebirile dintre proceduri si functii, enumerate Œn 8.5 s-a referit
+la restrictia aplicata functiilor de a nu avea parametri de iesire. Daca o
+instructiune din corpul unui subprogram de tip functie modifica valoarea unei
+variabile globale (accesata direct sau printr-un parametru transmis prin
+referinta), se spune ca functia are un 'efect secundar' sau 'efect colateral'.
+Acest efect se numeste 'secundar' deoarece efectul 'primar' al functiei este
+calculul unei valori, care este Œntoarsa de aceasta Œn programul apelant. De
+aceea, unele limbaje (de exemplu Ada; Pascal nu) impun ca toti parametrii
+unei functii sa se transmita prin valoare (sau prin constanta, o varianta a
+apelului prin valoare care interzice modificarea valorilor parametrilor
+formali Œn corpul subprogramului). Folosirea efectelor secundare este
+proprie programatorilor experimentati, Œnsa Œn general nu se recomanda.
+
+Regulile prezentate aici vin sa completeze sfaturile pe care le-am enuntat la
+sfƒrsitul sectiunii 8.3 privitoare la rolul subprogramelor Œntr-un program.
+
+8.7. Subprograme apelate din subprograme
+
+Din punctul de vedere al drepturilor sale de apel, un subprogram SP se
+comporta exact ca un program principal P; la rƒndul sau, SP poate avea Œn
+corpul sau instructiuni de apel ale altor subprograme, inclusiv apelul
+propriu. Singura conditie impusa este aceea ca subprogramele apelate de SP sa
+includa Œn domeniul lor de vizibilitate corpul subprogramului SP.
+
+8.7.1. Apelul subprogramelor din subprograme. Subprograme locale Œn
+       subprograme
+
+Sa consideram urmatorul exemplu:
+
+Program P4a;
+{ Apelul unei proceduri din alta procedura }
+
+  Procedure Unu;
+    Begin
+      Writeln('Aceasta este procedura Unu');
+    End; { Unu }
+
+  Procedure Doi;
+    Begin
+      Unu;
+      Writeln('Aceasta este procedura Doi');
+    End; { Doi }
+
+  Procedure Trei;
+    Begin
+      Doi;
+      Writeln('Aceasta este procedura Trei');
+    End; { Trei }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+      Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  begin  { Programul principal }
+    Unu;
+    Writeln;
+    Doi;
+    Writeln;
+    Trei;
+    Scrie_Sfarsit
+  end.   { P4a }
+
+{ Rezultatul executiei
+
+Aceasta este procedura Unu
+
+Aceasta este procedura Unu
+Aceasta este procedura Doi
+
+Aceasta este procedura Unu
+Aceasta este procedura Doi
+Aceasta este procedura Trei
+Programul s-a terminat
+}
+
+Programul P4a este un prim exemplu de apel de procedura Œn procedura.
+Procedura Doi contine Œn corpul ei apelul procedurii Unu, iar procedura Trei
+contine Œn corpul ei apelul procedurii Doi. Rezultatul apelului acestor
+proceduri Œn programul principal este ilustrat Œn exemplul de mai sus.
+
+Analizƒnd structura acestui program:
+
+Program P4a;
+[declaratii]
+  Procedure Unu;
+  Procedure Doi;
+  Procedure Trei;
+  Procedure Scrie_Sfarsit;
+  begin  { Programul principal }
+    [corp]
+  end.   { P4a }
+
+se observa ca declaratiile procedurilor Unu, Doi, Trei, Scrie_Sfarsit sunt
+continute (Œn aceasta ordine) Œn partea de declaratii a sa. De aici rezulta
+ca:
+- DoV al numelui Unu contine declaratiile procedurilor Unu, Doi, Trei,
+  Scrie_Sfarsit, precum si programul principal, deci procedura Unu va putea
+  fi apelata Œn oricare dintre acestea (inclusiv Œn Unu - vezi paragraful
+  urmator);
+- DoV al numelui Doi contine declaratiile procedurilor Doi, Trei,
+  Scrie_Sfarsit, precum si programul principal, deci procedura Doi va putea
+  fi apelata Œn oricare dintre acestea, mai putin Œn Unu - care nu face parte
+  din DoV al lui Doi
+- DoV al numelui Trei contine declaratiile procedurilor Trei, Scrie_Sfarsit,
+  precum si programul principal, deci procedura Trei va putea fi apelata Œn
+  oricare dintre acestea, mai putin Œn Unu si Doi - care nu fac parte din DoV
+  al lui Trei
+- s.a.m.d.
+
+Urmatorul exemplu vine sa ilustreze generalitatea conceptului de bloc din
+Pascal. Cum zona de declaratii a unui subprogram poate contine orice
+declaratie valida, ea va putea contine si declaratii de subprograme. In
+programul P4b am inclus declaratia procedurii Doi Œn zona de declaratii a
+procedurii Unu si am inversat apelurile: Unu apeleaza pe Doi. Ce constatam
+daca dorim sa lansam Œn executie acest program este ca el nu functioneaza:
+se produce o eroare de compilare:
+
+  Unknown identifier - Identificator necunoscut
+
+la apelul procedurii Doi Œn corpul lui Trei si (daca comentam acest apel) la
+apelul lui Doi din programul principal.
+
+Program P4b;
+{ Apelul unei proceduri din alta procedura }
+
+  Procedure Unu;
+    Procedure Doi;
+      Begin
+        Writeln('Aceasta este procedura Doi din Unu');
+      End; { Doi }
+
+    Begin { Unu }
+      Writeln('Aceasta este procedura Unu');
+      Doi;   { corect! Doi este locala in Unu }
+    End; { Unu }
+
+  Procedure Trei;
+    Begin
+      Doi;     { eroare de compilare: Identificator necunoscut }
+      Writeln('Aceasta este procedura Trei');
+    End; { Trei }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+      Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  begin  { Programul principal }
+    Unu;
+    Writeln;
+    Doi;      { eroare de compilare: Identificator necunoscut }
+    Writeln;
+    Trei;     { nu se poate compila Trei }
+    Scrie_Sfarsit
+  end.   { P4b }
+
+{ Rezultatul executiei: programul are erori de compilare }
+
+Structura programului P4b se Œnscrie Œn urmatoarea schema:
+
+Program P4b;
+[declaratii]
+  Procedure Unu;
+    Procedure Doi; { locala Œn Unu si invizibila Œn afara }
+  Procedure Trei;
+  Procedure Scrie_Sfarsit;
+  begin  { Programul principal }
+    [corp]
+  end.   { P4b }
+
+din care se observa ca procedurile locale Œn program sunt procedurilor Unu,
+Trei, Scrie_Sfarsit care sunt continute (Œn aceasta ordine) Œn partea de
+declaratii a sa, iar procedura Doi este locala Œn Unu. De aici rezulta ca:
+- DoV al numelui Unu contine declaratiile procedurilor Unu, Doi, Trei,
+  Scrie_Sfarsit, precum si programul principal, deci procedura Unu va putea
+  fi apelata Œn oricare dintre acestea (inclusiv Œn Unu - vezi paragraful
+  urmator);
+- DoV al numelui Doi contine doar declaratiile procedurilor Doi si Unu, fara
+  programul principal, deci procedura Doi nu va putea fi apelata decƒt Œn
+  corpul lui Unu - unde este locala si Œn propriul sau corp (apel recursiv -
+  vezi sectiunea urmatoare)
+- DoV al numelui Trei contine declaratiile procedurilor Trei, Scrie_Sfarsit,
+  precum si programul principal, deci procedura Doi va putea fi apelata Œn
+  oricare dintre acestea, mai putin Œn Unu si Doi - care nu fac parte din DoV
+  al sau
+- s.a.m.d.
+
+Ultimul exemplu care-l dam aici reproduce functionalitatea programului P4a
+folosind proceduri declarate local Œn alte proceduri:
+
+program P4c;
+{ Apelul unei proceduri din alta procedura }
+
+  Procedure Unu;
+    Begin
+      Writeln('Aceasta este procedura Unu');
+    End; { Unu }
+
+  Procedure Doi;
+    Procedure Unu;
+      Begin
+        Writeln('Aceasta este procedura Unu din Doi');
+      End; { Unu }
+    Begin { Doi }
+      Unu; { apelul procedurii locale Unu }
+      Writeln('Aceasta este procedura Doi');
+    End; { Doi }
+
+  Procedure Trei;
+    Procedure Doi;
+      Procedure Unu;
+        Begin
+          Writeln('Aceasta este procedura Unu din Doi din Trei');
+        End; { Unu }
+      Begin { Doi }
+         Unu; { apelul procedurii locale Unu }
+         Writeln('Aceasta este procedura Doi din Trei');
+      End; { Doi }
+    Begin { Trei }
+       Doi; { apelul procedurii locale Doi }
+       Writeln('Aceasta este procedura Trei');
+    End; { Trei }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+       Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  begin  { Programul principal }
+    Unu;  { apelul procedurii Unu din programul principal }
+    Writeln;
+    Doi;
+    Writeln;
+    Trei;
+    Scrie_Sfarsit
+  end.   { P4c }
+
+{ Rezultatul executiei
+
+Aceasta este procedura Unu
+
+Aceasta este procedura Unu din Doi
+Aceasta este procedura Doi
+
+Aceasta este procedura Unu din Doi din Trei
+Aceasta este procedura Doi din Trei
+Aceasta este procedura Trei
+Programul s-a terminat
+}
+
+Structura acestui program este urmatoarea
+
+Program P4c;
+[declaratii]
+  Procedure Unu;
+  Procedure Doi;
+    Procedure Unu; { locala Œn Doi si invizibila Œn afara }
+  Procedure Trei;
+    Procedure Doi; { locala Œn Trei si invizibila Œn afara }
+      Procedure Unu; { locala Œn Doi si invizibila Œn afara }
+  Procedure Scrie_Sfarsit;
+  begin  { Programul principal }
+    [corp]
+  end.   { P4c }
+
+iar functionarea programului (ilustrata de rezultatul tiparit) este
+justificata doar de regulile de vizibilitate a identificatorilor Œntr-un
+program cu structura de bloc. Sa remarcam aici ca declaratiile procedurilor
+locale introduc 'gauri' Œn DoV al identificatorilor cu acelasi nume
+declarati Œn programul principal si ca Œn corpul procedurilor Doi si Trei vor
+fi apelate, din acest motiv, subprogramele locale acestora si nu cele globale.
+Mai mult, acest program va functiona corect indiferent de ordinea Œn care
+apar declaratiile procedurilor Unu, Doi si Trei Œn zona de declaratii a
+programului principal (ceea ce nu se va Œntƒmpla Œn P4a - acolo s-ar produce
+o eroare de compilare). Sa remarcam de asemenea ca Œn P4c se folosesc
+identificatori redefiniti fara a se provoca o eroare de compilare. Fiecare
+identificator are propriul sau DoV si nu exista ambiguitati.
+
+8.7.2. Apelul recursiv
+
+In paragraful precedent am amintit ca numele unei proceduri se poate referi
+Œn corpul acesteia. Am discutat de asemenea Œn 8.5 faptul ca numele unei
+functii este obligatoriu sa apara Œn membrul stƒng al unei operatii de
+atribuire. Ce se Œntƒmpla Œnsa daca Œn corpul procedurii P apare o
+instructiune de apel a sa, sau daca Œn corpul functiei F numele acesteia
+apare Œn membrul drept al unei operatii de atribuire? Ambele situatii sunt
+permise (Œn anumite conditii care vor fi discutate Œn continuare) si sunt
+tratate ca apeluri (de procedura, respectiv de functie), fiind numite
+'apeluri recursive'.
+
+Subprogramele recursive permit o descriere eleganta a proceselor de calcul
+(algoritmilor) care se preteaza gƒndirii recursive. De fapt recursivitatea
+este o alta metoda de reducere a unei probleme date P la o problema mai
+simpla. Spre deosebire de descompunerea functionala, Œn care subproblemele
+sunt diferite de problema initiala, Œn cazul recursivitatii simple rezolvarea
+problemei P (de dimensiune n) se reduce la rezolvarea aceleiasi probleme P
+(de dimensiune n-1 sau mai mica).
+
+Un exemplu simplu de aplicare a recursivitatii este determinarea factorialului
+din numarul natural n:
+
+  Fact(n) ::= n * Fact(n-1);
+
+care nu inseamna decat aplicarea formulei de recurenta
+
+  n! = n * (n-1)!
+
+Din punctul de vedere al analizei noastre, am redus problema determinarii lui
+n! (care spunem ca are dimensiunea n) la problema determinarii lui (n-1)!
+(deci aceeasi problema, dar de dimensiune n-1).
+
+Din schema de mai sus se observa ca problema nu este Œn Œntregime rezolvata.
+Pe lƒnga stabilirea unei legaturi Œntre P(n) si P(n-1), trebuie obligatoriu
+gasit un criteriu de stop (similar criteriului de oprire a descompunerii):
+cea mai mare valoare a lui n pentru care P(n) are solutie cunoscuta si deci
+nu mai trebuie aplicata recursivitatea.
+
+Prin urmare, rezolvarea recursiva a unei probleme P(n) Œnseamna stabilirea a
+doua elemente, la fel de importante:
+- o relatie Œntre P(n) si P(n-1)
+- un criteriu de oprire (o valoare a lui n pentru care P(n) are solutie
+  cunoscuta)
+  - Œn cazul factorialului, criteriul de stop se poate considera n = 1,
+    avƒnd Œn vedere ca 1! = 1 este cunoscut (din definitia factorialului)
+
+Un alt exemplu simplu de aplicare a recursivitatii este determinarea
+minimului unui sir de numere a1, a2, ..., an. Plecam de la urmatoarea
+constatare:
+
+  * n = 2: P(2) Œnseamna determinarea minimului a doua numere, a1, a2 si se
+           considera ca are solutie (se poate implementa direct)
+
+       Minim(a1, a2) ::= a1 daca a1 <  a2 , respectiv a2 daca a2 =  a1
+
+  * n > 2: P(n) se rezolva astfel:
+
+       Minim(a1, a2, ..., an) ::= Minim(a1, Minim(a2, ..., an))
+
+Criteriul de stop este aici atingerea valorii n = 2.
+
+Atƒt procedurile, cƒt si functiile se pot apela recursiv. Exemplele urmatoare
+ilustreaza acest lucru.
+
+program P5;
+{ Proceduri recursive }
+  Uses Crt;
+
+  Procedure Afiseaza_Titlu;
+    Begin
+      ClrScr;
+      WriteLn('Program care foloseste o procedura recursiva');
+    End; { AfiseazaTitlu }
+
+  Procedure Afiseaza_Si_Micsoreaza(Indice : integer);
+    Begin
+      Writeln('Valoarea indicelui este ',Indice:3);
+      Indice := Indice - 1;
+      If Indice > 0 Then
+         Afiseaza_Si_Micsoreaza(Indice);
+    End; { Afiseaza_Si_Micsoreaza }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+       Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  Var
+    Contor: Integer;
+
+  Begin  { programul principal }
+    Afiseaza_Titlu;
+    Contor := 7;
+    Afiseaza_Si_Micsoreaza(Contor);
+    Scrie_Sfarsit
+  End.  { P5 }
+
+{ Rezultatul executiei
+
+Program care foloseste o procedura recursiva
+Valoarea indicelui este   7
+Valoarea indicelui este   6
+Valoarea indicelui este   5
+Valoarea indicelui este   4
+Valoarea indicelui este   3
+Valoarea indicelui este   2
+Valoarea indicelui este   1
+Programul s-a terminat
+
+}
+
+Procedura recursiva din acest program este Afiseaza_Si_Micsoreaza. Ea primeste
+ca parametru (transmis prin valoare) un Œntreg Indice care este afisat
+(valoarea cu care s-a facut apelul), apoi este micsorat si (daca valoarea sa
+este strict pozitiva) se apeleaza din nou procedura (cu noua valoare a lui
+Indice). Se observa si din modul de executie a programului ca la urmatoarea
+executie se repeta aceleasi operatii. Criteriul de stop al apelului recursiv
+este atingerea valorii 0 pentru Indice. Se observa ca apelul recursiv trebuie
+sa respecte Œntr-u totul sintaxa uzuala de apel a procedurii.
+
+Al doilea exemplu de program din acest paragraf ilustreaza folosirea
+functiilor recursive. Reamintim ca apelul functiei este diferit sintactic si
+semantic de apelul de procedura.
+
+program P6;
+{ Functii recursive }
+  Uses Crt;
+
+  Procedure Afiseaza_Titlu;
+    Begin
+      ClrScr;
+      WriteLn('Program care determina CMMDC a doua numere');
+    End; { AfiseazaTitlu }
+
+  Function CMMDC_Rec(a, b: LongInt): LongInt;
+  { determina cmmdc al numerelor a si b folosind formula:
+    cmmdc(a, b) = cmmdc(b, a mod b) daca b <> 0
+                = a                 daca b = 0
+    Preconditie: a > b > 0
+  }
+    Begin
+      WriteLn('CMMDC(',a:11, ',', b:11, ')=');
+      If b = 0 then CMMDC_Rec := a
+      Else CMMDC_Rec := CMMDC_Rec(b, a mod b);
+    End; { CMMDC_Rec }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+       Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  Var
+    Numar1: LongInt;   { primul numar citit }
+    Numar2: LongInt;   { al doilea numar citit }
+
+  Begin   { Programul principal }
+    Afiseaza_Titlu;
+    Write('Introduceti primul numar: ');
+    ReadLn(Numar1);
+    Write('Introduceti al doilea numar: ');
+    ReadLn(Numar2);
+    If Numar1 >= Numar2 Then WriteLn(CMMDC_Rec(Numar1, Numar2))
+    Else WriteLn(CMMDC_Rec(Numar2, Numar1));
+    Scrie_Sfarsit
+  End. { P6 }
+
+{ Rezultatul executiei
+
+Program care determina CMMDC a doua numere
+Introduceti primul numar: 1235
+Introduceti al doilea numar: 65700
+CMMDC(      65700,       1235) =
+CMMDC(       1235,        245) =
+CMMDC(        245,         10) =
+CMMDC(         10,          5) =
+CMMDC(          5,          0) =
+5
+Programul s-a terminat
+
+}
+
+Acest exemplu implementeaza o varianta recursiva a algoritmului de determinare
+a celui mai mare divizor comun a doua numere naturale, folosind relatia de
+recurenta enuntata Œn comentariile aferente functiei CMMDC_Rec. Conformƒndu-ne
+regulilor enuntate anterior, deoarece subprogramul de determinare a cmmdc
+primeste ca parametri doua numere Œntregi si Œntoarce un alt numar, este
+natural sa fie conceput ca functie. Criteriul de stop al recursivitatii este
+dat de relatia
+
+  cmmdc(a, 0) ::= a
+
+iar reducerea problemei la una de dimensiune mai mica (dimensiune mai mica
+Œnseamna aici parametri cu valori mai mici) se bazeaza pe relatia amintita:
+
+  cmmdc(a, b) ::= cmmdc(b, a mod b)  (Preconditie: a >= b)
+
+Verificarea preconditiei se face Œn programul apelant (programul principal),
+dupa citirea valorilor numerelor pentru care se calculeaza cmmdc, rezultƒnd
+doua apeluri Œnglobate Œntr-o structura alternativa. Corpul subprogramului
+afiseaza prima data parametrii de apel (pentru a se ilustra succesiunea
+apelurilor si deci maniera de rezolvare a problemei). Sa mai observam ca
+relatia de recurenta enuntata conserva preconditia (Œntotdeauna b > a mod b).
+
+Un algoritm mai lent este cel Œn care relatia de recurenta este
+
+  cmmdc(a, b) ::= cmmdc(b, a - b)
+
+care Œnsa nu mai pastreaza preconditia. Sugeram cititorului implementarea lui.
+
+8.7.3. Subprograme mutual recursive
+
+Un caz interesant de recursivitate este acela Œn care sunt implicate doua
+subprograme, A si B si Œn care
+- A apeleaza Œn corpul sau pe B
+- B apeleaza Œn corpul sau pe A
+
+si oricare dintre ele se pot apela din programul principal. Subprogramele A
+si B care Œndeplinesc aceste conditii se numesc 'mutual recursive'.
+
+Cu ceea ce stim pƒna acum despre Pascal, acest lucru este imposibil. Sa vedem
+de ce.
+
+Consideram ca A si B sunt subprograme declarate local Œn programul P.
+Declararea lor ar putea fi Œn ordinea A, B sau B, A. In ambele situatii,
+apelul reciproc nu se poate implementa. De exemplu, ordinea
+
+Program P;
+  Procedure A;
+    [corp A]  {contine apelul lui B - eroare! B nedeclarat Œnca}
+  Procedure B;
+    [corp B]  {contine apelul lui A}
+  Begin
+    A;
+    B
+  End.
+
+ar provoca o eroare de compilare (Œn corpul lui A se apeleaza B, care nu a
+fost Œnca declarat, deci se obtine eroarea de compilare
+
+Unknown identifier = Identificator necunoscut
+
+Analog, daca se inverseaza ordinea de declarare, eroarea de compilare s-ar
+produce Œn corpul lui B.
+
+Ar fi o solutie care ar rezolva partial problema (A si B s-ar putea apela
+reciproc), Œnsa numai una dintre ele ar putea fi apelata din programul
+principal:
+
+Program P;
+  Procedure A;
+    Procedure B; { locala Œn A }
+      [corp B]  {contine apelul lui A - corect! A este declarat}
+    [corp A]  {contine apelul lui B - corect! B este declarat}
+  Begin
+    A;
+    B         {eroare de compilare! B nu este vizibil aici}
+  End.
+
+Pentru a rezolva complet problema, este nevoie de Œnca un mecanism. Acesta
+este concretizat Œn Turbo Pascal de directiva 'Forward', care are ca scop sa
+anunte compilatorului sintaxa de apel a unui subprogram care va fi declarat
+mai tƒrziu.
+
+Sintaxa acestei directive este
+
+Antet subprogram; Forward;
+
+si se aplica ca Œn exemplul urmator
+
+Program P;
+  Procedure B(parametri); Forward;
+  Procedure A(parametri);
+    [corp A]  {contine apelul lui B - corect!
+               apelul lui B este precizat Œn Forward}
+  Procedure B;{nu mai este obligatorie precizarea parametrilor}
+    [corp B]  {contine apelul lui A}
+  Begin
+    A;
+    B
+  End.
+
+Este valabila si versiunea:
+
+Program P;
+  Procedure A(parametri); Forward;
+  Procedure B(parametri);
+    [corp B]  {contine apelul lui A - corect!
+               apelul lui A este precizat Œn Forward}
+  Procedure A;{nu mai este obligatorie precizarea parametrilor}
+    [corp A]  {contine apelul lui B}
+  Begin
+    A;
+    B
+  End.
+
+Exemplul prezentat Œn continuare exemplifica declararea si folosirea
+procedurilor mutual recursive. Sa remarcam ca cel putin una dintre proceduri
+trebuie sa aiba Œn corpul ei o instructiune de stop - altfel s-ar ajunge la
+un ciclu infinit.
+
+program P7;
+{ Proceduri mutual recursive }
+  Uses Crt;
+
+  Procedure Afiseaza_Titlu;
+    Begin
+      ClrScr;
+      WriteLn('Apel recursiv - proceduri mutual recursive');
+    End; { AfiseazaTitlu }
+
+  Procedure Scrie_O_Linie(var Contor : Integer); Forward;
+
+  Procedure Micsoreaza(var Indice : Integer);
+    Begin
+      Indice := Indice - 1;
+      If Indice > 0 Then
+         Scrie_O_Linie(Indice);
+    End; { Micsoreaza }
+
+  Procedure Scrie_O_Linie;
+    begin
+       Writeln('Valoarea contorului este acum ',Contor:4);
+       Micsoreaza(Contor);
+    end; { Scrie_O_Linie }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+       Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  Var
+    De_Cate_Ori : integer;
+
+  Begin  { programul principal }
+    Afiseaza_Titlu;
+    De_Cate_Ori := 7;
+    WriteLn('Apelez Micsoreaza');
+    Micsoreaza(De_Cate_Ori);
+    Writeln;
+    De_Cate_Ori := 7;
+    WriteLn('Apelez Scrie_O_Linie');
+    Scrie_O_Linie(De_Cate_Ori);
+    Scrie_Sfarsit
+  End.  { P7 }
+
+{ Rezultatul executiei
+
+Apel recursiv - proceduri mutual recursive
+Apelez Micsoreaza
+Valoarea contorului este acum    6
+Valoarea contorului este acum    5
+Valoarea contorului este acum    4
+Valoarea contorului este acum    3
+Valoarea contorului este acum    2
+Valoarea contorului este acum    1
+
+Apelez Scrie_O_Linie
+Valoarea contorului este acum    7
+Valoarea contorului este acum    6
+Valoarea contorului este acum    5
+Valoarea contorului este acum    4
+Valoarea contorului este acum    3
+Valoarea contorului este acum    2
+Valoarea contorului este acum    1
+Programul s-a terminat
+
+}
+
+8.8. Tipuri procedurale
+
+Incepƒnd cu versiunea 5.0, mediul Turbo Pascal poseda doua tipuri de date noi,
+numite generic 'tipuri procedurale': tipul Procedure si tipul Function.
+Aceste tipuri se pot declara de catre utilizator si se includ Œn sistemul de
+tipuri al limbajului. Prin urmare, se pot declara si folosi variabile de
+tipurile respective.
+
+Sintaxa declaratiei tipurilor procedurale este:
+
+Type
+  Nume_Tip_Proc = Procedure(lista_parametri_formali);
+  Nume_Tip_Func = Function(lista_parametri_formali): tip_rezultat;
+
+unde lista_parametri_formali si tip_rezultat au semnificatia de la declararea
+procedurilor si functiilor.
+
+Rostul declaratiei de tip procedural este precizarea signaturii tipului de
+subprogram, anume:
+- precizarea tipurilor parametrilor formali (si a modului de transmitere)
+  - nu este obligatoriu ca numele parametrilor sa coincida
+  - perechile (tip_parametru, mod de transmitere) pentru fiecare parametru
+    determina ceea ce numim 'signatura' tipului procedural
+  - perechile (tip_parametru, mod de transmitere) pentru fiecare parametru,
+    impreuna cu tipul rezultatului intors determina ceea ce numim 'signatura'
+    tipului functional
+- precizarea tipului rezultatului Œntors (numai pentru tipurile functionale)
+
+Pentru ca sa se poata folosi tipuri procedurale Œntr-un program, acesta
+trebuie sa contina o directiva de compilare {$F+} (Force Far Calls).
+
+8.8.1. Tipuri Procedure
+
+Numele oricarui subprogram de tip Procedure care are signatura identica cu
+signatura tipului Nume_Tip_Proc va putea fi atribuit unei variabile de tipul
+Nume_Tip_Proc si orice variabila de acest tip va putea Œnlocui Œntr-o
+instructiune de apel numele concret al subprogramului continut de ea.
+
+Exemplul urmator este sugestiv:
+
+program P8a;
+{ Tipuri procedurale }
+  Uses Crt;
+
+{$F+} { Aceasta directiva forteaza apelurile far si este necesara
+        cand dorim sa lucram cu tipuri procedurale in Turbo Pascal }
+
+Type
+  Op_Aritm = Procedure(a, b, c : Integer;
+                       var r   : Integer); { tip procedural }
+
+  Procedure Afiseaza_Titlu;
+    Begin
+      ClrScr;
+      WriteLn('Program care foloseste tipuri procedurale si');
+      WriteLn('efectueaza operatii aritmetice cu trei numere')
+    End; { AfiseazaTitlu }
+
+   Procedure Adunare(In1, In2, In3: Integer;
+                     var Rezultat : Integer);
+     Begin
+        Rezultat := In1 + In2 + In3;
+        Writeln('Suma numerelor este     ', Rezultat:6);
+     End; { Adunare }
+
+   Procedure Inmultire(In1, In2, In3: Integer;
+                       var Rezultat : Integer);
+     Begin
+        Rezultat := In1 * In2 * In3;
+        Writeln('Produsul numerelor este ', Rezultat:6);
+     End; { Inmultire }
+
+   Procedure Medie(In1, In2, In3: Integer;
+                   var Rezultat : Integer);
+     Begin
+        Rezultat := (In1 + In2 + In3) div 3;
+        Writeln('Media numerelor este    ', Rezultat:6);
+     End; { Medie }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+       Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  Var
+    Numar1, Numar2, Numar3: Integer;
+    Rezultat_Final: Integer;
+    Operatie: Op_Aritm;
+
+  Begin { Programul principal }
+
+    Afiseaza_Titlu;
+    Write('Introduceti primul numar: ');
+    ReadLn(Numar1);
+    Write('Introduceti al doilea numar: ');
+    ReadLn(Numar2);
+    Write('Introduceti al treilea numar: ');
+    ReadLn(Numar3);
+
+    Operatie := Adunare;
+    Operatie(Numar1, Numar2, Numar3, Rezultat_Final);
+
+    Operatie := Inmultire;
+    Operatie(Numar1, Numar2, Numar3, Rezultat_Final);
+
+    Operatie := Medie;
+    Operatie(Numar1, Numar2, Numar3, Rezultat_Final);
+
+    Scrie_Sfarsit
+  end.  { P8a }
+
+{ Rezultatul executiei
+
+Program care foloseste tipuri procedurale si
+efectueaza operatii aritmetice cu trei numere
+Introduceti primul numar: 12
+Introduceti al doilea numar: 23
+Introduceti al treilea numar: 34
+Suma numerelor este         69
+Produsul numerelor este   9384
+Media numerelor este        23
+Programul s-a terminat
+
+}
+
+Programul de mai sus defineste tipul procedural Op_Aritm, care are trei
+parametri Œntregi de intrare (transmisi prin valoare) si unul Œntreg de
+iesire (transmis prin adresa). In partea sa de declaratii sunt definite si
+trei proceduri care efectueaza operatii aritmetice (numite Adunare,
+Inmultire si Medie) care au aceeasi signatura ca si Op_Aritm (chiar daca
+numele parametrilor difera, numarul lor este acelasi, si ei corespund ca tip
+si ca modalitate de transmitere). Zona de declaratii de variabile a
+programului contine declararea unei variabile procedurale (de tipul Op_Aritm)
+numita Operatie, care va fi folosita Œn corpul programului pentru apelul
+indirect al procedurilor aritmetice precizate anterior.
+
+De exemplu, maniera de apelare a procedurii Adunare este urmatoarea:
+
+  Operatie := Adunare;
+  Operatie(Numar1, Numar2, Numar3, Rezultat_Final);
+
+Prima instructiune initializeaza variabila Operatie cu adresa procedurii
+Adunare. Initializarea este posibila deoarece Adunare si Operatie au aceeasi
+signatura (si deci acelasi tip de date).
+
+A doua instructiune se traduce printr-un apel indirect de procedura. Variabila
+Operatie  contine adresa procedurii Adunare si prin urmare acest apel se
+traduce de fapt Œn apelul
+
+  Adunare(Numar1, Numar2, Numar3, Rezultat_Final);
+
+8.8.2. Tipuri Function
+
+Numele oricarui subprogram de tip Function care are signatura identica cu
+signatura tipului Nume_Tip_Func va putea fi atribuit unei variabile de tipul
+Nume_Tip_Func si orice variabila de acest tip va putea Œnlocui Œntr-o
+instructiune de apel numele concret al subprogramului continut de ea.
+
+Exemplul urmator este echivalent cu cel de la tipuri procedurale, folosind de
+data aceasta tipuri functionale (care sunt mai naturale pentru cazul ilustrat,
+deoarece operatiile aritmetice prezentate se implementeaza natural ca functii):
+
+program P8b;
+{ Tipuri functionale }
+  Uses Crt;
+
+{$F+} { Aceasta directiva forteaza apelurile far si este necesara
+        cand dorim sa lucram cu tipuri procedurale sau functionale
+        in Turbo Pascal }
+
+Type
+  Op_Aritm = Function(a, b, c : integer): Integer;
+
+  Procedure Afiseaza_Titlu;
+    Begin
+      ClrScr;
+      WriteLn('Program care foloseste tipuri functionale si');
+      WriteLn('efectueaza operatii aritmetice cu trei numere')
+    End; { AfiseazaTitlu }
+
+   Function Adunare(In1, In2, In3: Integer): Integer;
+     Var
+       R: Integer;
+     Begin
+        R := In1 + In2 + In3;
+        Writeln('Suma numerelor este     ', R:6);
+        Adunare := R
+     End; { Adunare }
+
+   Function Inmultire(In1, In2, In3: Integer): Integer;
+     Var
+       R: Integer;
+     Begin
+        R := In1 * In2 * In3;
+        Writeln('Produsul numerelor este ', R:6);
+        Inmultire := R
+     End; { Inmultire }
+
+   Function Medie(In1, In2, In3: Integer): Integer;
+     Var
+       R: Integer;
+     Begin
+        R := (In1 + In2 + In3) div 3;
+        Writeln('Media numerelor este    ', R:6);
+        Medie := R
+     End; { Medie }
+
+  Procedure Scrie_Sfarsit;
+    Begin
+       Writeln('Programul s-a terminat');
+    End; { Scrie_Sfarsit }
+
+  Var
+    Numar1, Numar2, Numar3: Integer;
+    Rezultat_Final: Integer;
+    Operatie: Op_Aritm;
+
+  Begin { Programul principal }
+
+    Afiseaza_Titlu;
+    Write('Introduceti primul numar: ');
+    ReadLn(Numar1);
+    Write('Introduceti al doilea numar: ');
+    ReadLn(Numar2);
+    Write('Introduceti al treilea numar: ');
+    ReadLn(Numar3);
+
+    Operatie := Adunare;
+    Rezultat_Final := Operatie(Numar1, Numar2, Numar3);
+
+    Operatie := Inmultire;
+    Rezultat_Final := Operatie(Numar1, Numar2, Numar3);
+
+    Operatie := Medie;
+    Rezultat_Final := Operatie(Numar1, Numar2, Numar3);
+
+    Scrie_Sfarsit
+  end.  { P8b }
+
+{ Rezultatul executiei
+
+Program care foloseste tipuri procedurale si
+efectueaza operatii aritmetice cu trei numere
+Introduceti primul numar: 12
+Introduceti al doilea numar: 23
+Introduceti al treilea numar: 34
+Suma numerelor este         69
+Produsul numerelor este   9384
+Media numerelor este        23
+Programul s-a terminat
+
+}
+
+Sa remarcam ca s-au modificat corespunzator declaratiile tipului procedural
+(functional) Op_Aritm, ale subprogramelor aritmetice (care sunt acum functii)
+si apelul acestora din programul principal.

@@ -1,0 +1,953 @@
+3.6. Arbori
+
+3.6.1. Introducere
+3.6.2. Arbori ordonati si orientati. Terminologie
+3.6.2.1. Elementele unui arbore
+3.6.2.2. Structura arborilor - relatii ierarhice
+3.6.3. Arborele binar abstract
+3.6.3.1. Structura
+3.6.3.2. Specificare si operatii
+3.6.3.3. Reprezentarea si implementarea inlantuita
+3.6.3.4. Reprezentarea secventiala implicita
+3.6.3.5. Reprezentarea secventiala folosind indici in loc de pointeri
+3.6.4. Arborele binar de cautare abstract
+3.6.4.1. Specificare si operatii
+3.6.4.2. Reprezentare si implementare
+
+3.6.1. Introducere
+
+Arborii sunt structuri de date intre elementele carora sunt definite
+relatii ierarhice, de incuibare, sau de tipul 1:m (unul la mai multe, m>=0)
+sau, altfel spus, structuri de date ierarhice.
+
+Exemple de relatii 1:m
+  - parinte-copii
+  - proprietar-bunuri
+  - echipa-jucatori
+  - biblioteca-carti
+
+Definitie matematica:
+  arborele este un graf (orientat) fara cicluri, ce are un singur varf (nod)
+  initial.
+
+Definitie alternativa:
+  Structura arborescenta este o multime finita de elemente, numite noduri,
+  care
+   (1) este vida sau
+   (2) contine un singur nod, numit radacina, sau
+   (3) are mai multe noduri, cu urmatoarele proprietati
+       - exista un singur nod, numit nod radacina, care nu are parinte
+       - exista cel putin un nod, numit nod frunza, care nu are fii
+       - orice nod, cu exceptia radacinii, are un singur parinte (ascendent)
+       - orice nod, cu exceptia frunzelor, are cel putin un fiu
+	   (descendent)
+       - numarul maxim de descendenti care ii poate avea un nod defineste
+	   ceea ce numim ordinul arborelui
+	   - arbori binari: fiecare nod poate avea cel mult doi fii
+	   - arbori m-ari: fiecare nod poate avea cel mult m fii
+
+Ce vom discuta in continuare:
+  - arbori ordonati
+  - arbori orientati
+  - arbori binari: relatii 1:2
+  - arbori binari de cautare
+Ce ar mai trebui discutat
+  - arbori completi
+  - arbori random
+  - arbori threaded
+  - arbori AVL
+  - B-arbori
+
+3.6.2.Arbori ordonati si orientati. Terminologie
+
+Arbore ordonat: caz particular de arbore.
+
+3.6.2.1. Elementele unui arbore
+
+Arborii contin noduri.
+Nodurile contin elemente.
+Un element este format din doua parti:
+  - Cheie (partea de identificare)
+  - Info (partea de informatie)
+
+Type
+  TipCheie = ... { tipul cheii }
+  TipInfo =  ... { tipul informatiei utile }
+  ElementStandard = record
+    Cheie: TipCheie;
+    Info: TipInfo
+  end;
+
+Se considera ca tipul de date TipCheie poseda o operatie:
+
+  Compara(a, b: TipCheie): Integer;
+    care intoarce
+      -1 daca a < b
+       0 daca a = b
+       1 daca a > b
+
+Un nod poate contine unul sau mai multe elemente.
+Un element este continut intr-un singur nod.
+
+Ce contine un nod (depinde de implementare)
+  - element (elemente)
+  - informatie despre relatiile cu celelalte noduri.
+
+Reprezentarea grafica a arborilor:
+   - noduri (cercuri)
+   - arce (ramuri, legaturi) intre nodurile care sunt in relatie
+     au orientare sau directie (intr-un arbore ordonat)
+   - orientarea este de la parinte spre fiu
+
+Pãrinte (tata, mama): primul nod dintr-o relatie ce defineste un arc
+Succesor (fiu, copil): al doilea nod dintr-o relatie ce defineste un arc
+
+3.6.2.2. Structura arborilor - relatii ierarhice
+
+Tipuri de structuri
+  - amorfa
+  - liniara (1:1)
+  - ierarhica (1:m)
+  - graf (m:n)
+
+Drum simplu (intre nodurile 1 si k): un sir de noduri: n1, n2, ..., nk
+astfel incat:
+  - toate nodurile sunt distincte
+  - intre fiecare pereche de noduri ni, ni+1 exista un arc (1 < i < k).
+
+Lungimea unui drum este egala cu numarul de noduri continute in el.
+
+Nod radacina: nu are nici un nod parinte.
+Nod interior: are un nod parinte (unul singur) si cel putin un nod fiu.
+Nod terminal, frunza: nu are nici un nod fiu.
+
+Intr-un arbore orientat, fiecare nod poate fi atins plecand de la radacina pe
+un singur drum.
+
+Orientarea arcelor intr-un arbore orientat: de la radacina spre frunze sau de
+la parinte spre descendent.
+
+Relatia parinte-fiu: relatia dintre un nod si succesorii sai.
+Noduri frati (siblings): au acelasi parinte.
+Stramos: parintele nodului si toti stramosii acestuia
+         toate nodurile de pe drumul de la radacina la nod, mai putin nodul.
+Descendent: fiul nodului si toti descendentii acestuia.
+Subarbore: orice nod al arborelui T impreuna cu descendentii sai.
+
+Definitia recursiva a arborelui orientat:
+  Arborele orientat este o colectie finita de unul sau mai multe noduri.
+  Unul dintre acestea este nodul radacina (care va determina orientarea
+  arcelor), iar celelalte fac parte din multimi diferite, fiecare dintre ele
+  formand un arbore orientat.
+    - multimea vida formeaza un arbore orientat
+    - multimea formata dintr-un singur nod formeaza un arbore orientat.
+
+T = radacina U T1 U T2 ... U Tm
+
+Nivelul (engl. level) unui nod:
+	Nivel(radacina) := 1
+	Nivel(n) := Nivel(parinte(n)) + 1
+
+Adancimea (engl. depth) sau inaltimea (engl. height) a unui arbore:
+  nivelul maxim al nodurilor sale.
+
+3.6.3. Arborele binar abstract
+
+3.6.3.1. Structura
+
+Caracteristicile arborelui binar
+  - fiecare nod poate avea cel mult doi subarbori, deci cel mult doi fii
+  - cei doi subarbori se numesc subarbore stang si subarbore drept
+  - arborele binar poate fi vid.
+
+Exemple de arbori binari:
+  - expression trees (arborele de descompunere a unei expresii)
+    exemplu: expresia: b * c + d : e
+
+			+
+		      /   \
+		     *     :
+		    / \   / \
+		   b   c d   e
+
+  - parse trees (arbori de sintaxa), folositi la compilare
+
+Definitia recursiva a arborelui binar:
+  un arbore vid sau format dintr-un nod (nodul radacina), impreuna cu doi
+  arbori binari (subarborele - SAB - stang si subarborele drept), care sunt
+  disjuncti unul fata de altul si fata de nodul radacina.
+
+3.6.3.2. Specificare si operatii
+
+Specificarea TAD Arbore Binar
+
+Elemente: Elementele AB sunt noduri.
+	  Fiecare nod contine un element standard, identificat unic prin
+	  valoarea cheii sale.
+	  Nodul poate sa contina si alte informatii.
+Structura: AB este:
+	     vid
+	     un nod radacina si doi SAB, SAB stang (SABS) si SAB drept (SABD)
+	       SABS si SABD sunt disjuncte
+	       radacina nu apartine nici SABS, nici SABD.
+	   Exista un (unic) nod radacina
+	   Fiecare nod are zero, unul sau doi fii.
+	   Un fiu poate fi fiu stang sau fiu drept al parintelui sau.
+Domeniu: Arborele are doua campuri,
+	   radacina: refera radacina arborelui si
+	   contor:   refera nodul curent al arborelui
+Operatii: Toate operatiile, cu exceptia lui Creeaza, presupun existenta
+	  arborelui binar ca preconditie
+	  T-pre va insemna arborele inainte de operatie
+	  c-pre va insemna nodul curent (cursorul) inainte de operatie
+
+	  Tipuri de date folosite in specificarea operatiilor
+		 Ordine = (PreOrdine, InOrdine, PostOrdine)
+		 Relativ = (Radacina, FiuStang, FiuDrept, Parinte)
+		 Stare = record
+		   Dimensiune: integer  { numarul de noduri }
+		   Inaltime: integer    { nivelul maxim }
+		   DrumMediu: real      { lungimea medie a drumurilor }
+		 end
+
+  Traverseaza(ord: Ordine)
+    pre:
+      Arborele nu este vid
+    post:
+      Fiecare nod din arbore a fost prelucrat (parcurs) exact odata.
+      Ordinea in care se parcurg nodurile depinde de valoarea parametrului
+      ord astfel:
+	case ord of
+	  PreOrdine:    nod, subarbore stang, subarbore drept
+	  InOrdine:     subarbore stang, nod, subarbore drept
+	  PostOrdine:   subarbore stang, subarbore drept, nod
+  Insereaza(e: ElementStandard; rel: Relativ; var esec: Boolean)
+    pre:
+      Sunt permise doar doua situatii exclusiv reciproce
+      - rel = Radacina si arborele este vid
+      - rel <> Radacina si arborele este nevid
+    post:
+      Elementul e se adauga la arbore, in functie de valoarea lui rel
+      Daca adaugarea (inserarea) are loc,
+	atunci e devine nodul curent
+	       esec primeste valoarea False
+	altfel esec primeste valoarea True (adaugarea a esuat)
+
+	esec := false
+	case rel of
+	  Radacina:
+            daca arborele este vid
+              atunci e este elementul continut in Radacina
+		     c-post primeste valoarea acestuia
+              altfel esec := true
+	  FiuStang:
+	    daca c-pre nu are fiu stang
+	      atunci c-pre are un fiu stang ce contine pe e
+		     c-post primeste valoarea acestuia
+	      altfel esec := true
+	  FiuDrept:
+	    daca c-pre nu are fiu drept
+	      atunci c-pre are un fiu drept
+		     c-post primeste valoarea acestuia
+	      altfel esec := true
+	  Parinte: esec := true
+
+  StergeSubarbore
+    pre:
+      Arborele nu este vid
+    post:
+      Subarborele lui T-pre a carui radacina este c-pre a fost sters din
+      arbore.
+      Nodul curent este nodul radacina
+  Modifica(e: StdElement)
+    pre:
+      Arborele nu este vid
+    post:
+      Elementul din nodul curent primeste valoarea e
+  Extrage(var e: StdElement)
+    pre:
+      Arborele nu este vid
+    post:
+      e are valoarea elementului din nodul curent
+  Caracteristici(var st: Stare)
+    post:
+      st contine dimensiunea, inaltimea si lungimea medie a drumurilor de la
+      radacina la frunze
+  Cauta(rel: Relativ; var esec: Boolean)
+    pre:
+      Arborele nu este vid
+    post:
+      Daca esec are valoarea True, atunci cautarea a esuat.
+      Nodul curent se determinã in functie de valoarea lui rel astfel
+
+	esec := false
+	case rel of
+	  Radacina: nodul curent este nodul radacina
+	  FiuStang:
+	    daca c-pre a avut fiu stang
+	      atunci acest fiu stang este nodul curent
+	      altfel esec := true
+	  FiuDrept:
+	    daca c-pre a avut fiu drept
+	      atunci acest fiu drept este nodul curent
+	      altfel esec := true
+	  Parinte:
+	    daca c-pre a avut nod parinte
+	      atunci nodul parinte al lui c-pre este nodul curent
+	      altfel esec := true
+
+  Vid
+    post:
+      daca T-pre este vid
+	atunci Vid := true
+	altfel Vid := false
+  Creeaza
+    pre:
+      True
+    post:
+      Exista un arbore binar vid.
+  Elibereaza
+    post:
+      Arborele binar este vid.
+  Afiseaza
+    pre:
+      True
+    post:
+      Arborele binar este afisat pe ecran.
+
+Majoritatea operatiilor AB din specificarea de mai sus recurge la nodul
+curent, care exista intotdeauna daca arborele nu e vid. Nodul curent contine
+elementul curent. Operatiile Insereaza, StergeSubArbore si Cauta pot
+modifica valoarea nodului curent. Dintre acestea, Cauta permite
+utilizatorului sa seteze orice nod din arbore drept nod curent.
+
+Vom discuta aici doar doua operatii. Operatia Creeaza pregateste
+(initializeaza) arborele. Ea este prima operatie care trebuie efectuata
+cand se doreste lucrul cu arborele. Reversul acesteia este operatia
+Elibereaza, care sterge toate nodurile din arbore, producand un arbore vid.
+In mod normal, orice program care foloseste operatiile de mai sus va incepe
+cu apelul lui Creeaza (o singura data) si se va termina cu apelul lui
+Elibereaza.
+
+3.6.3.2.2. Parcurgerea arborelui binar
+
+a) Parcurgerea unei liste (structura liniara)
+
+Varianta 1 (parcurgere de la cap spre coadã)
+
+Daca lista nu este vida atunci
+	gaseste primul nod al listei
+	Repeta
+		prelucreaza nodul curent
+		gaseste nodul urmator
+	Pana cand nu mai sunt noduri
+
+Varianta 2 (parcurgere de la coada spre cap)
+
+Daca lista nu este vida atunci
+	gaseste ultimul nod al listei
+	Repeta
+		prelucreaza nodul curent
+		gaseste nodul precedent
+	Pana cand nu mai sunt noduri
+
+Prelucrarea unui nod este considerata aici o operatie generica (de exemplu
+afisarea valorii elementului din nod, actualizarea acesteia, etc.).
+Proprietatea esentiala a acestei operatii este aceea ca semantica ei nu este
+afectata de structura in care se gaseste nodul: lista, arbore, graf.
+
+In afara de prelucrare, in algoritmii de mai sus sunt prezente inca doua
+operatii: gaseste primul nod si gaseste nodul urmator, respectiv gaseste
+ultimul nod si gaseste nodul precedent. Spre deosebire de prelucrare, aceste
+operatii au semantica diferita pentru structuri de date diferite (liste,
+arbori, grafe).
+
+b) Definitia parcurgerii (traversarii) unei structuri (colectii) ce contine
+obiecte (elemente)
+  A traversa (parcurge) o colectie finita de obiecte inseamna a prelucra
+  fiecare obiect (element) din colectie exact o singura data.
+
+c) Ordinea de parcurgere a unei colectii
+
+Structura oarecare:
+  - n! posibilitati (n este numarul de noduri din structura)
+
+Structura liniara (ordini de parcurgere naturale):
+  - de la cap la coada
+  - de la coada la cap
+
+Arbore binar, dar si arbore in general
+  - inordine
+  - preordine
+  - postordine
+
+Operatia observare (inspectare) este mai generala decat operatia generica
+prelucrare. Ea poate insemna sau nu prelucrare.
+
+d) Algoritmul general de parcurgere
+
+Diferenta intre observare si prelucrare
+  - observare inseamna trecerea prin nod
+  - prelucrare inseamna efectuarea unei anumite operatii in nod
+
+			a
+		      /   \
+		     b     f
+		    / \   / \
+		       c d   e
+                              \
+                               g
+
+1. Nodul curent este observat
+2. Se observa toate nodurile din subarborele stang al nodului curent
+3. Se observa din nou nodul curent
+4. Se observa toate nodurile din subarborele drept al nodului curent
+5. Se observa din nou nodul curent
+
+Preordine
+  Prelucrarea se face la pasul 1 (operatia de observare de la pasul 1
+  inseamna prelucrare, pe cand operatia observare de la pasii 3 sau 5 nu
+  inseamna prelucrare).
+Inordine
+  Prelucrarea se face la pasul 3 (operatia de observare de la pasul 3
+  inseamna prelucrare, pe cand operatia observare de la pasii 1 sau 5 nu
+  inseamna prelucrare).
+Postordine
+  Prelucrarea se face la pasul 5 (operatia de observare de la pasul 5
+  inseamna prelucrare, pe cand operatia observare de la pasii 1 sau 3 nu
+  inseamna prelucrare).
+
+3.6.3.2.3. Alte operatii pe arborii binari
+
+a) Operatia Cauta
+     determina un nou nod curent in functie de valoarea parametrului rel
+     care se refera la nodul curent c-pre (anterior efectuarii operatiei):
+    rel = Radacina
+      c-pre nu are semnificatie aici: nodul radacina va deveni nod curent
+    rel = Parinte
+      noul nod curent va fi parintele nodului c-pre
+    rel = FiuStang
+      daca c-pre are fiu stang
+	atunci noul nod curent va fi fiul stang al nodului c-pre
+	altfel operatia esueaza
+    rel = FiuDrept
+      daca c-pre are fiu drept
+	atunci noul nod curent va fi fiul drept al nodului c-pre
+	altfel operatia esueaza
+
+b) Operatia Extrage
+     intoarce continutul nodului curent
+
+c) Operatia Modifica
+     modifica continutul nodului curent cu (la) valoarea parametrului e
+
+d) Operatia Insereaza
+     adauga un nou nod curent pe o pozitie precizata de valoarea
+     parametrului rel care se refera la nodul curent c-pre (anterior
+     efectuarii operatiei):
+
+     rel = Radacina
+       c-pre nu are semnificatie aici: nodul inserat va deveni nod radacina
+       operatia este permisa numai daca T-pre este vid
+     rel = Parinte
+       nu este permisa inserarea: operatia esueaza intotdeauna
+     rel = FiuStang
+       daca c-pre nu are fiu stang
+	 atunci nodul inserat va fi fiul stang al nodului c-pre
+	 altfel operatia esueaza
+     rel = FiuDrept
+       daca c-pre nu are fiu drept
+	 atunci nodul inserat va fi fiul drept al nodului c-pre
+	 altfel operatia esueaza
+     dupa efectuarea operatiei si daca aceasta s-a efectuat cu succes,
+     nodul inserat devine nod curent
+
+e) Operatia StergeSubArbore
+     Sterge subarborele din T-pre a carui radacina este c-pre
+     Nodul radacina din arborele ramas devine nod curent
+
+f) Operatia Caracteristici
+     Intoarce trei valori, incapsulate intr-o variabila de tip Stare:
+     - numarul de noduri din arbore (dimensiunea acestuia)
+     - inaltimea arborelui
+     - lungimea medie a drumurilor de la radacina la un nod frunza oarecare
+       din arbore
+
+g) Operatia Afiseaza
+     Realizeaza afisarea structurii de arbore binar.
+
+3.6.3.2.4. Clasificarea operatiilor
+
+Operatiile specificate se pot imparti in 4 categorii, in functie de semantica
+lor:
+  - operatii de baza
+    - accesori: Extrage, Caracteristici
+    - modificatori: Insereaza, StergeSubArbore, Modifica
+      - modifica structura: Insereaza, StergeSubArbore
+      - modifica valoarea elementului, fara a modifica structura: Modifica
+      - modifica elementul curent (cursorul): Cauta
+    - mixte: Traverseaza (depinde de prelucrarea efectuata: poate fi atat
+      accesor, cat si modificator)
+  - operatii pentru testarea preconditiilor: Vid
+  - operatii de serviciu: Creeaza si Elibereaza.
+
+3.6.3.3. Reprezentarea si implementarea inlantuita
+
+3.6.3.3.1. Reprezentarea inlantuita
+
+La inceput vom preciza elementele comune tuturor reprezentarilor si
+implementarilor de arbori.
+
+a) Elementul continut in fiecare nod are urmatoarea definitie:
+type
+  TipCheie = Integer;         { tip furnizat de utilizator }
+  TipInfo = Integer;          { tip furnizat de utilizator }
+  ElementStandard = record
+    Cheie: TipCheie;
+    Info: TipInfo
+  end;
+
+b) Ordinea in care se traverseaza arborele se reprezinta prin tipul
+   enumerare:
+
+type
+  Ordine = (PreOrdine, InOrdine, PostOrdine);
+
+c) Elementele de structura ale arborelui (legaturile posibile ale unui nod
+   din el) se reprezinta prin tipul enumerare:
+
+type
+  Relativ = (Radacina, FiuStang, FiuDrept, Parinte);
+
+d) Informatia de stare a arborelui binar se reprezinta prin tipul
+   inregistrare:
+
+type
+  Stare = Record
+    Dimensiune: Integer;    { numarul de noduri }
+    Inaltime: Integer;      { nivelul maxim al unui nod }
+    DrumMediu: Real         { media sumei lungimilor drumurilor }
+  End;
+
+e) Procedura care se apeleaza in fiecare nod la traversarea arborelui binar
+   este de urmatorul tip procedural:
+
+type
+  ProcessProc = procedure(p: Pointer; i: Integer);
+
+f) Nodurile arborelui binar se reprezinta folosind urmatoarele tipuri de date:
+
+{ pentru UABGen }
+  PNodArbore = ^NodArbore;        { pointer la nod }
+  NodArbore = Record              { nodul arborelui binar }
+    el: ElementStandard;
+    Stg, Dr: PNodArbore
+  end;
+
+g) Arborele binar general se reprezinta astfel:
+type
+  ABG = record
+    Radacina,               { radacina arborelui }
+    Cursor: PNodArbore      { cursorul: nodul curent }
+  end;
+
+3.6.3.3.2. Implementarea inlantuita
+
+a) Unele dintre operatiile arborelui binar se implementeaza direct, din
+   discutia facuta mai sus. Acestea sunt:
+   - Creeaza
+   - Cauta
+   - Insereaza
+   - Extrage
+   - Modifica
+b) Pentru traversarea arborelui se pot folosi:
+   - proceduri recursive
+   - proceduri nerecursive
+
+   Procedura generala de traversare este urmatoarea:
+
+  Procedure Traverseaza(ord: Ordine; proc: ProcessProc);
+    { traverseaza arborele
+      parametri:
+	  - ord  = ordinea de traversare generala
+        - proc = prelucrarea care se face in fiecare nod
+    }
+    var l: Integer;
+    begin
+      l := 0;
+      case ord of    { tipul Ordine este declarat in unit-ul UDecl }
+	  UDecl.PreOrdine:  PreOrdine(Arb.Radacina, l+1, proc);
+	  UDecl.InOrdine:   InOrdine(Arb.Radacina, l+1, proc);
+	  UDecl.PostOrdine: PostOrdine(Arb.Radacina, l+1, proc);
+      end;
+    end; { Traverseaza }
+
+   Aceasta procedura are doi parametri:
+   - ord:  ordinea in care se face traversarea, de tipul 'Ordine' declarat
+	   in unit-ul UDecl
+   - proc: pointer la procedura ce efectueaza prelucrarea in fiecare nod
+
+   b1) Proceduri recursive de traversare
+
+   I. Traversarea in preordine
+
+  Procedure PreOrdine(p: Pointer; l: Integer; proc: ProcessProc);
+    { traverseaza in preordine subarborele cu radacina p
+      parametri:
+        - p    = radacina subarborelui de traversat
+        - l	   = nivelul lui p in arborele initial
+        - proc = prelucrarea care se face in fiecare nod
+    }
+    begin
+      if p <> Nil then begin
+	  proc(p, l);
+	  PreOrdine(PNodArbore(p)^.Stg, l+1, proc);
+	  PreOrdine(PNodArbore(p)^.Dr, l+1, proc);
+      end;
+    end; { PreOrdine }
+
+   II. Traversarea in inordine
+
+  Procedure InOrdine(p: Pointer; l: Integer; proc: ProcessProc);
+    { traverseaza in inordine subarborele cu radacina p
+      parametri:
+        - p    = radacina subarborelui de traversat
+        - l	   = nivelul lui p in arborele initial
+        - proc = prelucrarea care se face in fiecare nod
+    }
+    begin
+      if p <> Nil then begin
+	  InOrdine(PNodArbore(p)^.Stg, l+1, proc);
+	  proc(p, l);
+	  InOrdine(PNodArbore(p)^.Dr, l+1, proc);
+      end;
+    end; { InOrdine }
+
+   III. Traversarea in postordine
+
+  Procedure PostOrdine(p: Pointer; l: Integer; proc: ProcessProc);
+    { traverseaza in postordine subarborele cu radacina p
+      parametri:
+        - p    = radacina subarborelui de traversat
+        - l	   = nivelul lui p in arborele initial
+        - proc = prelucrarea care se face in fiecare nod
+    }
+    begin
+      if p <> Nil then begin
+	  PostOrdine(PNodArbore(p)^.Stg, l+1, proc);
+	  PostOrdine(PNodArbore(p)^.Dr, l+1, proc);
+	  proc(p, l);
+      end;
+    end; { PostOrdine }
+
+    Toate aceste proceduri au aceleasi argumente:
+      - un pointer 'p' la radacina (sub)arborelui care se traverseaza
+      - un intreg 'l' folosit dupa cum se va vedea in continuare
+	  (procedura generala de traversare nu are nevoie de asa ceva)
+	  'l' are semnificatia inaltimii nodului radacina 'p' in (sub)arbore
+      - un pointer 'proc' la procedura care se va executa in fiecare nod
+	  in timpul traversarii
+
+   b2) Proceduri nerecursive de traversare
+
+   Procedurile nerecursive de traversare vor folosi o stiva 'S' care va
+   contine in fiecare element pointeri PNodArbore.
+
+   I. Traversarea in preordine
+
+  Procedure PreOrdine(p: Pointer; l: Integer; proc: ProcessProc);
+    var S: Stiva;
+    begin
+      S.Creeaza;
+      S.Push(Nil);            { are semnificatie la terminare }
+      while p <> Nil do begin
+	  proc(p, l);             { prelucreaza banda stanga a nodului }
+	  if p^.Dr <> Nil         { salvand pointerii la toti subarborii }
+	    then S.Push(p^.Dr);   { drepti netriviali in stiva }
+	  if p^.Stg <> Nil
+	    then p := p^.Stg      { continua cu subarborele stang }
+	    else S.Pop(p);        { reia cu cel mau recent subarbore drept }
+      end;
+      S.Elibereaza
+    end; { PreOrdine }
+
+   II. Traversarea in inordine
+
+  Procedure InOrdine(p: Pointer; l: Integer; proc: ProcessProc);
+    var
+      Gata: Boolean;
+      S: Stiva;
+    begin
+      S.Creeaza;
+      while p <> Nil do begin
+	while p^.Stg <> Nil do begin  { fiecare nod din banda stanga este }
+	  S.Push(p);                  { introdus in stiva }
+	  p := p^.Stg                 { continua cu banda stanga }
+	end;
+	Gata := False;
+	Repeat
+	  proc(p, l);                 { prelucreaza nodul curent }
+	  if p^.Dr = Nil then begin
+	    S.Pop(p);                 { revenire la un nod al carui }
+	    if S.Vida                 { stang a fost deja prelucrat }
+	      then Gata := True       { stiva vida inseamna ca am terminat }
+	  end else begin
+	    p := p^.Dr;               { exista un subarbore drept }
+	    Gata := True              { reia ciclul while }
+	  end
+	Until Gata
+      end;
+      S.Elibereaza
+    end; { InOrdine }
+
+   III. Traversarea in postordine
+
+c) Traversarea recursiva se foloseste la urmatoarele proceduri:
+
+   Elibereaza
+   Traverseaza (orice ordine)
+   StergeSubArbore
+   Caracteristici
+
+   I. Elibereaza
+
+   Algoritmul Elibereaza(p) este:
+     @Traverseaza arborele cu radacina 'p' in postordine
+     @In fiecare nod prelucrarea este stergerea (dealocarea) acestuia
+     @Creeaza arborele
+   SfAlgoritm
+
+   Procedure Elibereaza;
+     begin
+       DealocaArbore(Arb.Radacina);
+       Creeaza
+     end; { Elibereaza }
+
+   Procedure DealocaArbore(p: PNodArbore);
+     var l: Integer;
+     begin
+       l := 0;
+       PostOrdine(p, l+1, DealocaNod)
+     end; { DealocaArbore }
+
+   Procedure DealocaNod(p: Pointer; i: Integer);
+     begin
+       Dispose(PNodArbore(p))
+     end; { DealocaNod }
+
+   II. StergeSubArbore - sterge subarborele cu radacina nodul curent
+
+   Algoritmul StergeSubArbore este:
+     @Determina parintele nodului curent
+     @Elimina legatura dintre nodul curent si parintele sau
+     @Sterge subarborele cu radacina nodul curent prin traversare in
+      postordine
+     @Seteaza ca nod curent radacina arborelui
+   SfAlgoritm
+
+   Procedure StergeSubArbore;
+     var
+       p: PNodArbore;
+       Esec: Boolean;
+     begin
+       p := Arb.Cursor;
+       CautaParinte(p, Esec);      { determina parintele nodului curent }
+       if not Esec then
+	   if p^.Stg = Arb.Cursor    { elimina legatura }
+	     then p^.Stg := Nil
+	     else p^.Dr  := Nil;
+       DealocaArbore(Arb.Cursor);  { sterge subarborele cu radacina nodul crt}
+       If Arb.Cursor = Arb.Radacina
+	   then Arb.Radacina := Nil; { arborele este vid daca cursorul este rad}
+       Arb.Cursor := Arb.Radacina  { seteaza noul cursor }
+     end; { StergeSubArbore }
+
+     CautaParinte este comentata mai jos.
+
+   III. Caracteristici
+
+   Algoritmul Caracteristici este:
+     @Initializeaza elementele de stare
+     @Traverseaza arborele in inordine.
+      Prelucrarea efectuata in fiecare nod este determinarea elementelor de
+      stare: dimensiune, inaltime si lungime totala drumuri
+     @Determina drumul mediu
+   SfAlgoritm
+
+   Procedure Caracteristici(var St: Stare);
+     begin
+       { initializeaza elementele de stare }
+       sz := 0;        { numarul de noduri }
+       ht := 0;        { inaltimea }
+       tpl := 0;       { suma lungimilor drumurilor }
+       if not Vid then begin
+	 { traversare in inordine folosind prelucrarea Numara }
+	 InOrdine(Arb.Radacina, 1, Numara);
+	 ap := tpl / sz
+       end else ap := 0;
+       St.Dimensiune := sz;
+       St.Inaltime := ht;
+       St.DrumMediu := ap
+     end; { Caracteristici }
+
+  Procedure Numara(p: Pointer; i: Integer);
+    begin
+      sz := sz + 1;              { numarul de noduri }
+      tpl := tpl + i;            { lungimea totala a drumurilor }
+      if ht < i then ht := i;    { inaltimea }
+    end; { Numara }
+
+d) Procedura CautaParinte foloseste traversarea nerecursiva
+
+   Algoritmul CautaParinte este:
+     @Traverseaza nerecursiv arborele in (in)preordine, plecand de la
+      radacina. Traversarea se opreste cand nodul 'p' are ca fiu
+      nodul curent
+   SfAlgoritm
+
+  Procedure CautaParinte(var p: PNodArbore; var Esec: Boolean);
+    var Gasit: Boolean;
+    begin
+      ULStackP.Creeaza;         { creeaza stiva vida }
+      Gasit := false;
+      p := Arb.Radacina;        { traversarea incepe de la radacina }
+      while (p <> Nil) and (not Gasit) do
+	if (p^.Stg = Arb.Cursor) or (p^.Dr = Arb.Cursor)
+	  { Cursorul este fiu al nodului curent: se incheie traversarea }
+	  then Gasit := true
+	  else begin
+	    if p^.Dr <> Nil
+	      then ULStackP.Push(p^.Dr);  { pune fiul drept in stiva }
+	    if p^.Stg <> Nil
+	      then p := p^.Stg         { continua cu fiul stang daca este }
+	      else p := ULStackP.Pop   { extrage din stiva urmatorul nod }
+	  end;
+      ULStackP.Elibereaza;
+      Esec := not Gasit
+    end; { CautaParinte }
+
+Exemplu:
+Programul TABGen.PAS
+Unit-ul UABGen.PAS  - implementare dinamica (inlantuita)
+
+3.6.3.4. Reprezentarea secventiala implicita
+
+Aceasta reprezentare se numeste implicita deoarece fiecare nod are o pozitie
+bine determinata, in functie de locul sau in arbore. Deoarece se foloseste un
+tablou, aceasta inseamna ca fiecare nod se va pune intr-un element al
+tabloului de indice precizat, dupa cum urmeaza:
+  - radacina arborelui se memoreaza in primul element (are indicele 1)
+  - pentru un nod memorat pe pozitia 'i'
+     - fiul sau stang este memorat pe pozitia 2*i
+     - fiul sau drept este memorat pe pozitia 2*i+1
+
+a) In reprezentarea secventiala implicita, arborele se reprezinta intr-un
+   tablou a carui dimensiune este precizata prin
+
+Const
+  DimensiuneArbore = 1000;
+
+b) Nodul care nu contine nimic (similar cu cel referit prin Nil la
+   reprezentarea inlantuita se reprezinta prin:
+
+Const
+  NodulZero: ElementStandard = (Cheie:0; Info:0);
+
+c) O legatura de la parinte la fiu se reprezinta prin tipul de date:
+
+type
+  Muchie = 0..DimensiuneArbore;
+
+d) Procedura care se apeleaza in fiecare nod la traversarea arborelui binar
+   este de urmatorul tip procedural:
+
+type
+  ProcessProcA = procedure(p: Muchie; i: Integer);
+
+e) Nodurile arborelui binar se reprezinta folosind urmatoarele tipuri de date:
+
+{ pentru UABGenAI }
+type
+  Node = ElementStandard;
+
+f) Arborele binar general se reprezinta astfel:
+type
+  ABG = record
+    A: array[1..DimensiuneArbore] of Node;
+    Cursor: Muchie
+  end;
+
+g) Regula de reprezentare a fiilor unui nod de indice 'p' din arbore este
+   urmatoarea (proprie reprezentarii implicite):
+   - fiul stang se gaseste la indicele '2*p'
+   - fiul drept se gaseste la indicele '2*p+1'
+   - daca un fiu lipseste, elementul corespunzator indicelui sau in tablou
+     are valoarea NodulZero
+
+Programul TABGenA.PAS
+Unit-ul UABGenA.PAS - implementare ca tablou - reprezentare implicita
+
+3.6.3.5. Reprezentarea secventiala folosind indici in loc de pointeri
+
+Aceasta reprezentare inlocuieste pointerii cu indici. Un indice egal cu zero
+semnifica pointerul Nil.
+
+a) In reprezentarea secventiala, arborele se reprezinta intr-un
+   tablou a carui dimensiune este precizata prin
+
+Const
+  DimensiuneArbore = 1000;
+
+b) Nodul care nu contine nimic (similar cu cel referit prin Nil la
+   reprezentarea inlantuita se reprezinta prin:
+
+Const
+  NodulZero: ElementStandard = (Cheie:0; Info:0);
+
+c) O legatura de la parinte la fiu se reprezinta prin tipul de date:
+
+type
+  Muchie = 0..DimensiuneArbore;
+
+d) Procedura care se apeleaza in fiecare nod la traversarea arborelui binar
+   este de urmatorul tip procedural:
+
+type
+  ProcessProcAI = procedure(p: Muchie; i: Integer);
+
+e) Nodurile arborelui binar se reprezinta folosind urmatoarele tipuri de date:
+
+{ pentru UABGenAI }
+type
+  NodAB = Record
+    el: ElementStandard;
+    stg, dr: Muchie
+  end;
+
+f) Arborele binar general se reprezinta astfel:
+type
+  ABG = record
+    A: array[Muchie] of NodAB;
+    Radacina, Cursor: Muchie;
+    PrimulLiber: Muchie;
+  end;
+
+g) Regula de reprezentare a unui nod este aceeasi ca in cazul reprezentarii
+   inlantuite, deosebirea constand in aceea ca se folosesc indici in loc de
+   pointeri.
+
+Programul TABGenAI.PAS
+Unit-ul UABGenAI.PAS - implementare pseudodinamica
+
+Operatiile se implementeaza aproape la fel ca si la reprezentarea inlantuita.
+Deosebirea majora se produce la
+  - crearea arborelui
+  - inserarea unui nod
+  - stergerea unui nod
+fiind legate toate de manipularea campului PrimulLiber.
+
+3.6.4. Arborele binar de cautare abstract
+3.6.4.1. Specificare si operatii
+3.6.4.2. Reprezentare si implementare
+
+in fisierul ARBCAUT.LEC

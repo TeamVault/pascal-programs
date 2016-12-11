@@ -1,0 +1,589 @@
+3.6.4. Arborele binar de cautare abstract
+
+Arborele binar de cautare este un arbore binar care satisface in plus
+'proprietatea arborelui binar de cautare', sau 'proprietatea ABC' pentru
+orice nod N din el:
+  1. orice nod L din subarborele stang al lui N are cheia mai mica decat
+     cheia din N: L.Cheie < N.Cheie
+  2. orice nod R din subarborele drept al lui N are cheia mai mare decat
+     cheia din N: R.Cheie > N.Cheie
+
+Aceste proprietati se pot traduce si prin urmatoarele afirmatii:
+  A1. Elementul minim dintr-un (sub)arbore este cel mai din stanga element al
+      sau
+  A2. Elementul maxim dintr-un (sub)arbore este cel mai din dreapta element al
+      sau
+
+In plus, se poate demonstra ca:
+  T1. Elementul minim dintr-un (sub)arbore este continut fie intr-o frunza,
+      fie intr-un nod (interior sau radacina) care are numai fiu drept.
+  T2. Elementul maxim dintr-un (sub)arbore este continut fie intr-o frunza,
+      fie intr-un nod (interior sau radacina) care are numai fiu stang.
+
+In general, un nod N al unui arbore poate fi:
+  - frunza - nu are nici un fiu
+  - nod interior (sau radacina) cu un fiu stang
+  - nod interior (sau radacina) cu un fiu drept
+  - nod interior (sau radacina) cu doi fii
+
+Negatia ipotezei T1 (faptul ca nodul L in care se gaseste minimul este fie
+frunza, fie nod interior sau radacina care are numai fiu drept) este:
+  - nodul L are numai fiu stang
+  - nodul L are doi fii.
+
+Vom demonstra T1 prin reducere la absurd (demonstratia T2 este analoaga).
+Presupunem ca 'm' este elementul minim al arborelui 'A' si ca el se gaseste
+intr-un nod L care are fiu stang (cazul cand L are doi fii se reduce la
+acesta). Avem:
+
+  L.Cheie < N.Cheie pentru orice nod N din arborele T (L contine elementul
+                    minim al arborelui T)
+  L.Stg.Cheie < L.Cheie (proprietatea arborelui binar de cautare)
+
+deci se infirma ipoteza ca L contine elementul minim al arborelui. Prin
+urmare L nu poate avea fiu stang.
+
+Similar, cazul in care L are doi fii se reduce la cazul discutat mai sus,
+deoarece ceea ce ne intereseaza in demonstratia noastra este ca L are fiu
+stang.
+
+Cu acestea, rezultatele T1 si T2 se pot reformula astfel:
+  T1'. Nodul care contine elementul minim dintr-un (sub)arbore nu are fiu
+       stang.
+  T2'. Nodul care contine elementul maxim dintr-un (sub)arbore nu are fiu
+       drept.
+
+Termenul englezesc de 'binary search tree' se traduce in limba romana fie
+prin 'arbore binar de cautare', fie prin 'arbore de cautare binara'. A
+doua forma este mai apropiata textual de termenul englezesc, insa ar putea
+sa fie restrictiva din punctul de vedere al intelesului. Noi vom folosi
+in continuare prima forma, adica 'arbore binar de cautare'.
+
+Cu ajutorul arborelui binar de cautare se implementeaza o metoda de cautare
+numita 'cautarea binara'. Esenta cautarii binare (folosind un arbore binar
+de cautare) este data de algoritmul CautareBinara. Acest algoritm cauta in
+arbore un nod numit 'nod tinta', care are cheia egala cu o cheie data ca
+argument. Cu alte cuvinte, se cauta in arbore un nod a carui cheie este
+egala cu o cheie data, numita 'cheie de cautare'.
+
+  Algoritmul CautareBinara(T, cheie) este
+    CatTimp (nodul tinta nu a fost gasit) si
+            (cautarea in arbore este posibila) executa
+      Daca cheia de cautare este mai mica decat cheia din nodul curent
+        atunci continua cautarea in subarborele stang al nodului curent
+        altfel continua cautarea in subarborele drept al nodului curent
+      SfDaca
+    SfCatTimp
+  SfAlgoritm
+
+3.6.4.1. Specificare si operatii
+
+Specificarea TAD Arbore Binar de Cautare abstract (ABC)
+
+Elemente: Elementele ABC sunt noduri.
+	  Fiecare nod contine un element standard, identificat unic prin
+	  valoarea cheii sale. Prin urmare, in arbore nu pot exista doua
+          elemente (noduri) cu aceeasi cheie.
+	  Nodul poate sa contina si alte informatii.
+Structura: structura ABC este aceeasi ca si structura AB, cu urmatoarele
+           proprietati suplimentare, valabile pentru orice nod N din arbore:
+             - toate nodurile L din subarborele stang al lui N au cheia
+               mai mica decat cheia din N
+             - toate nodurile R din subarborele drept al lui N au cheia
+               mai mare decat cheia din N
+Domeniu: Arborele are doua campuri,
+	   radacina: refera radacina arborelui si
+	   contor:   refera nodul curent al arboreluo
+Operatii: Toate operatiile, cu exceptia lui Creeaza, presupun existenta
+	  arborelui binar ca preconditie
+	  T-pre va insemna arborele inainte de operatie
+	  c-pre va insemna nodul curent (cursorul) inainte de operatie
+          Fiind un arbore binar, ABC are urmatoarele operatii de la AB:
+            - StergeSubarbore
+            - Extrage
+            - Traverseaza
+            - Caracteristici
+            - Cauta
+            - Vid
+            - Creeaza
+            - Elibereaza
+            - Afiseaza
+          Pe langa acestea, ABC are urmatoarele operatii proprii
+            - Insereaza (modificata fata de AB)
+            - StergeCheie (noua)
+            - Modifica (modificata fata de AB)
+            - CautaCheie (noua)
+
+Insereaza(e: ElementStandard; var esec: Boolean)
+  pre:
+    True
+  post:
+    Daca T-pre nu contine elementul 'e'
+      atunci 'e' este inserat in arbore
+             T-post este arbore binar de cautare
+             cursorul se pozitioneaza pe 'e'
+             esec := False
+      altfel esec := True
+    SfDaca
+
+StergeCheie(tCheie: TipCheie; var esec: Boolean);
+  pre:
+    True
+  post:
+    Daca T-pre contine un element 'e' cu e.Cheie = tCheie
+      atunci 'e' este sters din arbore
+             T-post este arbore binar de cautare
+             esec := False
+      altfel esec := True
+    SfDaca
+    Daca T-post nu este vid
+      atunci cursorul se pozitioneaza pe radacina lui T-post
+    SfDaca
+
+Modifica(e: ElementStandard);
+  pre:
+    T-pre nu este vid
+  post:
+    Valoarea elementului curent din T-post este 'e'.
+    T-post este un arbore binar de cautare
+
+CautaCheie(tCheie: TipCheie; var esec: Boolean);
+  pre:
+    T-pre nu este vid
+  post:
+    Daca T-pre contine un element 'e' cu e.Cheie = tCheie
+      atunci 'e' este elementul curent in T-post
+             esec := False
+      altfel nodul curent din T-post este nodul parinte al noului nod
+             cu cheia 'tCheie' care va fi atasat la T-pre
+             esec := True
+    SfDaca
+
+3.6.4.2. Reprezentare si implementare
+
+3.6.4.2.1. Reprezentarea inlantuita
+
+Se foloseste exact aceeasi reprezentare ca si in cazul arborelui binar
+abstract (vezi 3.6.3.3.1).
+
+Operatiile specifice ABC se implementeaza dupa cum urmeaza:
+
+a) CautaCheie
+
+  Operatia CautaCheie implementeaza cautarea binara, descrisa la inceput
+  (3.6.4). Cautarea incepe de la radacina arborelui si urmeaza un drum
+  simplu spre nodul cautat, folosind proprietatea arborelui binar de
+  cautare. Algoritmul este urmatorul:
+
+  Algoritmul CautaCheie(tCheie: TipCheie; esec: Boolean)
+    p := Radacina;        { p semnifica nodul curent care se testeaza }
+    Cursor := Nil;        { cursorul semnifica parintele lui p }
+    esec := True;
+    CatTimp Esec si (p <> Nil) executa
+      Cursor := p;
+      Daca tCheie = p^.El.TCheie
+        atunci esec := False   { nodul curent contine cheia cautata }
+        altfel
+          Daca tCheie < p^.El.TCheie
+            atunci p := p^.Stg  { continua cautarea in subarborele stang }
+            altfel p := p^.Dr   { continua cautarea in subarborele drept }
+          SfDaca
+      SfDaca
+    SfCatTimp
+  SfAlgoritm
+
+  In cazul in care cautarea se termina cu succes, atunci Cursor va referi
+  elementul curent al arborelui cu cheia egala cu tCheie (cheia care se
+  cauta). Prin urmare, la terminarea executiei acestui algoritm arborele va
+  avea ca nod curent cel cu cheia specificata.
+
+  In cazul in care cautarea se termina cu insucces, Cursor va referi
+  parintele nodului care ar trebui sa contina cheia. Aceasta situatie
+  se intalneste la inserarea unui element nou in arbore, cand CautaCheie
+  determina parintele noului nod care se insereaza. Prin urmare, algoritmul
+  CautaCheie este astfel gandit incat sa rezolve 'dintr-un singur foc' ambele
+  folosiri ale sale:
+    - cautarea unui nod (existent in arbore) cu cheia precizata
+      sau
+    - determinarea pozitiei noului nod (element) care se va insera in arbore.
+
+b) Insereaza
+
+  Spre deosebire de arborele binar abstract (AB), operatia de inserare pentru
+  arborele binar de cautare (ABC) are o particularitate foarte importanta:
+  locul in care se insereaza un nou element in arbore nu mai este specificat
+  de catre utilizator (parametrul 'rel' al operatiei Insereaza de la AB) ci
+  este determinat de catre algoritm (pentru a asigura conservarea
+  proprietatii ABC). In consecinta, operatia Insereaza nu mai are 'rel' ca
+  parametru.
+
+  Algoritmul acestei operatii este urmatorul
+
+  Algoritmul Insereaza(e: ElementStandard; esec: Boolean) este:
+    @Daca exista in arbore un nod 'el' cu el.Cheie = e.Cheie
+       atunci esec := True
+       altfel
+         Esec := False
+         @Genereaza un nod nou p cu p^.el = e
+         Daca e.Cheie < Cursor^.el.Cheie  { compara cheile pt. p si Cursor }
+           atunci Cursor^.Stg := p  { cheia lui p^ este mai mica }
+           altfel Cursor^.Dr := p   { cheia lui p^ este mai mare }
+         SfDaca
+         Cursor := p
+     SfDaca
+  SfAlgoritm
+
+  Existenta in arbore a nodului 'el' cu el.Cheie = e.Cheie se verifica
+  prin apelarea algoritmului 'CautaCheie(e.Cheie, esec)'. Inserarea are loc
+  numai daca acest algoritm intoarce esec = False, caz in care (asa cum
+  am vazut la algoritmul CautaCheie) cursorul arborelui este pozitionat
+  pe parintele nodului care se va insera. Restul algoritmului se intelege
+  usor acum: se va insera in arbore un fiu al nodului referit de Cursor,
+  astfel incat proprietatea ABC sa se conserve. Egalitatea cheilor lui
+  p^ si Cursor^ este exclusa aici, deoarece CautaCheie nu a gasit in
+  arbore cheia e.Cheie.
+
+c) Modifica
+
+  Operatia Modifica a ABC difera radical de operatia Modifica din AB,
+  deoarece prin modificarea elementului din nodul curent (deci si a
+  cheii acestuia) se poate altera proprietatea ABC. Prin urmare, pentru
+  a asigura conservarea acestei proprietati nodul curent (referit de
+  Cursor) se sterge, si apoi se insereaza un nod nou, care va contine
+  elementul specificat in argumentul acestei operatii:
+
+  Algoritmul Modifica(e: ElementStandard) este
+    @Sterge nodul curent din arbore (referit de cursor)
+    @Insereaza in arbore un nod nou, care va contine elementul 'e'
+  SfAlgoritm;
+
+  Cea mai dificila operatie este specificata in prima propozitie nestandard
+  a acestui algoritm, ea fiind numita StergeCheie. A doua propozitie
+  nestandard se traduce prin apelul operatiei de inserare. Operatia
+  StergeCheie este discutata in continuare
+
+d) StergeCheie
+
+   Aceasta operatie este cea mai complexa dintre cele discutate aici. Ea
+   inseamna stergerea unui nod din arbore, cu cheia specificata ca parametru.
+   Operatiile efectuate sunt:
+     1) pozitionarea cursorului pe nodul cu cheia specificata
+     2) stergerea nodului curent din arbore
+     3) refacerea proprietatii ABC
+     4) setarea radacinii (daca arborele nu este vid) pe post de element
+        curent al arborelui
+
+   Pentru discutia de fata sunt importante operatiile 2) si 3). Vom presupune
+   prin urmare ca operatia 1) a fost deja efectuata (folosind CautaCheie), si
+   ca operatia 4) nu ridica probleme.
+
+   Vom discuta urmatoarele situatii (c-pre inseamna nodul curent):
+     i) c-pre este nod frunza
+     ii) c-pre este nod al arborelui care are un singur fiu
+     iii) c-pre este nod al arborelui care are are doi fii
+
+                       ÚÄÄÄÄÄ 6 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                           ÚÄ 5    ÚÄ 9 Ä¿
+                           4       8     10
+
+     i) c-pre (care se sterge) este frunza si contine cheia 8
+
+                       ÚÄÄÄÄÄ 6 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                           ÚÄ 5    ÚÄ 9 Ä¿
+                           4    ÚÄ 8     10
+                              c-pre
+
+        In aceasta situatie, deoarece c-pre este frunza, singurele operatii
+        care trebuie efectuate sunt:
+          I. stergerea legaturii de la parintele sau (9) la nodul c-pre
+          II. dealocarea nodului referit de c-pre
+          III. setarea c-pre la radacina (6)
+
+        dupa stergere, arborele va avea configuratia:
+
+                              ÚÄ c-post
+                       ÚÄÄÄÄÄ 6 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                           ÚÄ 5       9 Ä¿
+                           4             10
+
+        Deoarece nodul sters este frunza, stergerea sa nu strica proprietatea
+        ABC, deci nu este nevoie de discutarea acestui caz.
+
+     ii) c-pre (care se sterge) are numai un fiu si contine cheia 11
+
+                       ÚÄÄÄÄÄ 6 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11 Äc-pre
+                           ÚÄ 5    ÚÄ 9 Ä¿
+                           4       8     10
+
+        In acest caz, nodul care se sterge este un nod interior care are
+        numai un fiu (subarbore) stang. Singurele operatii
+        care trebuie efectuate sunt:
+          I. stergerea legaturii de la parintele sau (7) la nodul c-pre
+          II. legarea parintelui lui c-pre (7) de fiul acestuia (9)
+              deoarece c-pre este fiu drept al parintelui sau, fiul lui
+              c-pre va deveni fiu drept al parintelui lui c-pre
+          III. dealocarea nodului referit de c-pre
+          IV. setarea c-pre la radacina (6)
+
+                              ÚÄ c-post
+                       ÚÄÄÄÄÄ 6 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 9 Ä¿
+                           ÚÄ 5       8     10
+                           4
+
+        Este esential de retinut ca in acest caz c-pre se inlocuieste cu
+        unicul sau fiu, pastrandu-se aceeasi legatura (stanga sau dreapta)
+        pentru parintele sau.
+
+     iii) c-pre (care se sterge) are ambii fii si contine cheia 6
+          (este chiar radacina)
+
+                              ÚÄ c-pre
+                       ÚÄÄÄÄÄ 6 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                           ÚÄ 5    ÚÄ 9 Ä¿
+                           4       8     10
+
+        In acest caz, nodul care se sterge este un nod interior care are
+        atat un fiu (subarbore) stang (2), cat si un fiu drept (7). In fapt
+        nodul nu se va sterge fizic din arbore, ci
+          - se va determina un alt nod care se sterge
+          - continutul acelui nod se va muta in nodul candidat initial la
+            stergere.
+        Exista doua solutii pentru aceasta situatie, care se caracterizeaza
+        prin aceea ca NU se sterge nodul curent, ci se executa urmatoarele
+        operatii:
+          I.   determinarea unui alt nod N care se sterge
+          II.  mutarea continutului nodului N in c-pre
+          III. stergerea lui N (suntem intr-unul din cazurile anterioare,
+               i) sau ii)
+
+        Solutiile difera in modul de abordare a etapei I, care poate fi:
+          I1) N este nodul cu cea mai mare cheie din subarborele stang
+              al lui c-pre
+          I2) N este nodul cu cea mai mica cheie din subarborele drept
+              al lui c-pre
+
+        Ambele solutii au ca scop conservarea proprietatii ABC cu efort minim.
+        Anume, daca se sterge un nod din arbore cu o cheie K si acel nod are
+        ambii fii, atunci continutul nodului candidat la stergere se va putea
+        inlocui:
+          I1) fie cu cel mai din dreapta nod N din subarborele sau stang
+              (care este nodul ce contine elementul maxim din subarborele
+               sau stang)
+          I2) fie cu cel mai din stanga nod N din subarborele sau drept
+              (care este nodul ce contine elementul minim din subarborele
+               sau drept)
+        fara ca proprietatea ABC sa se altereze. In acest caz, se sterge
+        de fapt alt nod (N), nu insa inainte de a muta continutul acestuia
+        in c-pre. Dupa toate aceste operatii, arborele nu va mai contine
+        un nod care sa aiba informatia din c-pre, adica s-a realizat de fapt
+        o 'stergere logica', chiar daca fizic nodul respectiv ramane in
+        structura (dar cu o alta informatie in el).
+
+        Nodul N care se sterge efectiv (conform T2 sau T1 de la inceput):
+          I1) nu are fiu drept
+          I2) nu are fiu stang
+        prin urmare stergerea se va efectua ca in cazurile i) sau ii)
+        discutate mai sus.
+
+        Intr-adevar, in cazul I1) N are
+          - cheia mai mica decat cheia lui c-pre (N este in subarborele stang
+            al lui c-pre)
+          - cheia mai mare decat orice alta cheie din subarborele stang al lui
+            c-pre (N este cel mai din dreapta nod din subarborele stang al
+            lui c-pre, adica nodul cu cheia cea mai mare din acest subarbore)
+        Prin urmare, daca continutul lui c-pre se inlocuieste cu continutul
+        lui N (c-pre devenind c-post) si apoi N se sterge, atunci:
+          - cheia din c-post (fosta cheie din N) va fi mai mare decat orice
+            alta cheie din subarborele stang al lui c-post deoarece:
+              L.Cheie < c-pre.Cheie (conform proprietatii ABC, pentru orice
+                                     nod L din subarborele stang al lui c-pre)
+              L.Cheie < N.Cheie (pentru toate nodurile L diferite de N din
+                                 subarborele stang al lui c-pre)
+              L.Cheie < c-post.Cheie (dupa mutarea lui N in c-pre si stergerea
+                                      lui N; este valabila pentru orice nod
+                                      L din subarborele stang al lui c-post)
+          - cheia din c-post (fosta cheie din N) va fi mai mica decat orice
+            alta cheie din subarborele drept al lui c-post deoarece:
+              c-pre.Cheie < R.Cheie (conform proprietatii ABC, pentru orice
+                                     nod R din subarborele drept al lui c-pre)
+              c-post.Cheie < c-pre.Cheie
+              c-post.Cheie < R.Cheie (pe baza tranzitivitatii operatiei '<')
+
+        Analog, in cazul I2) N are
+          - cheia mai mare decat cheia lui c-pre (N este in subarborele drept
+            al lui c-pre)
+          - cheia mai mica decat orice alta cheie din subarborele drept al lui
+            c-pre (N este cel mai din stanga nod din subarborele drept al
+            lui c-pre, adica nodul cu cheia cea mai mica din acest subarbore)
+        Prin urmare, daca continutul lui c-pre se inlocuieste cu continutul
+        lui N (c-pre devenind c-post) si apoi N se sterge, atunci:
+          - cheia din c-post (fosta cheie din N) va fi mai mica decat orice
+            alta cheie din subarborele drept al lui c-post deoarece:
+              R.Cheie > c-pre.Cheie (conform proprietatii ABC, pentru orice
+                                     nod R din subarborele drept al lui c-pre)
+              R.Cheie > N.Cheie (pentru toate nodurile R diferite de N din
+                                 subarborele drept al lui c-pre)
+              R.Cheie > c-post.Cheie (dupa mutarea lui N in c-pre si stergerea
+                                      lui N; este valabila pentru orice nod
+                                      R din subarborele drept al lui c-post)
+          - cheia din c-post (fosta cheie din N) va fi mai mare decat orice
+            alta cheie din subarborele stang al lui c-post deoarece:
+              c-pre.Cheie > L.Cheie (conform proprietatii ABC, pentru orice
+                                     nod L din subarborele stang al lui c-pre)
+              c-post.Cheie > c-pre.Cheie
+              c-post.Cheie > L.Cheie (pe baza tranzitivitatii operatiei '>')
+
+        Vom ilustra ambele solutii:
+
+        I1) se pune in locul lui c-pre nodul N cel mai din dreapta din
+            subarborele stang al lui c-pre, adica nodul cu cheia 5 si apoi
+            N se sterge (suntem in cazul ii): N (5) are un subarbore stang)
+
+            inainte de stergere:
+
+                              ÚÄ c-pre
+                       ÚÄÄÄÄÄ 6 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                           ÚÄ 5    ÚÄ 9 Ä¿
+                           4  ³    8     10
+                              N
+
+            pune continutul lui N in c-pre
+
+                              ÚÄ c-post
+                       ÚÄÄÄÄÄ 5 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                           ÚÄ 5    ÚÄ 9 Ä¿
+                           4  ³    8     10
+                              N
+
+            sterge N (conform ii)
+
+                              ÚÄ c-post
+                       ÚÄÄÄÄÄ 5 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                              4    ÚÄ 9 Ä¿
+                                   8     10
+
+        I2) se pune in locul lui c-pre nodul N cel mai din stanga din
+            subarborele drept al lui c-pre, adica nodul cu cheia 7 si apoi
+            N se sterge (suntem in cazul ii): N (7) are un subarbore stang)
+
+            inainte de stergere:
+
+                              ÚÄ c-pre
+                       ÚÄÄÄÄÄ 6 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿          7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                           ÚÄ 5    ÚÄ 9 Ä¿
+                           4       8     10
+
+            pune continutul lui N in c-pre
+
+                              ÚÄ c-post
+                       ÚÄÄÄÄÄ 7 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿      NÄÄ 7 Ä¿
+                 1         3 Ä¿       ÚÄ 11
+                           ÚÄ 5    ÚÄ 9 Ä¿
+                           4       8     10
+
+            sterge N
+
+                              ÚÄ c-post
+                       ÚÄÄÄÄÄ 7 ÄÄÄÄÄÄ¿
+                 ÚÄÄÄÄ 2 ÄÄ¿       ÚÄ 11
+                 1         3 Ä¿ ÚÄ 9 Ä¿
+                           ÚÄ 5 8     10
+                           4
+
+  Algoritmul general pentru operatia StergeCheie este urmatorul:
+
+  Varianta I1)
+  Algoritmul StergeCheie(tCheie: TipCheie; esec: Boolean) este:
+    @Cauta in arbore nodul cu cheia tCheie
+    @Daca in arbore nu exista un astfel de nod
+      atunci esec := True
+      altfel  { exista nodul c-pre care se va sterge }
+        esec := False
+        @Daca c-pre este frunza
+          atunci Sterge legatura de la parintele lui c-pre la c-pre
+                 Sterge c-pre
+                 Seteaza c-post la radacina arborelui
+          altfel
+            @Daca c-pre are numai un fiu
+              atunci Inlocuieste legatura de la parintele lui c-pre la c-pre
+                     cu legatura de la parintele lui c-pre la fiul lui c-pre
+                     Sterge c-pre
+                     Seteaza c-post la radacina arborelui
+              altfel { c-pre are doi fii }
+                @Determina N - cel mai din dreapta nod din subarborele stang
+                 al lui c-pre
+                @Muta continutul lui N in c-pre
+                @Sterge nodul N      { apel recursiv }
+            SfDaca
+        SfDaca
+    SfDaca
+  SfAlgoritm
+
+  Varianta I2)
+  Algoritmul StergeCheie(tCheie: TipCheie; esec: Boolean) este:
+    @Cauta in arbore nodul cu cheia tCheie
+    @Daca in arbore nu exista un astfel de nod
+      atunci esec := True
+      altfel  { exista nodul c-pre care se va sterge }
+        esec := False
+        @Daca c-pre este frunza
+          atunci Sterge legatura de la parintele lui c-pre la c-pre
+                 Sterge c-pre
+                 Seteaza c-post la radacina arborelui
+          altfel
+            @Daca c-pre are numai un fiu
+              atunci Inlocuieste legatura de la parintele lui c-pre la c-pre
+                     cu legatura de la parintele lui c-pre la fiul lui c-pre
+                     Sterge c-pre
+                     Seteaza c-post la radacina arborelui
+              altfel { c-pre are doi fii }
+                @Determina N - cel mai din stanga nod din subarborele drept
+                 al lui c-pre
+                @Muta continutul lui N in c-pre
+                @Sterge nodul N      { apel recursiv }
+            SfDaca
+        SfDaca
+    SfDaca
+  SfAlgoritm
+
+  Propozitiile nestandard din acest algoritm (in ambele variante) sunt
+  comentate (pe larg) in textul sursa al procedurii StergeCheie din
+  unit-ul UABOrd.PAS
+
+Programul TABOrd.PAS
+Unit-ul UABOrd.PAS  - implementare inlantuita (folosind pointeri)
+Programul TABOrd2.PAS
+
+b) Reprezentarea secventiala implicita
+
+Programul TABOrdA.PAS
+Unit-ul UABOrdA.PAS - implementare ABC ca tablou, dupa regula prezentata
+                      in 3.6.3.4.
+Programul TABOrd2A.PAS
+
+c) Reprezentarea secventiala folosind indici in loc de pointeri
+
+Programul TABOrdAI.PAS
+Unit-ul UABOrdAI.PAS - implementare ca tablou, cu gestiunea nodurilor
+		       libere

@@ -1,0 +1,184 @@
+5.2. Cozi
+
+Coada este o structura dinamica de date in care inserarea si stergerea
+respecta principiul FIFO - First In, First Out: primul venit, primul
+iesit.
+
+Cu alte cuvinte, putem considera coada ca o lista liniara in care
+inserarea se face in coada listei iar stergerea se face in capul listei.
+
+5.2.1. Structura de date Coada
+
+Stiva este o structura dinamica de date in care stergerea elementelor
+se face in ordinea inserarii lor: cel mai vechi introdus element se
+sterge primul.
+
+Specificarea structurii de date Coada este urmatoarea:
+
+  Elemente:  Toate elementele din Coada sunt de acelasi tip, notat
+             cu TElement.
+  Structura: Exista o relatie de 1:1 intre fiecare element si pozitia
+             pe care acesta o ocupa in Coada
+  Domeniu:   Coada are o pozitie particulara, notata cu Inceput, care
+             refera elementul care urmeaza sa se scoata din ea, si o
+             alta pozitie particulara, numita Sfarsit, care refera
+             locul pe care il va ocupa viitorul element care se adauga.
+             Inserarea va folosi Sfarsit, iar stergerea va folosi
+             Inceput.
+  Operatii:
+    Vida(C);
+      Pre:  True
+      Post: Intoarce True daca C e vida, False altfel
+    Plina(C);
+      Pre:  True
+      Post: Intoarce True daca C e plina, False altfel
+    Adauga(C, E);
+      Pre:  C nu este plina
+      Post: E va fi introdus in C si va fi cel mai recent introdus
+    Scoate(C, E);
+      Pre:  C nu este vida
+      Post: E este elementul care a fost in C pe pozitia Inceput
+            C nu mai contine pe E
+    Primul(C, E);
+      Pre:  C nu este vida
+      Post: E este valoarea elementului de la inceput
+            C nu se modifica
+    Ultimul(C, E);
+      Pre:  C nu este vida
+      Post: E este valoarea elementului de la sfarsit
+            C nu se modifica
+    Init(C);
+      Pre:  True;
+      Post: C este vida
+    Term(C);
+      Pre:  C nu este vida
+      Post: Scoate din C toate elementele
+            C devine vida
+    List(C);
+      Pre:  C nu este vida
+      Post: sunt afisate toate elementele din C, in ordinea
+            introducerii lor
+
+5.2.2. Implementarea structurii de date Coada
+
+Prezentam in cele ce urmeaza o multitudine de implementari ale acestei
+structuri de date, folosind diverse reprezentari ale cozii.
+Implementarile difera prin:
+  - paradigma de programare folosita (procedurala sau modulara)
+  - prezenta sau nu a unui parametru de tip Coada la operatii
+
+I. C este variabila globala
+
+   Prin urmare, nu este nevoie prezenta sa ca parametru al operatiilor
+   pe coada.
+   Toate implementarile apeleaza procedurile
+     - Operatii
+     - Run
+   care sunt incluse in fisierele
+     - operatp.pas
+     - coadap.run
+   Acest lucru se vrea o demonstratie a modului in care aceeasi
+   specificare este implementata in moduri diferite, care pastreaza
+   (toate) aceeasi modalitate de apel a operatiilor. Prin urmare,
+   procedurile Operatii si Run vor apela operatiile descrise mai sus
+   (fara parametrul C), chiar daca acestea sunt implementate diferit
+   in diferite programe. Operatii si Run sunt exemple de (sub)programe
+   generale, scrise pe baza specificarii unei structuri de date.
+   Ele se vor putea folosi pentru toate implementarile structurii de
+   de date care respecta specificarea.
+
+   I.A. Varianta procedurala
+
+   C este variabila globala in programul principal. Aceasta varianta
+   nu ofera nici o protectie pentru integritatea lui C: in orice parte
+   a programului principal se poate accesa (si modifica) C si
+   componentele sale.
+
+   Exista doua implementari, care difera intre ele prin reprezentarea
+   cozii
+
+Coada1P - coada implementata ca tablou circular, varianta procedurala
+Coada2P - coada implementata ca lista inlantuita, varianta procedurala
+
+   I.B. Varianta modulara
+
+   C este variabila locala in modulul care implementeaza operatiile
+   pe coada.
+
+Coada1M - coada implementata ca tablou circular, varianta modulara
+          (UCoada1M)
+Coada2M - coada implementata ca lista inlantuita, varianta modulara
+          (UCoada2M)
+(proiect)
+Coada3M - coada implementata ca tablou de pointeri la element,
+          varianta modulara (UCoada3M)
+Coada4M - coada implementata ca lista inlantuita de pointeri la element,
+          varianta modulara (UCoada4M)
+Coada5M - coada implementata ca tablou dinamic si flexibil de pointeri
+          la element, varianta modulara (UCoada5M)
+
+II. C este parametru al fiecarei operatii
+
+   Ne gasim in situatia in care respectam integral specificarea de
+   mai sus.
+
+   Toate implementarile apeleaza procedurile
+     - Operatii
+     - Run
+   care sunt incluse in fisierele
+     - operatm.pas
+     - coadam.run
+
+   C este variabila globala in programul apelant (mai exact in
+   coadam.run).
+
+   Acest lucru se vrea o demonstratie a modului in care aceeasi
+   specificare este implementata in moduri diferite, care pastreaza
+   (toate) aceeasi modalitate de apel a operatiilor. Prin urmare,
+   procedurile Operatii si Run vor apela operatiile descrise mai sus
+   (cu parametrul C), chiar daca acestea sunt implementate diferit
+   in diferite programe. Operatii si Run sunt exemple de (sub)programe
+   generale, scrise pe baza specificarii unei structuri de date.
+   Ele se vor putea folosi pentru toate implementarile structurii de
+   de date care respecta specificarea.
+
+   I.A. Varianta procedurala
+
+   C este parametru al fiecarei operatii si in acelasi timp este variabila
+   globala in programul principal (declarata ca atare in coadam.run).
+   Aceasta varianta nu ofera nici o protectie pentru integritatea lui C:
+   in orice parte a domeniului de vizibilitate al lui C componentele sale
+   se pot modifica.
+
+   Exista doua implementari, care difera intre ele prin reprezentarea
+   cozii
+
+Coada1  - coada implementata ca tablou circular, varianta procedurala
+Coada2  - coada implementata ca lista inlantuita, varianta procedurala
+
+   II.B. Varianta modulara
+
+   C este parametru al fiecarei operatii si in acelasi timp este variabila
+   globala in programul principal (declarata ca atare in coadam.run).
+   Aceasta varianta nu ofera nici o protectie pentru integritatea lui C:
+   in orice parte a domeniului de vizibilitate al lui C componentele sale
+   se pot modifica.
+
+   Aceasta varianta nu respecta integral principiul programarii modulare,
+   in sensul ca C nu este protejata (locala in modul).
+
+   Exista cinci implementari, care difera intre ele prin reprezentarea
+   cozii
+
+Coada1U - coada implementata ca tablou circular, varianta modulara
+          (UCoada1)
+Coada2U - coada implementata ca lista inlantuita, varianta modulara
+          (UCoada2)
+(proiect)
+Coada3U - coada implementata ca tablou de pointeri la element,
+          varianta modulara (UCoada3)
+Coada4U - coada implementata ca lista inlantuita de pointeri la element,
+          varianta modulara (UCoada4)
+Coada5U - coada implementata ca tablou dinamic si flexibil de pointeri
+          la element, varianta modulara (UCoada5)
+

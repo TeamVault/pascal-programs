@@ -1,0 +1,93 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal 3 Runtime Library                           *)
+(*       The Strings Unit                                       *)
+(*                                                              *)
+(*       Copyright (c) 1995, 2000 TMT Development Corporation   *)
+(*       Authors: Anton Moscal, Vadim Bodrov                    *)
+(*                                                              *)
+(****************************************************************)
+
+unit Strings;
+
+{$i-,opt+,a+,cc+}
+
+interface
+
+function  Dup_SI(const s: String; n: Longint): String;
+overload  * = Dup_SI;
+function  Dup_CI(c: Char; n: Longint): String;
+overload  * = Dup_CI;
+procedure StrAppend(var dst: String; const src: String);
+overload  +:= = StrAppend;
+procedure StrAppendC(var dst: String; src: Char);
+overload  +:= = StrAppendC;
+
+function  LowerCase(str: String): String;
+function  UpperCase(str: String): String;
+
+function  StrCopy(dst, src: PChar): PChar;
+function  StrLen(str: PChar): Longint;
+function  StrEnd(str: PChar): PChar;
+function  StrMove(dst, src: PChar; count: Longint): PChar;
+function  StrECopy(dst, src: PChar): PChar;
+function  StrLCopy(dst, src: PChar; maxlen:Longint): PChar;
+function  StrPCopy(dst: PChar; const src: String ): PChar;
+function  StrCat(dst, src: PChar): PChar;
+function  StrLCat(dst, src: PChar; maxlen: Longint): PChar;
+function  StrComp(str1, str2: PChar): Longint;
+function  StrIComp(str1, str2: PChar): Longint;
+function  StrLComp(str1, str2: PChar; maxlen: Longint): Longint;
+function  StrLIComp(str1, str2: PChar; maxlen: Longint): Longint;
+function  StrScan(str: PChar; chr: Char): PChar;
+function  StrRScan(str: PChar; chr: Char): PChar;
+function  StrPos(str1, str2: PChar): PChar;
+function  StrUpper(str: PChar): PChar;
+function  StrLower(str: PChar): PChar;
+function  StrPas(str: PChar): String;
+function  StrNew(str: PChar): PChar;
+procedure StrDispose(str: PChar);
+
+function  Hex(n: Longint): String [12];
+function  Whl(n: Longint): String [12];
+function  Uns(n: dword): String [12];
+function  Flt(x: extended; w: Longint): String;
+function  Fls(x: Extended): String;
+function  Fix(x: extended; w, pr: Longint): String;
+function  Align(str: String; w: Longint): String;
+function  HexVal(const s: String): Longint;
+function  Bin(n: Longint): String[32];
+
+function  IntToStr(Value: Longint): String;
+function  StrToInt(const S: String): Longint;
+function  HexStr(var Num; ByteCount: DWord): String;
+function  IntToHex(Value: Longint; Digits: DWord): String;
+function  BinStr(var Num; ByteCount: DWord): String;
+function  IntToBin(Value: Longint; Digits: DWord): String;
+
+function  FloatToStr(Value: Extended): String;
+
+function  TrimLeft(const S: String): String;
+function  TrimRight(const S: String): String;
+function  Trim(const S: String): String;
+
+function  QuotedStr(const S: String): String;
+function  IsValidIdent(const Ident: String): Boolean;
+function  StrToIntDef(const S: String; Default: Longint): Longint;
+function  IsPathDelimiter(const S: String; IndexPos: Longint): Boolean;
+function  IsDelimiter(const Delimiters, S: String; IndexPos: Longint): Boolean;
+function  LastDelimiter(const Delimiters, S: String): Longint;
+function  AppendPathDelimiter(const S: String): String;
+
+function  AnsiUpperCase(S: String): String;
+function  AnsiLowerCase(S: String): String;
+function  AnsiCompareStr(S1, S2: String): Longint;
+function  AnsiCompareText(S1, S2: String): Longint;
+function  AnsiStrComp(S1, S2: PChar): Longint;
+function  AnsiStrIComp(S1, S2: PChar): Longint;
+function  AnsiStrLComp(S1, S2: PChar; MaxLen: DWord): Longint;
+function  AnsiStrLIComp(S1, S2: PChar; MaxLen: DWord): Longint;
+function  AnsiStrLower(Str: PChar): PChar;
+function  AnsiStrUpper(Str: PChar): PChar;
+
+implementation

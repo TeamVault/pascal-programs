@@ -1,0 +1,4849 @@
+ GRAPH.TPU Functions and Procedures
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+These are the functions and procedures that
+make up the Graph unit:
+ Arc
+ Bar
+ Bar3D
+ Circle
+ ClearDevice
+ ClearViewPort
+ CloseGraph
+ DetectGraph
+ Drawpoly
+ Ellipse
+ FillEllipse
+ FillPoly
+ FloodFill
+ GetArcCoords
+ GetAspectRatio
+ GetBkColor
+ GetColor
+ GetDefaultPalette
+ GetDriverName
+ GetFillPattern
+ GetFillSettings
+ GetGraphMode
+ GetImage
+ GetLineSettings
+ GetMaxColor
+ GetMaxMode
+ GetMaxX
+ GetMaxY
+ GetModeName
+ GetModeRange
+ GetPalette
+ GetPaletteSize
+ GetPixel
+ GetTextSettings
+ GetViewSettings
+ GetX
+ GetY
+ GraphDefaults
+ GraphErrorMsg
+ GraphResult
+ ImageSize
+ InitGraph
+ InstallUserDriver
+ InstallUserFont
+ Line
+ LineRel
+ LineTo
+ MoveRel
+ MoveTo
+ OutText
+ OutTextXY
+ PieSlice
+ PutImage
+ PutPixel
+ Rectangle
+ RegisterBGIdriver
+ RegisterBGIfont
+ RestoreCrtMode
+ Sector
+ SetActivePage
+ SetAllPalette
+ SetAspectRatio
+ SetBkColor
+ SetColor
+ SetFillPattern
+ SetFillStyle
+ SetGraphBufSize
+ SetGraphMode
+ SetLineStyle
+ SetPalette
+ SetRGBPalette
+ SetTextJustify
+ SetTextStyle
+ SetUserCharSize
+ SetViewPort
+ SetVisualPage
+ SetWriteMode
+ TextHeight
+ TextWidth
+
+ Arc (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a circular arc.
+
+ Declaration:
+  procedure Arc (X,Y; Integer; StAngle, EndAngle, Radius; Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+The arc goes from StAngle (start angle) to
+EndAngle, with radius Radius, using (x,y) as
+the center point.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Circle
+ Ellipse
+ GetArcCoords
+ GetAspectRatio
+ PieSlice
+
+ Sample Code:
+
+  {Arc.PAS}
+
+ {Sample code for the Arc procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Radius: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm,' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  for Radius := 1 to 5 do
+    Arc(100, 100, 0, 90, Radius * 10);
+  Readln;
+  CloseGraph;
+ end.
+
+
+
+
+
+ Bar (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a bar using the current fill style and
+fill color.
+
+ Declaration:
+ procedure Bar(x1, y1, x2, y2: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Bar draws a filled-in rectangle (used in bar
+charts, for example). Uses the pattern and
+color defined by SetFillStyle or
+SetFillPattern. To draw an outlined bar, call
+Bar3D with a depth of zero.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Bar3D
+ SetFillPattern
+ SetFillStyle
+ SetLineStyle
+
+
+ Sample Code:
+
+ {Bar.PAS}
+
+ {Sample code for the Bar procedure.}
+
+ uses
+  Graph;
+
+ var
+  Gd, Gm, I, Width: Integer;
+ begin
+  Gd := Detect; InitGraph(Gd, Gm,' ');
+  if GraphResult <> grOk then Halt(1);
+  Width := 10;
+  for I := 1 to 5 do
+    Bar(I*Width, I*10, Succ(I)*Width, 200);
+  ReadLn;
+  CloseGraph;
+ end.
+
+
+ Bar3D (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a 3-D bar using the current fill style
+and fill color.
+
+ Declaration:
+  procedure Bar3D(x1, y1, x2, y2: Integer; Depth: Word; Top: Boolean);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Bar3D draws a filled-in, three-dimensional bar
+using the pattern and color defined by
+SetFillStyle or SetFillPattern. The 3-D
+outline of the bar is drawn in the current
+line style and color as set by SetLineStyle
+and SetColor. Depth is the length in pixels of
+the 3-D outline. If Top is TopOn, a 3-D top is
+put on the bar; if Top is TopOff, no top is
+put on the bar (making it possible to stack
+several bars on top of one another).
+
+A typical depth could be calculated by taking
+25% of the width of the bar:
+   Bar3D(X1, Y1, X2, Y2, (X2 - X1 + 1) div 4, TopOn);
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Bar
+ SetFillPattern
+ SetFillStyle
+ SetLineStyle
+
+ Sample Code:
+
+ {Bar3d.PAS}
+
+ {Sample code for the Bar3D procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Y0, Y1, Y2, X1, X2: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm,' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Y0 := 10;
+  Y1 := 60;
+  Y2 := 110;
+  X1 := 10;
+  X2 := 50;
+  Bar3D(X1, Y0, X2, Y1, 10, TopOn);
+  Bar3D(X1, Y1, X2, Y2, 10, TopOff);
+  Readln;
+  CloseGraph;
+ end.
+
+ Circle (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a circle (in the current color set by
+SetColor), using (X,Y) as the center point.
+
+ Declaration:
+ procedure Circle(X,Y: Integer; Radius: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Draws a circle in the current color set by
+SetColor. Each graphics driver contains an
+aspect ratio used by Circle, Arc, and
+PieSlice.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Arc
+ Ellipse
+ GetArcCoords
+ GetAspectRatio
+ PieSlice
+
+ Sample Code:
+
+ {Circle.PAS}
+
+ {Sample code for the Circle procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Radius: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  for Radius := 1 to 5 do
+    Circle(100, 100, Radius * 10);
+  Readln;
+  CloseGraph;
+ end.
+
+ ClearDevice (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Clears the currently selected output device
+and homes the current pointer.
+
+ Declaration:
+ procedure ClearDevice;
+
+ Target:
+Real, Protected
+
+ Remarks:
+ClearDevice moves the current pointer to (0,
+0), clears the screen using the background
+color set by SetBkColor, and prepares it for
+output.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ ClearViewPort
+ CloseGraph
+ InitGraph
+ RestoreCrtMode
+ SetGraphMode
+
+ Sample Code:
+
+ {Clrdevc.PAS}
+
+ {Sample code for the ClearDevice procedure.}
+
+ uses Crt, Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Randomize;
+  repeat
+    LineTo(Random(200), Random(200));
+  until KeyPressed;
+  ClearDevice;
+  Readln;
+  CloseGraph;
+ end.
+
+ ClearViewPort (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Clears the current view port (graphics mode
+only).
+
+ Declaration:
+ procedure ClearViewPort;
+
+ Target:
+Real, Protected
+
+ Remarks:
+ClearViewPort sets the fill color to the
+background color (Palette[0]) and moves the
+current pointer to (0, 0).
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ ClearDevice
+ GetViewSettings
+ SetViewPort
+
+ Sample Code:
+
+ {Clrvwprt.PAS}
+
+ {Sample code for the ClearViewPort procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Rectangle(19, 19, GetMaxX - 19, GetMaxY - 19);
+  SetViewPort(20, 20, GetMaxX - 20, GetMaxY - 20, ClipOn);
+  OutTextXY(0, 0, '<ENTER> clears viewport:');
+  Readln;
+  ClearViewPort;
+  OutTextXY(0, 0, '<ENTER> to quit:');
+  Readln;  CloseGraph;
+ end.
+
+ CloseGraph (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Shuts down the graphics system.
+
+ Declaration:
+ procedure CloseGraph;
+
+ Target:
+Real, Protected
+
+ Remarks:
+CloseGraph restores the original screen mode
+before graphics was initialized and frees the
+memory allocated on the heap for the graphics
+scan buffer. CloseGraph also deallocates
+driver and font memory buffers if they were
+allocated by calls to GraphGetMem and
+GraphFreeMem.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ DetectGraph
+ InitGraph
+ RestoreCrtMode
+ SetGraphMode
+
+ Sample Code:
+
+  {Closegrf.PAS}
+
+ {Sample code for the CloseGraph procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Line(0, 0, GetMaxX, GetMaxY);
+  Readln;
+  CloseGraph;   { Shut down graphics }
+ end.
+
+ DetectGraph (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Checks the hardware and determines which
+graphics driver and mode to use.
+
+ Declaration:
+ procedure DetectGraph(var GraphDriver, GraphMode: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+DetectGraph returns the detected driver and
+mode value that can be passed to InitGraph,
+which will then load the correct driver. If no
+graphics hardware was detected, the
+GraphDriver parameter and GraphResult return a
+value of grNotDetected.
+
+Unless instructed otherwise, InitGraph calls
+DetectGraph, finds and loads the correct
+driver, and initializes the graphics system.
+The only reason to call DetectGraph directly
+is to override the driver that DetectGraph
+recommends. When you pass InitGraph a
+GraphDriver other than Detect, you must also
+pass a valid GraphMode for the driver
+requested.
+
+ See Also:
+ CloseGraph
+ GraphResult
+ InitGraph
+
+ Sample Code:
+
+ {Detctgrf.PAS}
+
+ {Sample code for the Detectgraph function.}
+
+ uses Graph;
+
+ var GraphDriver, GraphMode: Integer;
+ begin
+  DetectGraph(GraphDriver, GraphMode);
+  if (GraphDriver = EGA) or
+     (GraphDriver = EGA64) then
+  begin
+    GraphDriver := CGA;
+    GraphMode := CGAHi;
+  end;
+  InitGraph(GraphDriver, GraphMode,' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Line(0, 0, GetMaxX, GetMaxY);
+  Readln;
+  CloseGraph;
+ end.
+
+ DrawPoly (procedure)     (Graph Unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws the outline of a polygon using the
+current line style and color.
+
+ Declaration:
+ procedure DrawPoly(NumPoints: Word; var PolyPoints);
+
+ Target:
+Real, Protected
+
+ Remarks:
+NumPoints specifies the number of coordinates
+in PolyPoints. A coordinate consists of two
+words, an X and a Y value.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ FillPoly
+ GetLineSettings
+ GraphResult
+ SetColor
+ SetLineStyle
+ SetWriteMode
+
+ Sample Code:
+
+ {Drawpoly.PAS}
+
+ {Sample code for the Drawpoly function.}
+
+ uses Graph;
+
+ const
+  Triangle: array[1..4] of PointType = ((X: 50; Y: 100), (X: 100; Y:100),
+    (X: 150; Y: 150), (X:  50; Y: 100));
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  DrawPoly(SizeOf(Triangle) div SizeOf(PointType), Triangle);{ 4 }
+  Readln;
+  CloseGraph;
+ end.
+
+
+ Ellipse (procedure)     (Graph Unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws an elliptical arc.
+
+ Declaration:
+ procedure Ellipse(X, Y: Integer; StAngle, EndAngle: Word; XRadius, YRadius:
+    Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Draws the arc from StAngle (start angle) to
+EndAngle, with radii XRadius and YRadius, sing
+(X,Y) as the center point.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Arc
+ Circle
+ GetArcCoords
+ GetAspectRatio
+ PieSlice
+
+ Sample Code:
+
+ {Ellipse.PAS}
+
+ {Sample code for the Ellipse procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Ellipse(100, 100, 0, 360, 30, 50);
+  Ellipse(100, 100, 0, 180, 50, 30);
+  Readln;
+  CloseGraph;
+ end.
+
+ FillEllipse (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a filled ellipse
+
+ Declaration:
+ procedure FillEllipse(X, Y: Integer; XRadius, YRadius: Word)
+
+ Target:
+Real, Protected
+
+ Remarks:
+(X,Y) is the center point; XRadius and YRadius
+are the horizontal and vertical axes.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Arc
+ Circle
+ Ellipse
+ GetArcCoords
+ GetAspectRatio
+ PieSlice
+
+ Sample Code:
+
+  {Fillelps.PAS}
+
+ {Sample code for the FillEllipse procedure.}
+
+ uses Graph;
+
+ const R = 30;
+ var
+  Driver, Mode: Integer;
+  Xasp, Yasp: Word;
+ begin
+  Driver := Detect;   { Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult < 0 then
+    Halt(1);
+  { Draw ellipse }
+  FillEllipse(GetMaxX div 2, GetMaxY div 2, 50, 50);
+  GetAspectRatio(Xasp, Yasp);
+  { Circular ellipse }
+  FillEllipse(R, R, R, R * Longint(Xasp) div Yasp);
+  Readln;
+  CloseGraph;
+ end.
+
+
+ FillPoly (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Fills a polygon, using the scan converter
+
+ Declaration:
+ procedure FillPoly(NumPoints: Word; var PolyPoints);
+
+ Target:
+Real, Protected
+
+ Remarks:
+PolyPoints is an untyped parameter that
+contains the coordinates of each intersection
+in the polygon. NumPoints specifies the number
+of coordinates in PolyPoints. A coordinate
+consists of two words, an X and a Y value.
+
+FillPoly calculates all the horizontal
+intersections, and then fills the polygon
+using the current fill style and color defined
+by SetFillStyle or SetFillPattern. The outline
+of the polygon is drawn in the current line
+style and color as set by SetLineStyle.
+
+If an error occurs while filling the polygon,
+GraphResult returns a value of grNoScanMem.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ DrawPoly
+ GetFillSettings
+ GetLineSettings
+ GraphResult
+ SetFillPattern
+ SetFillStyle
+ SetLineStyle
+
+ Sample Code:
+
+ {FillPoly.PAS}
+
+ {Sample code for the FillPoly procedure.}
+
+ uses Graph;
+
+ const
+  Triangle: array[1..3] of PointType = ((X:  50; Y: 100),
+    (X: 100; Y: 100), (X: 150; Y: 150));
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  FillPoly(SizeOf(Triangle) div SizeOf(PointType), Triangle);
+  Readln;
+  CloseGraph;
+ end.
+
+ FloodFill (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Fills a bounded region with the current fill
+pattern and color.
+
+ Declaration:
+ procedure FloodFill(X, Y: Integer; Border: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Fills an enclosed area on bitmap devices. (X,
+Y) is a seed within the enclosed area to be
+filled. The current fill pattern, as set by
+SetFillStyle or SetFillPattern, is used to
+flood the area bounded by Border color. If the
+seed point is within an enclosed area, then
+the inside will be filled. If the seed is
+outside the enclosed area, then the exterior
+will be filled.
+
+If an error occurs while flooding a region,
+GraphResult returns a value of grNoFloodMem
+
+ See Also:
+ SetFillPattern
+ SetFillStyle
+
+ Sample Code:
+
+ {FloodFil.PAS}
+
+ {Sample code for the FloodFill procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  SetColor(GetMaxColor);
+  Circle(50, 50, 20);
+  FloodFill(50, 50, GetMaxColor);
+  Readln;
+  CloseGraph;
+ end.
+
+
+ GetArcCoords (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Gets the coordinates of the last Arc command.
+
+ Declaration:
+ procedure GetArcCoords(var ArcCoords: _ArcCoordsType_);
+
+ Target:
+Real, Protected
+
+ Remarks:
+GetArcCoords returns a variable of type
+ArcCoordsType. GetArcCoords returns a variable
+containing the center point (X, Y), the
+starting position
+ (Xstart, Ystart), and the ending position (Xend, Yend) of the last Arc or
+Ellipse command.
+
+These values are useful if you need to connect
+a line to the end of an ellipse.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Arc
+ Circle
+ Ellipse
+ PieSlice
+
+ Sample Code:
+
+ {Getarccd.PAS}
+
+ {Sample code for the GetArcCoords procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  ArcCoords: ArcCoordsType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Arc(100, 100, 0, 270, 30);
+  GetArcCoords(ArcCoords);
+  with ArcCoords do
+    Line(Xstart, Ystart, Xend, Yend);
+  Readln;
+  CloseGraph;
+ end.
+
+ GetAspectRatio (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns two components from which the aspect
+ratio can be computed.
+
+ Declaration:
+ procedure GetAspectRatio(var Xasp, Yasp: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+The aspect ratio is (Xasp: Yasp).
+
+ See Also:
+ Arc
+ Circle
+ Ellipse
+ GetMaxX
+ GetMaxY
+ PieSlice
+
+ Sample Code:
+
+ {Getasprt.PAS}
+
+ {Sample code for the GetAspectRatio procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Xasp, Yasp: Word;
+  XSideLength, YSideLength: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  GetAspectRatio(Xasp, Yasp);
+  XSideLength := 20;
+
+  { Adjust Y length for aspect ratio }
+  YSideLength := Round( (Xasp / Yasp) * XSideLength);
+
+  { Draw a "square" rectangle on the screen }
+  Rectangle(0, 0, XSideLength, YSideLength);
+  Readln;
+  CloseGraph;
+ end.
+
+ GetBkColor (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current background color.
+
+ Declaration:
+ function GetBkColor: Word;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Background colors range from 0 to 15,
+depending on the current graphics driver and
+current graphics mode.
+
+GetBkColor returns 0 if the 0th palette entry
+is changed by a call to SetPalette or
+SetAllPalette.
+
+ See Also:
+ GetColor
+ GetPalette
+ InitGraph
+ SetAllPalette
+ SetBkColor
+ SetColor
+ SetPalette
+
+ Sample Code:
+
+ {Getbkcol.PAS}
+
+ {Sample code for the GetBkColor function.}
+
+ uses Crt, Graph;
+
+ var
+  Gd, Gm: Integer;
+  Color: Word;
+  Pal: PaletteType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Randomize;
+  GetPalette(Pal);
+  if Pal.Size <> 1 then
+  begin
+    repeat   { Cycle through colors }
+      Color := Succ(GetBkColor);
+      if Color > Pal.Size-1 then
+        Color := 0;
+      SetBkColor(Color);
+      LineTo(Random(GetMaxX), Random(GetMaxY));
+    until KeyPressed;
+  end
+  else
+    Line(0, 0, GetMaxX, GetMaxY);
+  Readln;
+  CloseGraph;
+ end.
+
+
+ GetColor (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current drawing color.
+
+ Declaration:
+ function GetColor: Word;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Drawing colors range from 0 to 15, depending
+on the current graphics driver and current
+graphics mode.
+
+ See Also:
+ GetBkColor
+ GetPalette
+ InitGraph
+ SetAllPalette
+ SetColor
+ SetPalette
+
+ Sample Code:
+
+ {Getcolor.PAS}
+
+ {Sample code for the GetColor function.}
+
+ uses Graph, Crt;
+
+ var
+  Gd, Gm: Integer;
+  Color: Word;
+  Pal: PaletteType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Randomize;
+  GetPalette(Pal);
+  repeat
+    Color := Succ(GetColor);
+    if Color > Pal.Size - 1 then
+      Color := 0;
+    SetColor(Color);
+    LineTo(Random(GetMaxX), Random(GetMaxY));
+  until KeyPressed;
+  CloseGraph;
+ end.
+
+ GetDefaultPalette (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the palette definition structure.
+
+ Declaration:
+ function GetDefaultPalette(var Palette: PaletteType);
+
+This structure contains the palette as the
+driver initialized it during InitGraph.
+
+ Target:
+Real, Protected
+
+ Remarks:
+GetDefaultPalette returns a PaletteType
+record, which contains the palette as the
+driver initialized it during InitGraph.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetPalette
+ InitGraph
+
+ Sample Code:
+
+ {Getdfplt.PAS}
+
+ {Sample code for the GetDefaultPalette function.}
+
+ uses Crt, Graph;
+
+ var
+  Driver, Mode, I: Integer;
+  MyPal, OldPal: PaletteType;
+ begin
+  DirectVideo := False;
+  Randomize;
+  Driver := Detect;   { Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult < 0 then
+    Halt(1);
+  GetDefaultPalette(OldPal);   { Preserve old one }
+  MyPal := OldPal;   { Duplicate and modify }
+  { Display something }
+  for I := 0 to MyPal.Size - 1 do
+  begin
+    SetColor(I);
+    OutTextXY(10, I * 10, '...Press any key...');
+  end;
+  repeat   { Change palette until a key is pressed }
+    with MyPal do
+      Colors[Random(Size)] := Random(Size + 1);
+    SetAllPalette(MyPal);
+  until KeyPressed;
+  SetAllPalette(OldPal);   { Restore original palette }
+  ClearDevice;
+  OutTextXY(10, 10, 'Press <Return>...');
+  Readln;
+  CloseGraph;
+ end.
+
+
+ GetDriverName (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns a string containing the name of the
+current driver
+
+ Declaration:
+ function GetDriverName: string;
+
+ Target:
+Real, Protected
+
+ Remarks:
+After a call to InitGraph, GetDriverName
+returns the name of the active driver.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ InitGraph
+
+ Sample Code:
+
+ {Getdrvnm.PAS}
+
+ {Sample code for the GetDriverName function.}
+
+ uses Graph;
+
+ var Driver, Mode: Integer;
+ begin
+  Driver := Detect;   { Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult < 0 then
+    Halt(1);
+  OutText('Using driver ' + GetDriverName);
+  Readln;
+  CloseGraph;
+ end.
+
+
+ GetFillPattern (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the currently selected fill pattern
+and color as set by SetFillStyle or
+SetFillPattern.
+
+ Declaration:
+ procedure GetFillPattern(var FillPattern: FillPatternType);
+
+ Target:
+Real, Protected
+
+ Remarks:
+If no user call has been made to
+SetFillPattern, GetFillPattern returns an
+array filled with $FF.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetFillSettings
+
+ Sample Code:
+
+  {GetFPatt.PAS}
+
+ { Example for GetFillPattern and
+   SetFillPattern }
+
+ uses Graph;
+ const
+   Gray50 : FillPatternType = ($AA, $55, $AA,
+     $55, $AA, $55, $AA, $55);
+ var
+   Gd, Gm : Integer;
+   OldPattern : FillPatternType;
+ begin
+   Gd := Detect; InitGraph(Gd, Gm, ' ');
+   if GraphResult <> grOk then Halt(1);
+   GetFillPattern(OldPattern);
+   SetFillPattern(Gray50, White);
+
+
+   { Draw bar 50% gray }
+   Bar(0, 0, 100, 100);
+   ReadLn;
+   SetFillPattern(OldPattern,White);
+   { Draw bar with old pattern }
+   { (normally filled with $FF }
+   { on startup)               }
+   Bar(0, 0, 100, 100);
+   ReadLn;
+   CloseGraph;
+ end.
+
+ GetFillSettings (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Gets the current fill pattern and color, as
+set by SetFillStyle or SetFillPattern.
+
+ Declaration:
+ procedure GetFillSettings(var FillInfo: FillSettingsType);
+
+ Target:
+Real, Protected
+
+ Remarks:
+The Pattern field reports the current fill
+pattern selected. The colors field reports the
+current fill color selected. Both the fill
+pattern and color can be changed by calling
+the SetFillStyle or SetFillPattern procedure.
+
+If Pattern is equal to UserFill, use
+GetFillPattern to get the user-defined fill
+pattern that is selected.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ FillPoly
+ SetFillPattern
+ SetFillStyle
+
+ Sample Code:
+
+ {Getfsets.PAS}
+
+ {Sample code for the GetFillSettings procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  FillInfo: FillSettingsType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  GetFillSettings(FillInfo);   { Save fill style and color }
+  Bar(0, 0, 50, 50);
+  SetFillStyle(XHatchFill, GetMaxColor);   { New style }
+  Bar(50, 0, 100, 50);
+  with FillInfo do
+    SetFillStyle(Pattern, Color);   { Restore old fill style }
+  Bar(100, 0, 150, 50);
+  Readln;
+  CloseGraph;
+ end.
+
+ GetGraphMode (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current graphics mode.
+
+ Declaration:
+ function GetGraphMode: Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+GetGraphMode returns the current graphics mode
+set by InitGraph or SetGraphMode. The Mode
+value is an integer from 0 to 5, depending on
+the current driver.
+
+The following mode constants are defined:
+
+ Graphics³ Constant ³     ³ Column ³         ³
+  driver ³ name     ³Value³ x row  ³ Palette ³Pages
+ ÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍØÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍ
+   CGA   ³CGAC0     ³  0  ³320x200 ³  C0     ³1
+         ³CGAC1     ³  1  ³320x200 ³  C1     ³1
+         ³CGAC2     ³  2  ³320x200 ³  C2     ³1
+         ³CGAC3     ³  3  ³320x200 ³  C3     ³1
+         ³CGAHi     ³  4  ³640x200 ³2 color  ³1
+         ³          ³     ³        ³         ³
+   MCGA  ³MCGAC0    ³  0  ³320x200 ³  C0     ³1
+         ³MCGAC1    ³  1  ³320x200 ³  C1     ³1
+         ³MCGAC2    ³  2  ³320x200 ³  C2     ³1
+         ³MCGAC3    ³  3  ³320x200 ³  C3     ³1
+         ³MCGAMed   ³  4  ³640x200 ³2 color  ³1
+         ³MCGAHi    ³  5  ³640x480 ³2 color  ³1
+         ³          ³     ³        ³         ³
+   EGA   ³EGALo     ³  0  ³640x200 ³16 color ³4
+         ³EGAHi     ³  1  ³640x350 ³16 color ³2
+         ³          ³     ³        ³         ³
+   EGA64 ³EGA64Lo   ³  0  ³640x200 ³16 color ³1
+         ³EGA64Hi   ³  1  ³640x350 ³4 color  ³1
+ EGA-MONO³EGAMonoHi ³  3  ³640x350 ³2 color  ³1*
+         ³EGAMonoHi ³  3  ³640x350 ³2 color  ³1**
+         ³          ³     ³        ³         ³
+ HERC    ³HercMonoHi³  0  ³720x348 ³2 color  ³1
+         ³          ³     ³        ³         ³
+ ATT400  ³ATT400C0  ³  0  ³320x200 ³C0       ³1
+         ³ATT400C1  ³  1  ³320x200 ³C1       ³1
+         ³ATT400C2  ³  2  ³320x200 ³C2       ³1
+         ³ATT400C3  ³  3  ³320x200 ³C3       ³1
+         ³ATT400Med ³  4  ³640x200 ³2 color  ³1
+         ³ATT400Hi  ³  5  ³640x400 ³2 color  ³1
+         ³          ³     ³        ³         ³
+ VGA     ³VGALo     ³  0  ³640x200 ³16 color ³2
+         ³VGAMed    ³  1  ³640x350 ³16 color ³2
+         ³VGAHi     ³  2  ³640x480 ³16 color ³1
+         ³          ³     ³        ³         ³
+ PC3270  ³PC3270Hi  ³  0  ³720x350 ³2 color  ³1
+         ³          ³     ³        ³         ³
+ IBM8514 ³IBM8514Lo ³  0  ³640x480 ³256 color³1
+ IBM8514 ³IBM8514Hi ³  0  ³1024x768³256 color³1
+
+* 64K on EGAMono card ** 256K on EGAMono card
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ ClearDevice
+ DetectGraph
+ InitGraph
+ RestoreCrtMode
+ SetGraphMode
+
+ Sample Code:
+
+ {Getgrfmd.PAS}
+
+ {Sample code for the GetGraphMode function.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Mode: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  OutText('<ENTER> to leave graphics:');
+  Readln;
+  RestoreCrtMode;
+  Writeln('Now in text mode');
+  Write('<ENTER> to enter graphics mode:');
+  Readln;
+  SetGraphMode(GetGraphMode);
+  OutTextXY(0, 0, 'Back in graphics mode');
+  OutTextXY(0, TextHeight('H'), '<ENTER> to quit:');
+  Readln;
+  CloseGraph;
+ end.
+
+
+ GetImage (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Saves a bit image of the specified region into
+a buffer.
+
+ Declaration:
+ procedure GetImage(x1, y1, x2, y2: Integer; var BitMap);
+
+ Target:
+Real, Protected
+
+ Remarks:
+X1, Y1, X2, and Y2 define a rectangular region
+on the screen. BitMap is an untyped parameter
+that must be greater than or equal to 6 plus
+the amount of area defined by the region. The
+first two words of BitMap store the width and
+height of the region. The third word is
+reserved.
+
+The remaining part of BitMap is used to save
+the bit image itself. Use the ImageSize
+function to determine the size requirements of
+BitMap.
+
+ Restrictions:
+Must be in graphics mode. The memory required
+to save the region must be less than 64K.
+
+ See Also:
+ ImageSize
+ PutImage
+
+ Sample Code:
+
+ {Getimage.PAS}
+
+ {Sample code for the GetImage procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  P: Pointer;
+  Size: Word;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Bar(0, 0, GetMaxX, GetMaxY);
+  Size := ImageSize(10, 20, 30, 40);
+  GetMem(P, Size);   { Allocate memory on heap }
+  GetImage(10, 20, 30, 40, P^);
+  Readln;
+  ClearDevice;
+  PutImage(100, 100, P^, NormalPut);
+  Readln;
+  CloseGraph;
+ end.
+
+ GetLineSettings (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current line style, line pattern,
+and line thickness, as set by SetLineStyle.
+
+ Declaration:
+ procedure GetLineSettings(var LineInfo: LineSettingsType);
+
+ Target:
+Real, Protected
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ DrawPoly
+ SetLineStyle
+
+ Sample Code:
+
+ {Getlnset.PAS}
+
+ {Sample code for the GetLineSetting procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  OldStyle: LineSettingsType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Line(0, 0, 100, 0);
+  GetLineSettings(OldStyle);
+  SetLineStyle(DottedLn, 0, ThickWidth);   { New style }
+  Line(0, 10, 100, 10);
+  with OldStyle do          { Restore old line style }
+    SetLineStyle(LineStyle, Pattern, Thickness);
+  Line(0, 20, 100, 20);
+  Readln;
+  CloseGraph;
+ end.
+
+ GetMaxColor (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the highest color that can be passed
+to the SetColor procedure.
+
+ Declaration:
+ function GetMaxColor: Word;
+
+ Target:
+Real, Protected
+
+ Remarks:
+As an example, on a 256K EGA, GetMaxColor
+always returns 15, which means that any call
+to SetColor with a value from 0..15 is valid.
+On a CGA in high-resolution mode or on a
+Hercules monochrome adapter, GetMaxColor
+returns a value of 1 because these adapters
+only support draw colors of 0 or 1.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ SetColor
+
+ Sample Code:
+
+ {Getmxcol.PAS}
+
+ {Sample code for the GetMaxColor, SetColor functions.}
+
+ uses
+  Crt, Graph;
+ var
+  GraphDriver, GraphMode : Integer;
+ begin
+  GraphDriver := Detect;
+  InitGraph(GraphDriver, GraphMode, ' ');
+  if GraphResult <> grOk then Halt(1);
+  Randomize;
+  repeat
+    SetColor(Random(GetMaxColor)+1);
+    LineTo(Random(GetMaxX),
+           Random(GetMaxY));
+  until KeyPressed;
+ end.
+
+ GetMaxMode (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the maximum mode number for the
+currently loaded driver.
+
+ Declaration:
+ function GetMaxMode: Integer;
+The return value is the maximum value that can
+be passed to SetGraphMode.
+
+ Target:
+Real, Protected
+
+ Remarks:
+GetMaxMode lets you find out the maximum mode
+number for the current driver, directly from
+the driver. (Formerly, GetModeRange was the
+only way you could get this number;
+GetModeRange is still supported, but only for
+the Borland drivers.)
+
+The value returned by GetMaxMode is the
+maximum value that might be passed to
+SetGraphMode. Every driver supports modes
+0..GetMaxMode.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetModeRange
+ SetGraphMode
+
+ Sample Code:
+
+ {Getmxmd.PAS}
+
+ {Sample code for the GetMaxMode function.}
+
+ uses Graph;
+
+ var
+  Driver, Mode: Integer;
+  I: Integer;
+ begin
+  Driver := Detect;{ Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult < 0 then
+    Halt(1);
+  for I := 0 to GetMaxMode do{ Display all mode names }
+    OutTextXY(10, 10 * Succ(I), GetModeName(I));
+  Readln;
+  CloseGraph;
+ end.
+
+ GetMaxX (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Gets current X resolution.
+
+ Declaration:
+ function GetMaxX: Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Returns the rightmost column (X resolution) of
+the current graphics driver and mode.
+
+ See Also:
+ GetMaxY
+ GetX
+ GetY
+ MoveTo
+
+ Sample Code:
+
+ {Getmxx.PAS}
+
+ {Sample code for the GetMaxX function.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Rectangle(0, 0, GetMaxX, GetMaxY);   { Draw a full-screen box }
+  Readln;
+  CloseGraph;
+ end.
+
+
+ GetMaxY (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Gets current Y resolution.
+
+ Declaration:
+ function GetMaxY: Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Returns the bottommost row (Y resolution) of
+the current graphics driver and mode.
+
+ See Also:
+ GetMaxX
+ GetX
+ GetY
+ MoveTo
+
+ Sample Code:
+
+ {Getmxx.PAS}
+
+ {Sample code for the GetMaxX function.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Rectangle(0, 0, GetMaxX, GetMaxY);   { Draw a full-screen box }
+  Readln;
+  CloseGraph;
+ end.
+
+ GetModeName (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Gets the name of a graphics mode.
+
+ Declaration:
+ function GetModeName(ModeNumber: Integer): string;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Returns a string containing the name of the
+specified graphics mode.
+
+ See Also:
+ GetMaxMode
+ GetModeRange
+
+ Sample Code:
+
+ {Getmxmd.PAS}
+
+ {Sample code for the GetMaxMode function.}
+
+ uses Graph;
+
+ var
+  Driver, Mode: Integer;
+  I: Integer;
+ begin
+  Driver := Detect;{ Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult < 0 then
+    Halt(1);
+  for I := 0 to GetMaxMode do{ Display all mode names }
+    OutTextXY(10, 10 * Succ(I), GetModeName(I));
+  Readln;
+  CloseGraph;
+ end.
+
+ GetModeRange (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Lets you ask for the range of valid graphics
+mode values for a particular device driver.
+
+ Declaration:
+ procedure GetModeRange(GraphDriver:Integer; var LoMode, HiMode:Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+The output from the following program will be
+Lowest =0 and Highest = 1. If the value of
+GraphDriver is invalid, the LoMode and HiMode
+are set to -1.
+
+ See Also:
+ InitGraph
+ DetectGraph
+ SetGraphMode
+ GetGraphMode
+
+ Sample Code:
+
+ {GetMdRng.PAS}
+
+ {Sample code for the GetModeRange procedure.}
+
+ uses Graph;
+
+ var Lowest, Highest: Integer;
+ begin
+  GetModeRange(EGA64, Lowest, Highest);
+  Write('Lowest = ', Lowest);
+  Write(' Highest = ', Highest);
+ end.
+
+ GetPalette (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the current palette and its size.
+
+ Declaration:
+ procedure GetPalette(var Palette: PaletteType);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Returns the current palette and its size in a
+variable of type PaletteType.
+
+ Restrictions:
+Must be in graphics mode, and can be used only
+with EGA, EGA 64, or VGA (not the IBM 8514 or
+the VGA in 256-color mode).
+
+ See Also:
+ SetAllPalette
+ SetPalette
+
+ Sample Code:
+
+ {Getplt.PAS}
+
+ {Sample code for the GetPalette procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Color: Word;
+  Palette: PaletteType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  GetPalette(Palette);
+  if Palette.Size <> 1 then
+    for Color := 0 to Pred(Palette.Size) do
+    begin
+      SetColor(Color);
+      Line(0, Color * 5, 100, Color * 5);
+    end
+  else
+    Line(0, 0, 100, 0);
+  Readln;
+  CloseGraph;
+ end.
+
+ GetPaletteSize (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the size of the palette color lookup
+table.
+
+ Declaration:
+ function GetPaletteSize: Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+GetPaletteSize reports how many palette
+entries can be set for the current graphics
+mode; for example, the EGA in color mode
+returns a value of 16.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetMaxColor
+ GetPalette
+ SetPalette
+
+ Sample Code:
+
+  {Getpltsz.PAS}
+
+
+ { Example for GetPaletteSize }
+
+ uses Graph;
+ var
+   Driver, Mode : Integer;
+ begin
+   Driver := Detect;
+   InitGraph(Driver, Mode, ' ');
+   if GraphResult < 0 then Halt(1);
+   SetColor(1);
+   OutText('Color = 1, ');
+   SetColor(GetPaletteSize - 1);
+   OutText('Color = Max');
+   ReadLn;
+   Closegraph;
+ end.
+
+
+ GetPixel (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Gets the pixel value at (X,Y).
+
+ Declaration:
+ function GetPixel(X,Y: Integer): Word;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Gets the color of the pixel at (X, Y).
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetImage
+ PutImage
+ PutPixel
+
+ Sample Code:
+
+ {Getpixel.PAS}
+
+ {Sample code for the GetPixel function.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  PixelColor: Word;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  PixelColor := GetPixel(10, 10);
+  if PixelColor = 0 then
+    PutPixel(10, 10, GetMaxColor);
+  Readln;
+  CloseGraph;
+ end.
+
+ GetTextSettings (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Gets settings for text output in graphics
+mode.
+
+ Declaration:
+ procedure GetTextSettings(var TextInfo: TextSettingsType);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Returns the current text font, direction,
+size, and justification as set by SetTextStyle
+and SetTextJustify.
+
+ See Also:
+ InitGraph
+ SetTextJustify
+ SetTextStyle
+ TextHeight
+ TextWidth
+
+ Sample Code:
+
+ {Gettxtst.PAS}
+
+ {Sample code for the GetTextSettings procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  OldStyle: TextSettingsType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  GetTextSettings(OldStyle);
+  OutTextXY(0, 0, 'Old text style');
+  SetTextJustify(LeftText, CenterText);
+  SetTextStyle(TriplexFont, VertDir, 4);
+  OutTextXY(GetMaxX div 2, GetMaxY div 2, 'New Style');
+  with OldStyle do
+  begin                 { Restore old text style }
+    SetTextJustify(Horiz, Vert);
+    SetTextStyle(Font, Direction, CharSize);
+  end;
+  OutTextXY(0, TextHeight('H'), 'Old style again');
+  Readln;
+  CloseGraph;
+ end.
+
+ GetViewSettings (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Gets the current viewport and clipping
+parameters.
+
+ Declaration:
+ procedure GetViewSettings(var ViewPort: ViewPortType);
+
+ Target:
+Real, Protected
+
+ Remarks:
+GetViewSettings returns a variable of
+ViewPortType.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ ClearViewPort
+ SetViewPort
+
+ Sample Code:
+
+ {Getvwset.PAS}
+
+ {Sample code for the GetViewSettings procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  ViewPort: ViewPortType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  GetViewSettings(ViewPort);
+  with ViewPort do
+  begin
+    Rectangle(0, 0, X2 - X1, Y2 - Y1);
+    if Clip then
+      OutText('Clipping is active.')
+    else
+      OutText('No clipping today.');
+  end;
+  Readln;
+  CloseGraph;
+ end.
+
+ GetX (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns X coordinate of current pointer (CP).
+
+ Declaration:
+ function GetX: Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+The value of GetX is relative to the
+dimensions of the active viewport, as the
+following examples illustrate.
+
+  SetViewPort(0, 0, GetMaxX, GetMaxY, True);
+  Moves CP to absolute (0, 0), and GetX returns a value of 0.
+
+  MoveTo(5, 5);
+  Moves CP to absolute (5, 5), and GetX returns a value of 5.
+
+  SetViewPort(10, 10, 100, 100, True);
+  Moves CP to absolute (10, 10), but GetX returns a value of 0.
+
+  MoveTo(5, 5);
+  Moves CP to absolute (15, 15), but GetX returns a value of 5.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetViewSettings
+ GetY
+ InitGraph
+ MoveTo
+ SetViewPort
+
+ Sample Code:
+
+ {Getx.PAS}
+
+ {Sample code for the GetX function.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  X, Y: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  OutText('Starting here. ');
+  X := GetX;
+  Y := GetY;
+  OutTextXY(20, 10, 'Now over here...');
+  OutTextXY(X, Y, 'Now back over here.');
+  Readln;
+  CloseGraph;
+ end.
+
+ GetY (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns Y coordinate of current pointer (CP).
+
+ Declaration:
+ function GetY: Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+The value of GetY is relative to the
+dimensions of the active viewport, as the
+following examples illustrate.
+
+  SetViewPort(0, 0, GetMaxX, GetMaxY, True);
+  Moves CP to absolute (0, 0), and GetY returns a value of 0.
+
+  MoveTo(5, 5);
+  Moves CP to absolute (5, 5), and GetY returns a value of 5.
+
+  SetViewPort(10, 10, 100, 100, True);
+  Moves CP to absolute (10, 10), but GetY returns a value of 0.
+
+  MoveTo(5, 5);
+  Moves CP to absolute (15, 15), but GetY returns a value of 5.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetViewSettings
+ GetX
+ InitGraph
+ MoveTo
+ SetViewPort
+
+ Sample Code:
+
+ {Getx.PAS}
+
+ {Sample code for the GetX function.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  X, Y: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  OutText('Starting here. ');
+  X := GetX;
+  Y := GetY;
+  OutTextXY(20, 10, 'Now over here...');
+  OutTextXY(X, Y, 'Now back over here.');
+  Readln;
+  CloseGraph;
+ end.
+
+ GraphDefaults (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Homes the current pointer (CP) and resets the
+graphics system to specified default values.
+
+ Declaration:
+ procedure GraphDefaults;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Homes the current pointer (CP) and resets the
+graphics system to the default values for
+
+  viewport
+  palette
+  draw and background colors
+  line style and line pattern
+  fill style, fill color, and fill pattern
+  active font, text style, text justification, and user Char size
+
+ Restrictions:
+Must be in graphics mode.
+
+ Sample Code:
+
+ {Grfdeflt.PAS}
+
+ {Sample code for the GraphDefaults procedure.}
+
+ uses
+  Crt, Graph;
+ var
+  Gd, Gm : Integer;
+ begin
+  Gd := Detect; InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then Halt(1);
+  SetColor(1);
+  OutText('This text is in color #1');
+  ReadLn;
+  { Now start over...}
+  ClearViewPort; { Erase everything}
+  GraphDefaults; { Reset to all defaults}
+  OutText('This text is the default color');
+  ReadLn;
+  CloseGraph;
+ end.
+
+ GraphErrorMsg (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns error message string for the specified
+ErrorCode.
+
+ Declaration:
+ function GraphErrorMsg(ErrorCode: Integer): string;
+
+ Target:
+Real, Protected
+
+ See Also:
+ DetectGraph
+ GraphResult
+ Graphics Mode Error Codes and Message Strings
+ InitGraph
+
+ Sample Code:
+
+ {Grfermsg.PAS}
+
+ {Sample code for the GraphErrorMsg function.}
+
+ uses Graph;
+
+ var
+  GraphDriver, GraphMode: Integer;
+  ErrorCode: Integer;
+ begin
+  GraphDriver := Detect;
+  InitGraph(GraphDriver, GraphMode, ' ');
+  ErrorCode := GraphResult;
+  if ErrorCode <> grOk then
+  begin
+    Writeln('Graphics error: ', GraphErrorMsg(ErrorCode));
+    Readln;
+    Halt(1);
+  end;
+  Line(0, 0, GetMaxX, GetMaxY);
+  Readln;
+  CloseGraph;
+ end.
+
+ GraphResult (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns an error code for the last graphics operation.
+
+ Declaration:
+ function GraphResult: Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+The following routines set GraphResult:
+
+ Bar             GetGraphMode        SetAllPalette
+ Bar3D           ImageSize           SetFillPattern
+ ClearViewPort   InitGraph           SetFillStyle
+ CloseGraph      InstallUserDriver   SetGraphBufSize
+ DetectGraph     InstallUserFont     SetGraphMode
+ DrawPoly        PieSlice            SetLineStyle
+ FillPoly        RegisterBGIdriver   SetPalette
+ FloodFill       RegisterBGIfont     SetTextJustify
+                                     SetTextStyle
+
+ See Also:
+ DetectGraph
+ DrawPoly
+ Graphics Mode Error Codes and Message Strings
+ GraphErrorMsg
+
+ Sample Code:
+
+ {Grfreslt.PAS}
+
+ {Sample code for the GraphResult function.}
+
+ uses Graph;
+
+ var
+  ErrorCode: Integer;
+  GrDriver, GrMode: Integer;
+ begin
+  GrDriver := Detect;
+  InitGraph(GrDriver, GrMode, ' ');
+  ErrorCode := GraphResult;   { Check for errors }
+  if ErrorCode <> grOk then
+  begin
+    Writeln('Graphics error:');
+    Writeln(GraphErrorMsg(ErrorCode));
+    Writeln('Program aborted...');
+    Halt(1);
+  end;
+  ClearDevice;   { Do some graphics... }
+  Rectangle(0, 0, GetMaxX, GetMaxY);
+  Readln;
+  CloseGraph;
+ end.
+
+ ImageSize (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the number of bytes required to store
+a rectangular region of the screen.
+
+ Declaration:
+ function ImageSize(x1, y1, x2, y2: Integer): Word;
+
+ Target:
+Real, Protected
+
+ Remarks:
+X1, Y1, X2, and Y2 define a rectangular region
+on the screen. ImageSize determines the number
+of bytes necessary for GetImage to save the
+specified region of the screen. The image size
+includes space for three words. The first
+stores the width of the region, the second
+stores the height, and the third is reserved.
+
+If the memory required to save the region is
+greater than or equal to 64K, a value of 0 is
+returned and GraphResult returns -11
+(grError).
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetImage
+ PutImage
+
+ Sample Code:
+
+ {Getimage.PAS}
+
+ {Sample code for the GetImage procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  P: Pointer;
+  Size: Word;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Bar(0, 0, GetMaxX, GetMaxY);
+  Size := ImageSize(10, 20, 30, 40);
+  GetMem(P, Size);   { Allocate memory on heap }
+  GetImage(10, 20, 30, 40, P^);
+  Readln;
+  ClearDevice;
+  PutImage(100, 100, P^, NormalPut);
+  Readln;
+  CloseGraph;
+ end.
+
+ InitGraph (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Initializes the graphics system and puts the
+hardware into graphics mode.
+
+ Declaration:
+ procedure InitGraph(var GraphDriver:Integer; var GraphMode: Integer;
+    PathToDriver: string);
+
+ Target:
+Real, Protected
+
+ Remarks:
+If GraphDriver is equal to Detect, a call is
+made to any user-defined autodetect routines
+and then DetectGraph. If graphics hardware is
+detected, the appropriate graphics driver is
+initialized, and a graphics mode is selected.
+
+If GraphDriver is not equal to 0, the value of
+GraphDriver is assumed to be a driver number.
+That driver is then selected, and the system
+is put into the mode specified by GraphMode
+procedure If you override autodetection in
+this manner, you must supply a valid GraphMode
+parameter for the driver requested.
+
+PathToDriver specifies the directory path
+where the graphics drivers can be found. If
+PathToDriver is null, the driver files must be
+in the current directory.
+
+Normally, InitGraph loads a graphics driver by
+allocating memory for the driver (through
+GraphGetMem), then loads the appropriate .BGI
+file from disk. As an alternative to this
+dynamic loading scheme, you can link a
+graphics driver file (or several of them)
+directly into your executable program file.
+
+Do this by first converting the .BGI file to
+an .OBJ file (using the BINOBJ utility), then
+place calls to RegisterBGIdriver in your
+source code (before the call to InitGraph) to
+register the graphics driver(s). When you
+build your program, you must link the .OBJ
+files for the registered drivers. You can also
+load a BGI driver onto the heap and then
+register it using RegisterBGIdriver.
+
+If memory for the graphics driver is allocated
+on the heap using GraphGetMem, that memory is
+released when a call is made to CloseGraph.
+
+After calling InitGraph, GraphDriver is set to
+the current graphics driver, and GraphMode is
+set to the current graphics mode.
+
+If an error occurs, both GraphDriver and
+GraphResult (a function) return one of the
+following grXXXX constant values:
+grNotDetected, grFileNotFound,
+grInvalidDriver, grNoLoadMem, or
+grInvalidMode.
+
+ See Also:
+ CloseGraph
+ DetectGraph
+ GraphResult
+ RestoreCrtMode
+ SetGraphBufSize
+ SetGraphMode
+
+ Sample Code:
+
+  {Initgrf.PAS}
+
+ {Sample code for the Initgrf procedure.}
+
+ uses Graph;
+
+ var
+  grDriver: Integer;
+  grMode: Integer;
+  ErrCode: Integer;
+ begin
+  grDriver := Detect;
+  InitGraph(grDriver, grMode,' ');
+  ErrCode := GraphResult;
+  if ErrCode = grOk then
+  begin  { Do graphics }
+    Line(0, 0, GetMaxX, GetMaxY);
+    Readln;
+    CloseGraph;
+  end
+  else
+    Writeln('Graphics error:', GraphErrorMsg(ErrCode));
+ end.
+
+ InstallUserDriver (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Installs a vendor-added device driver to the
+BGI device driver table
+
+ Declaration:
+ function InstallUserDriver(Name: string; AutoDetectPtr: pointer): integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+InstallUserDriver lets you use a vendor-added
+device driver. The Name parameter is the file
+name of the new device driver. AutoDetectPtr
+is a pointer to an optional autodetect
+function that might accompany the new driver.
+This autodetect function takes no parameters
+and returns an integer value.
+
+If the internal driver table is full,
+InstallUserDriver returns a value of -11
+(grError); otherwise, InstallUserDriver
+assigns and returns a driver number for the
+new device driver.
+
+There are two ways to use this vendor-supplied
+driver. Suppose you have a
+ new video card called the Spiffy Graphics Array (SGA) and that the SGA
+manufacturer provided you with a BGI device
+driver (SGA.BGI). The easiest way to use this
+driver is to install it by calling
+InstallUserDriver and then passing the return
+value (the assigned driver number) directly to
+InitGraph:
+
+ var Driver, Mode: Integer;
+ begin
+   Driver := InstallUserDriver('SGA', nil);
+   if Driver = grError then     { Table full? }
+     Halt(1);
+   Mode := 0;                    { Every driver supports mode of 0 }
+   InitGraph(Driver, Mode, '');  { Override autodetection }
+   ...                           { Do graphics ... }
+ end.
+
+The nil value for the AutoDetectPtr parameter
+in the InstallUserDriver call indicates there
+isn't an autodetect function for the SGA.
+
+The other, more general way to use this driver
+is to link in an autodetect function that will
+be called by InitGraph as part of its
+hardware-detection logic. Presumably, the
+manufacturer of the SGA gave you an autodetect
+function that looks something like this:
+
+ {$F+}
+ function DetectSGA: Integer;
+ var Found: Boolean;
+ begin
+   DetectSGA := grError;  { Assume it's not there }
+   Found := ...           { Look for the hardware }
+   if not Found then
+     Exit;                { Returns -11 }
+   DetectSGA := 3;        { Return recommended default video mode }
+ end;
+ {$F-}
+
+DetectSGA's job is to look for the SGA
+hardware at run time. If an SGA is not
+detected, DetectSGA returns a value of -11
+(grError); otherwise, the return value is the
+default video mode for the SGA (usually the
+best mix of color and resolution available on
+this hardware).
+
+This function takes no parameters, returns a
+signed, integer-type value, and must be a far
+call. When you install the driver (by calling
+InstallUserDriver), you pass the address of
+DetectSGA along with the device driver's file
+name:
+
+ var Driver, Mode: Integer;
+   begin
+     Driver := InstallUserDriver('SGA', @@DetectSGA);
+     if Driver = grError then { Table full? }
+       Halt(1);
+     Driver := Detect;
+     { Discard SGA driver #; trust autodetection }
+     InitGraph(Driver, Mode, '');
+     ...
+ end.
+
+After you install the device driver file name
+and the SGA autodetect function, you call
+InitGraph and let it go through its normal
+autodetection process. Before InitGraph calls
+its built-in autodetection function
+(DetectGraph), it first calls DetectSGA. If
+DetectSGA doesn't find the SGA hardware, it
+returns a value of -11 (grError) and InitGraph
+proceeds with its normal hardware detection
+logic (which might include calling any other
+vendor-supplied autodetection functions in the
+order in which they were "installed").
+
+If, however, DetectSGA determines that an SGA
+is present, it returns a nonnegative mode
+number, and InitGraph locates and loads
+SGA.BGI, puts the hardware into the default
+graphics mode recom-mended by DetectSGA, and
+finally returns control to your program.
+
+ See Also:
+ InitGraph
+ RegisterBGIdriver
+
+ Sample Code:
+ InstUdrv.PAS
+
+ {Instudrv.PAS}
+
+ {Sample code for the InstallUserDriver function.}
+
+uses Graph;
+
+var
+  Driver, Mode,
+  TestDriver,
+  ErrCode: Integer;
+ {$F+}
+function TestDetect: Integer;
+ { Autodetect function: assume hardware is always present; return value =
+   recommended default mode }
+begin
+  TestDetect := 1;   { Default mode = 1 }
+end;
+ {$F-}
+begin
+  { Install the driver }
+  TestDriver := InstallUserDriver('TEST', @TestDetect);
+  if GraphResult <> grOk then
+  begin
+    Writeln('Error installing TestDriver');
+    Halt(1);
+  end;
+  Driver := Detect;   { Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  ErrCode := GraphResult;
+  if ErrCode <> grOk then
+  begin
+    Writeln('Error during Init: ', ErrCode);
+    Halt(1);
+  end;
+  OutText('Installable drivers supported...');
+  Readln;
+  CloseGraph;
+end.
+
+ InstallUserFont (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Installs a new font.
+
+ Declaration:
+ function InstallUserFont(FontFileName: string ): Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+The new font is one that's not built into the
+BGI system.
+
+ See Also:
+ SetTextStyle
+
+ Sample Code:
+
+ {Instufnt.PAS}
+
+ {Sample code for the InstallUserFont function.}
+
+ uses Graph;
+
+ var
+  Driver, Mode: Integer;
+  TestFont: Integer;
+ begin
+  TestFont := InstallUserFont('TEST');   { Install the font }
+  if GraphResult <> grOk then
+  begin
+    Writeln('Error installing TestFont (using DefaultFont)');
+    Readln;
+  end;
+  Driver := Detect;   { Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  SetTextStyle(TestFont, HorizDir, 2);   { Use new font }
+  OutText('Installable fonts supported...');
+  Readln;
+  CloseGraph;
+ end.
+
+ Line (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a line from the point (x1, y1) to (x2,
+y2).
+
+ Declaration:
+ procedure Line(x1, y1, x2, y2: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Draws a line in the style and thickness
+defined by SetLineStyle and uses the color set
+by SetColor. Use SetWriteMode to determine
+whether the line is copied or XOR'd to the
+screen.
+
+Note that
+
+  MoveTo(100, 100);
+  LineTo(200, 200);
+
+is equivalent to
+
+  Line(100, 100, 200, 200);
+  MoveTo(200, 200);
+
+Use LineTo when the current pointer (CP) is at
+one endpoint of the line. If you want the CP
+updated automatically when the line is drawn,
+use LineRel to draw a line a relative distance
+from the CP. Line doesn't update the CP.
+
+ Restrictions:
+Must be in graphics mode. Also, for drawing a
+horizontal line, Bar is faster than Line.
+
+ See Also:
+ LineTo
+ MoveTo
+ Rectangle
+ SetColor
+ SetLineStyle
+ SetWriteMode
+
+ Sample Code:
+
+ {Line.PAS}
+
+ {Sample code for the Line procedure.}
+
+ uses Crt, Graph;
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Randomize;
+  repeat
+    Line(Random(200), Random(200), Random(200), Random(200));
+  until KeyPressed;
+  Readln;
+  CloseGraph;
+ end.
+
+ LineRel (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a line relative to the current pointer
+(CP) and moves the CP to (x1, y1).
+
+ Declaration:
+ procedure LineRel(Dx, Dy: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Draws the line from the CP (x0, y0) to a point
+ (x1, y1), where
+
+   x1 = x0 + Dx
+   y1 = y0 + Dy
+
+ See Also:
+ Line
+ LineTo
+ MoveRel
+ MoveTo
+ SetLineStyle
+ SetWriteMode
+
+ Sample Code:
+
+ {Linerel.PAS}
+
+ {Sample code for the LineRel procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  MoveTo(1, 2);
+  LineRel(100, 100);   { Draw to the point (101,102) }
+  Readln;
+  CloseGraph;
+ end.
+
+ LineTo (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a line from the current pointer to
+(X,Y).
+
+ Declaration:
+ procedure LineTo(X, Y: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Draws a line in the style and thickness
+defined by SetLineStyle and uses the color set
+by SetColor. Use SetWriteMode to determine
+whether the line is copied or XOR'd to the
+screen.
+
+Note that
+
+  MoveTo(100, 100);
+  LineTo(200, 200);
+
+is equivalent to
+
+  Line(100, 100, 200, 200);
+
+The first method is slower and uses more code.
+Use LineTo only when the current pointer is at
+one endpoint of the line. Use LineRel to draw
+a line a relative distance from the CP. The
+second method doesn't change the value of the
+CP.
+
+LineTo moves the current pointer to (X, Y).
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Line
+ LineRel
+ MoveRel
+ MoveTo
+ SetLineStyle
+ SetWriteMode
+
+ Sample Code:
+
+ {LineTo.PAS}
+
+ {Sample code for the LineTo procedure.}
+
+ uses Crt, Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Randomize;
+  repeat
+    LineTo(Random(200), Random(200));
+  until KeyPressed;
+  Readln;
+  CloseGraph;
+ end.
+
+ MoveRel (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Moves the current pointer (CP) a relative
+distance from its current position.
+
+ Declaration:
+ procedure MoveRel(Dx, Dy: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+If the CP is at (X1,Y1), MoveRel moves it to
+((X1 + Dx),(Y1 + Dy)).
+
+ See Also:
+ LineRel
+ LineTo
+ MoveTo
+
+ Sample Code:
+
+  {Moverel.PAS}
+
+ {Sample code for the MoveRel procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  MoveTo(1, 2);
+  MoveRel(10, 10); { Move to the point (11, 12) }
+  PutPixel(GetX, GetY, GetMaxColor);
+  Readln;
+  CloseGraph;
+ end.
+
+ MoveTo (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Moves the current pointer (CP) to (X,Y).
+
+ Declaration:
+ procedure MoveTo(X, Y: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+The CP is similar to a text mode cursor except
+that the CP is not visible. The following
+routines move the CP:
+
+ ClearDevice
+ ClearViewPort
+ GraphDefaults
+ InitGraph
+ LineRel
+ LineTo
+ MoveRel
+ MoveTo
+ OutText
+ SetGraphMode
+ SetViewPort
+
+If a viewport is active, the CP will be
+viewport-relative (the X and Y values will be
+added to the viewport's X1 and Y1 values). The
+CP is never clipped at the current viewport's
+boundaries.
+
+ See Also:
+ GetMaxX
+ GetMaxY
+ GetX
+ GetY
+ MoveRel
+
+ Sample Code:
+
+ {Moveto.PAS}
+
+ {Sample code for the MoveTo procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  MoveTo(0, 0); { Upper left corner of viewport }
+  LineTo(GetMaxX, GetMaxY);
+  Readln;
+  CloseGraph;
+ end.
+
+ OutText (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sends a string to the output device at the
+current pointer.
+
+ Declaration:
+ procedure OutText(TextString: string);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Displays TextString at the CP using the
+current justification settings.
+
+TextString is truncated at the viewport border
+if it is too long.
+ - If one of the stroked fonts is active, TextString is truncated at the
+   screen boundary if it is too long.
+ - If the default (bit-mapped) font is active and the string is too long to
+   fit on the screen, no text is displayed.
+
+OutText uses the font set by SetTextStyle. To
+maintain code compatibility when using several
+fonts, use the TextWidth and TextHeight calls
+to determine the dimensions of the string.
+
+OutText uses the output options set by
+SetTextJustify (justify, center, rotate 90
+degrees, and so on).
+
+The CP is only updated by OutText if the
+direction is horizontal with left
+justification. Text output direction is set by
+SetTextStyle (horizontal or vertical); text
+justification is set by SetTextJustify (CP at
+the left of the string, centered around CP, or
+CP at the right of the string--written above
+CP, below CP, or centered around CP). In the
+following example, block #1 outputs ABCDEF and
+moves CP (text is both horizontally output and
+left-justified); block #2 outputs ABC with DEF
+written right on top of it because text is
+right-justified; and, block #3 outputs ABC
+with DEF written right on top of it because
+text is written vertically.
+
+  program CPupdate;
+  uses Graph;
+  var Driver, Mode: Integer;
+  begin
+    Driver := Detect;
+    InitGraph(Driver, Mode, '');
+    if GraphResult < 0 then
+      Halt(1);
+    { #1 }
+    MoveTo(0, 0);
+    SetTextStyle(DefaultFont, HorizDir, 1);   { CharSize = 1 }
+    SetTextJustify(LeftText, TopText);
+    OutText('ABC');                           { CP is updated }
+    OutText('DEF');                           { CP is updated }
+    { #2 }
+    MoveTo(100, 50);
+    SetTextStyle(DefaultFont, HorizDir, 1);   { CharSize = 1 }
+    SetTextJustify(RightText, TopText);
+    OutText('ABC');                           { CP is updated }
+    OutText('DEF');                           { CP is updated }
+    { #3 }
+    MoveTo(100, 100);
+    SetTextStyle(DefaultFont, VertDir, 1);    { CharSize = 1 }
+    SetTextJustify(LeftText, TopText);
+    OutText('ABC');                           { CP is NOT updated }
+    OutText('DEF');                           { CP is NOT updated }
+    Readln;
+    CloseGraph;
+  end.
+
+The CP is never updated by OutTextXY.
+
+The default font (8X8) is not clipped at the
+screen edge. Instead, if any part of the
+string would go off the screen, no text is
+output. For example, the following statements
+would have no effect:
+
+  SetViewPort(0, 0, GetMaxX, GetMaxY, ClipOn);
+  SetTextJustify(LeftText, TopText);
+  OutTextXY(-5, 0);  _{ -5,0 not onscreen }
+  OutTextXY(GetMaxX - 1, 0, 'ABC'); _{ Part of 'A', }
+  _{ All of 'BC' off screen }
+
+The stroked fonts are clipped at the screen
+edge, however.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetTextSettings
+ OutTextXY
+ SetTextJustify
+ SetTextStyle
+ SetUserCharSize
+ TextHeight
+ TextWidth
+
+ Sample Code:
+
+ {OutTxt.PAS}
+
+ {Sample code for the OutText procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  OutText('Easy to use');
+  Readln;
+  CloseGraph;
+ end.
+
+ OutTextXY (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sends a string to the output device.
+
+ Declaration:
+ procedure OutTextXY(X,Y: Integer; TextString: string);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Displays TextString at (X, Y). TextString is
+truncated at the viewport border if it is too
+long. If one of the stroked fonts is active,
+TextString is truncated at the screen boundary
+if it is too long. If the default (bit-mapped)
+font is active and the string is too long to
+fit on the screen, no text is displayed.
+
+Use OutText to output text at the current
+pointer; use OutTextXY to output text
+elsewhere on the screen.
+
+OutTextXY uses the font set by SetTextStyle.
+To maintain code compatibility when using
+several fonts, use the TextWidth and
+TextHeight calls to determine the dimensions
+of the string.
+
+OutTextXY uses the output options set by
+SetTextJustify (justify, center, rotate 90
+degrees, and so on).
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ OutText
+ SetTextStyle
+ SetUserCharSize
+ TextHeight
+ TextWidth
+
+ Sample Code:
+
+ {Outtxtxy.PAS}
+
+ {Sample code for the OutTextXY procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  MoveTo(0, 0);
+  OutText('Inefficient');
+  Readln;
+  OutTextXY(GetX, GetY, 'Also inefficient');
+  Readln;
+  ClearDevice;
+  OutTextXY(0, 0, 'Perfect!');   { Replaces above }
+  Readln;
+  CloseGraph;
+ end.
+
+ PieSlice (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Draws and fills a pie slice.
+
+ Declaration:
+ procedure PieSlice(X, Y: Integer; StAngle, EndAngle, Radius: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+(X,Y) is the center point. The pie slice
+starts at StAngle, ends at EndAngle.
+
+ See Also:
+ Arc
+ Circle
+ Ellipse
+ GetArcCoords
+ GetAspectRatio
+ SetFillPattern
+ SetFillStyle
+ SetGraphBufSize
+
+ Sample Code:
+
+ {Pieslice.PAS}
+
+ {Sample code for the PieSlice procedure.}
+
+ uses Graph;
+
+ const Radius = 30;
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  PieSlice(100, 100, 0, 270, Radius);
+  Readln;
+  CloseGraph;
+ end.
+
+ PutImage (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Puts a bit image onto the screen.
+
+ Declaration:
+ procedure PutImage(X, Y: Integer; var BitMap; BitBlt: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+(X, Y) is the upper left corner of a
+rectangular region on the screen. BitMap is an
+untyped parameter that contains the height and
+width of the region, and the bit image that
+will be put onto the screen. BitBlt specifies
+which binary operator will be used to put the
+bit image onto the screen.
+
+Each constant corresponds to a binary
+operation. For example:
+
+PutImage(X, Y, BitMap, NormalPut) puts the
+image stored in BitMap at (X, Y) using the
+assembly language MOV instruction for each
+byte in the image.
+
+PutImage(X, Y, BitMap, XORPut) puts the image
+stored in BitMap at (X, Y) using the assembly
+language XOR instruction for each byte in the
+image. This is an often-used animation
+technique for "dragging" an image around the
+screen.
+
+PutImage(X, Y, BitMap, NotPut) inverts the
+bits in BitMap and then puts the image stored
+in BitMap at (X, Y) using the assembly
+language MOV for each byte in the image. Thus,
+the image appears in inverse video of the
+original BitMap.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetImage
+ ImageSize
+
+ Sample Code:
+
+ {Getimage.PAS}
+
+ {Sample code for the GetImage procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  P: Pointer;
+  Size: Word;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Bar(0, 0, GetMaxX, GetMaxY);
+  Size := ImageSize(10, 20, 30, 40);
+  GetMem(P, Size);   { Allocate memory on heap }
+  GetImage(10, 20, 30, 40, P^);
+  Readln;
+  ClearDevice;
+  PutImage(100, 100, P^, NormalPut);
+  Readln;
+  CloseGraph;
+ end.
+
+ PutPixel (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Plots a pixel at X,Y.
+
+ Declaration:
+ procedure PutPixel(X, Y: Integer; Pixel: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Plots a point in the color defined by Pixel at
+(X, Y).
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetImage
+ GetPixel
+ PutImage
+
+ Sample Code:
+
+ {PutPixel.PAS}
+
+ {Sample code for the PutPixel procedure.}
+
+ uses Crt, Graph;
+
+ var
+  Gd, Gm: Integer;
+  Color: Word;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Color := GetMaxColor;
+  Randomize;
+  repeat
+    PutPixel(Random(100), Random(100), Color); { Plot "stars" }
+    Delay(10);
+  until KeyPressed;
+  Readln;
+  CloseGraph;
+ end.
+
+ Rectangle (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws a rectangle, using the current line
+style and color.
+
+ Declaration:
+ procedure Rectangle(x1, y1, x2, y2: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+(X1, Y1) define the upper left corner of the
+rectangle, and (X2, Y2) define the lower right
+corner (0 <= X1 < X2 <= GetMaxX, and 0 <= Y1 <
+Y2 <= GetMaxY).
+
+Draws the rectangle in the current line style
+and color, as set by SetLineStyle and
+SetColor. Use SetWriteMode to determine
+whether the rectangle is copied or XOR'd to
+the screen.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Bar
+ Bar3D
+ GetViewSettings
+ InitGraph
+ SetColor
+ SetLineStyle
+ SetViewPort
+
+ Sample Code:
+
+ {Rectangl.PAS}
+
+ {Sample code for the Rectangle procedure.}
+
+ uses Crt, Graph;
+
+ var
+  GraphDriver, GraphMode: Integer;
+  X1, Y1, X2, Y2: Integer;
+ begin
+  GraphDriver := Detect;
+  InitGraph(GraphDriver, GraphMode, ' ');
+  if GraphResult<> grOk then
+    Halt(1);
+  Randomize;
+  repeat
+    X1 := Random(GetMaxX);
+    Y1 := Random(GetMaxY);
+    X2 := Random(GetMaxX - X1) + X1;
+    Y2 := Random(GetMaxY - Y1) + Y1;
+    Rectangle(X1, Y1, X2, Y2);
+  until KeyPressed;
+  CloseGraph;
+ end.
+
+ RegisterBGIdriver (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Passes the graphics system a pointer to a
+device driver that has been linked into an
+application program.
+
+ Declaration:
+ function RegisterBGIdriver(driver: pointer): Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+The driver must be registered before the call
+to InitGraph.
+
+If an error occurs, the return value is less
+than 0;otherwise, the internal driver number
+is returned.
+
+This routine enables a user to load a driver
+file and "register" the driver by passing its
+memory location to RegisterBGIdriver. When
+that driver is used by InitGraph, the
+registered driver will be used (instead of
+being loaded from disk by the Graph unit). A
+user-registered driver can be loaded from disk
+onto the heap, or converted to an .OBJ file
+(using BINOBJ.EXE) and linked into the .EXE.
+
+Returns grInvalidDriver if the driver header
+is not recognized.
+
+The following program loads the CGA driver
+onto the heap, registers it with the graphics
+system, and calls InitGraph:
+
+ program LoadDriv;
+ uses Graph;
+ var
+   Driver, Mode: Integer;
+   DriverF: file;
+   DriverP: Pointer;
+ begin
+   { Open driver file, read into memory, register it }
+   Assign(DriverF, 'CGA.BGI');
+   Reset(DriverF, 1);
+   GetMem(DriverP, FileSize(DriverF));
+   BlockRead(DriverF, DriverP^, FileSize(DriverF));
+   if RegisterBGIdriver(DriverP) < 0 then
+   begin
+     Writeln('Error registering driver: ',
+       GraphErrorMsg(GraphResult));
+     Halt(1);
+   end;
+   { Init graphics }
+   Driver := CGA;
+   Mode := CGAHi;
+   InitGraph(Driver, Mode, '');
+   if GraphResult < 0 then
+     Halt(1);
+   OutText('Driver loaded by user program');
+   Readln;
+   CloseGraph;
+ end.
+
+The program begins by loading the CGA driver
+file from disk and registering it with the
+Graph unit. Then a call is made to InitGraph
+to initialize the graphics system. You might
+wish to incorporate one or more driver files
+directly into your .EXE file. In this way, the
+graphics drivers that your program needs will
+be built-in and only the .EXE will be needed
+to run. The process for incorporating a driver
+file into your .EXE is straight forward:
+
+ - Run BINOBJ on the driver file(s).
+ - Link the resulting .OBJ file(s) into your program.
+ - Register the linked-in driver file(s) before calling InitGraph
+
+ See Also:
+ InitGraph
+
+ Sample Code:
+
+  {RgBGIdrv.PAS}
+
+ { Example for RegisterBGIDriver function.}
+
+ uses Graph;
+ var
+  Driver, Mode: Integer;
+  DriverF: file;
+  DriverP: pointer;
+ begin
+  { Open driver file, read, register }
+  Assign(DriverF, 'CGA.BGI');
+  Reset(DriverF, 1);
+  GetMem(DriverP, FileSize(DriverF));
+  BlockRead(DriverF, DriverP^,
+            FileSIze(DriverF));
+  if RegisterBGIdriver(DriverP) < 0 then
+  begin
+    WriteLn('Error registering driver: ',
+            GraphErrorMsg(GraphResult));
+    Halt(1);
+  end;
+  { Init graphics }
+  Driver := CGA;
+  Mode := CGAHi;
+  InitGraph(Driver, Mode,' ');
+  if GraphResult < 0 then
+    Halt(1);
+  OutText('Driver loaded by user program');
+  ReadLn;
+  CloseGraph;
+ end.
+
+ RegisterBGIfont (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Passes the graphics system a pointer to a font
+that has been linked into an application
+program.
+
+ Declaration:
+ function RegisterBGIfont(Font: pointer): Integer;
+
+ Target:
+Real, Protected
+
+ Remarks:
+The return value is less than 0 if an error
+occurs. Possible error codes are grError,
+grInvalidFont, and grInvalidFontNum. If no
+error occurs, the internal font number is
+returned. This routine enables a user to load
+a font file and "register" the font by passing
+its memory location to RegisterBGIfont. When
+that font is selected with a call to
+SetTextStyle, the registered font will be used
+(instead of being loaded from disk by the
+Graph unit). A user-registered font can be
+loaded from disk onto the heap, or converted
+to an .OBJ file (using BINOBJ.EXE) and linked
+into the .EXE.
+
+There are several reasons to load and register
+font files. First, Graph only keeps one
+stroked font in memory at a time. If you have
+a program that needs to quickly alternate
+between stroked fonts, you might want to load
+and register the fonts yourself at the
+beginning of your program. Then Graph will not
+load and unload the fonts each time a call to
+SetTextStyle is made.
+
+Second, you might wish to incorporate the font
+files directly into your .EXE file. This way,
+the font files that your program needs will be
+built-in, and only the .EXE and driver files
+will be needed to run. The process for
+incorporating a font file into your .EXE is
+straight forward:
+
+ 1. Run BINOBJ on the font file(s).
+ 2. Link the resulting .OBJ file(s) into your program.
+ 3. Register the linked-in font file(s) before calling InitGraph.
+
+For a detailed explanation and example of the
+preceding, see the comments at the top of the
+BGILINK.PAS example program on the
+distribution disks. Documentation on the
+BINOBJ utility is available in the file
+UTIL.DOC (in ONLINE.ZIP) on your distribution
+disks.
+
+ See Also:
+ InitGraph
+ SetTextStyle
+
+ Sample Code:
+
+  {RgBGIfnt.PAS}
+
+ { Example for RegisterBGIFont }
+
+ uses Graph;
+ var
+   Driver, Mode: Integer;
+   FontF: file;
+   FontP: pointer;
+ begin
+   { Open font file, read, register }
+   Assign(FontF, 'TRIP.CHR');
+   Reset(FontF, 1);
+   GetMem(FontP, FileSize(FontF));
+   BlockRead(FontF, FontP^,
+             FileSize(FontF));
+   if RegisterBGIfont(FontP) < 0 then
+   begin
+     WriteLn('Error registering font: ',
+             GraphErrorMsg(GraphResult));
+     Halt(1);
+   end;
+   { Init graphics }
+   Driver := Detect;
+   InitGraph(Driver, Mode, ' ');
+   if GraphResult < 0 then
+     Halt(1);
+   ReadLn;
+   { Select registered font }
+   SetTextStyle(TriplexFont, HorizDir, 4);
+   OutText('Triplex loaded by user program');
+   MoveTo(0, TextHeight('a'));
+   ReadLn;
+   { Select font to be loaded from disk }
+   SetTextStyle(SansSerifFont, HorizDir, 4);
+   OutText('Your disk should be spinning..');
+   MoveTo(0, GetY + TextHeight('a'));
+   ReadLn;
+   { Re-select font (already in memory) }
+   SetTextStyle(TriplexFont, HorizDir, 4);
+   OutText('Back to Triplex');
+   ReadLn;
+   CloseGraph;
+ end.
+
+ RestoreCrtMode (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Restores the original screen mode before
+graphics was initialized.
+
+ Declaration:
+ procedure RestoreCrtMode;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Restores the original video mode detected by
+InitGraph. Can be used in conjunction with
+SetGraphMode to switch back and forth between
+text and graphics modes.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ CloseGraph
+ DetectGraph
+ InitGraph
+ SetGraphMode
+
+ Sample Code:
+
+ {Rstcrtmd.PAS}
+
+ {Sample code for the RestoreCrtMode procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Mode: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  OutText('<ENTER> to leave graphics:');
+  Readln;
+  RestoreCrtMode;
+  Writeln('Now in text mode');
+  Write('<ENTER> to enter graphics mode:');
+  Readln;
+  SetGraphMode(GetGraphMode);
+  OutTextXY(0, 0, 'Back in graphics mode');
+  OutTextXY(0, TextHeight('H'), '<ENTER> to quit:');
+  Readln;
+  CloseGraph;
+ end.
+
+ Sector (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Draws and fills an elliptical sector.
+
+ Declaration:
+ procedure Sector(x, y: Integer; StAngle,EndAngle, XRadius, YRadius: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Using (X, Y) as the center point, XRadius and
+YRadius specify the horizontal and vertical
+radii, respectively; Sector draws from StAngle
+to EndAngle, outlined in the current color and
+filled with the pattern and color defined by
+SetFillStyle or SetFillPattern.
+
+A start angle of 0 and an end angle of 360
+will draw and fill a complete ellipse. The
+angles for Arc, Ellipse, FillEllipse,
+PieSlice, and Sector are counter-clock-wise
+with 0 degrees at 3 o'clock, 90 degrees at 12
+o'clock, and so on.
+
+If an error occurs while filling the sector,
+GraphResult returns a value of grNoScanMem.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Arc
+ Circle
+ Ellipse
+ GetArcCoords
+ GetAspectRatio
+ PieSlice
+ SetFillPattern
+ SetFillStyle
+ SetGraphBufSize
+
+ Sample Code:
+
+ {Sector.PAS}
+
+ {Sample code for the Sector procedure.}
+
+ uses Graph;
+
+ const R = 50;
+ var
+  Driver, Mode: Integer;
+  Xasp, Yasp: Word;
+ begin
+  Driver := Detect;{ Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult < 0 then
+    Halt(1);
+  Sector(GetMaxX div 2, GetMaxY div 2, 0, 45, R, R);
+  GetAspectRatio(Xasp, Yasp);{ Draw circular sector }
+  Sector(GetMaxX div 2, GetMaxY div 2,{ Center point }
+    180, 135,{ Mirror angle above }
+    R, R * Longint(Xasp) div Yasp);{ Circular }
+  Readln;
+  CloseGraph;
+ end.
+
+ SetActivePage (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Set the active page for graphics output.
+
+ Declaration:
+ procedure SetActivePage(Page: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Makes Page the active graphics page, directing
+all subsequent graphics output to Page.
+
+Multiple pages are only supported by the EGA
+(256K), VGA, and Hercules graphics cards. With
+multiple graphics pages, a program can direct
+graphics output to an offscreen page, then
+quickly display the offscreen image by
+changing the visual page with the
+SetVisualPage procedure. This technique is
+especially useful for animation.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ SetVisualPage
+
+ Sample Code:
+
+ {Setactpg.PAS}
+
+ {Sample code for the SetActivePage procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  if (Gd = HercMono) or (Gd = EGA) or (Gd = EGA64) or (Gd = VGA) then
+  begin
+    SetVisualPage(0);
+    SetActivePage(1);
+    Rectangle(10, 20, 30, 40);
+    SetVisualPage(1);
+  end
+  else
+    OutText('No paging supported.');
+  Readln;
+  CloseGraph;
+ end.
+
+ SetAllPalette (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Changes all palette colors as specified.
+
+ Declaration:
+ procedure SetAllPalette(var Palette);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Must be in graphics mode, and can only be used
+with EGA, EGA 64, or VGA (not the IBM 8514 or
+the VGA in 256-color mode).
+
+ See Also:
+ GetBkColor
+ GetColor
+ GetPalette
+ GraphResult
+ SetBkColor
+ SetColor
+ SetPalette
+
+ Sample Code:
+
+ {Setallpl.PAS}
+
+ {Sample code for the SetAllPalette procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Palette: PaletteType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Line(0, 0, GetMaxX, GetMaxY);
+  with Palette do
+  begin
+    Size := 4;
+    Colors[0] := 5;
+    Colors[1] := 3;
+    Colors[2] := 1;
+    Colors[3] := 2;
+    SetAllPalette(Palette);
+  end;
+  Readln;
+  CloseGraph;
+ end.
+
+ SetAspectRatio (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Changes the default aspect-ratio correction
+factor.
+
+ Declaration:
+ function SetAspectRatio(Xasp, Yasp: Word): Word;
+
+ Target:
+Real, Protected
+
+ Remarks:
+SetAspectRatio is used to change the default
+aspect ratio of the current graphics mode. The
+aspect ratio is used to draw circles. If
+circles appear elliptical, the monitor is not
+aligned properly. This can be corrected in the
+hardware by realigning the monitor, or can be
+corrected in the software by changing the
+aspect ratio using SetAspectRatio. To read the
+current aspect ratio from the system, use
+GetAspectRatio.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetAspectRatio
+
+ Sample Code:
+
+ {Setasprt.PAS}
+
+ {Sample code for the SetAspectRatio procedure.}
+
+ uses Crt, Graph;
+
+ const R = 50;
+ var
+  Driver, Mode: Integer;
+  Xasp, Yasp: Word;
+ begin
+  DirectVideo := False;
+  Driver := Detect;   { Put in graphics mode }
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult < 0 then
+    Halt(1);
+  GetAspectRatio(Xasp, Yasp);   { Get default aspect ratio }
+  if Xasp = Yasp then
+  { Adjust for VGA and 8514. They have 1:1 aspect }
+    Yasp := 5 * Xasp;
+  while (Xasp < Yasp) and not KeyPressed do
+  { Keep modifying aspect ratio until 1:1 or key is pressed }
+  begin
+    SetAspectRatio(Xasp, Yasp);
+    Circle(GetMaxX div 2, GetMaxY div 2, R);
+    Inc(Xasp, 20);
+  end;
+  SetTextJustify(CenterText, CenterText);
+  OutTextXY(GetMaxX div 2, GetMaxY div 2, 'Done!');
+  Readln;
+  CloseGraph;
+ end.
+
+ SetBkColor (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets the current background color, using the
+palette.
+
+ Declaration:
+ procedure SetBkColor(ColorNum: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Background colors range from 0 to 15,
+depending on the current graphics driver and
+current graphics mode. On a CGA, SetBkColor
+sets the flood overscan color.
+
+SetBkColor(N) makes the Nth color in the
+palette the new background color. The only
+exception is SetBkColor(0), which always sets
+the background color to black.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetBkColor
+ GetColor
+ GetPalette
+ SetAllPalette
+ SetColor
+ SetPalette
+
+ Sample Code:
+
+ {Setbkcol.PAS}
+
+ {Sample code for the SetBkColor procedure.}
+
+ uses Crt, Graph;
+
+ var
+  GraphDriver, GraphMode: Integer;
+  Palette: PaletteType;
+ begin
+  GraphDriver := Detect;
+  InitGraph(GraphDriver, GraphMode,' ');
+  Randomize;
+  if GraphResult <> grOk then
+    Halt(1);
+  GetPalette(Palette);
+  repeat
+    if Palette.Size <> 1 then
+      SetBkColor(Random(Palette.Size));
+    LineTo(Random(GetMaxX),Random(GetMaxY));
+  until KeyPressed;
+  CloseGraph;
+ end.
+
+ SetColor (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets the current drawing color, using the
+palette.
+
+ Declaration:
+ procedure SetColor(Color: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+SetColor(5) makes the fifth color in the
+palette the current drawing color. Drawing
+colors can range from 0 to 15, depending on
+the current graphics driver and current
+graphics mode.
+
+GetMaxColor returns the highest valid color
+for the current driver and mode.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ DrawPoly
+ GetBkColor
+ GetColor
+ GetPalette
+ SetAllPalette
+ SetBkColor
+ SetPalette
+
+ Sample Code:
+
+ {Getmxcol.PAS}
+
+ {Sample code for the GetMaxColor, SetColor functions.}
+
+ uses
+  Crt, Graph;
+ var
+  GraphDriver, GraphMode : Integer;
+ begin
+  GraphDriver := Detect;
+  InitGraph(GraphDriver, GraphMode, ' ');
+  if GraphResult <> grOk then Halt(1);
+  Randomize;
+  repeat
+    SetColor(Random(GetMaxColor)+1);
+    LineTo(Random(GetMaxX),
+           Random(GetMaxY));
+  until KeyPressed;
+ end.
+
+ SetFillPattern (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Selects a user-defined fill pattern.
+
+ Declaration:
+ procedure SetFillPattern(Pattern: FillPatternType; Color: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+FillPatternType is predefined as follows:
+
+ type
+    FillPatternType = array[1..8] of byte;
+
+ See Also:
+ Bar
+ Bar3D
+ FillPoly
+ GetFillPattern
+ GetFillSettings
+ GraphResult
+ PieSlice
+
+ Sample Code:
+
+  {GetFPatt.PAS}
+
+ { Example for GetFillPattern and
+   SetFillPattern }
+
+ uses Graph;
+ const
+   Gray50 : FillPatternType = ($AA, $55, $AA,
+     $55, $AA, $55, $AA, $55);
+ var
+   Gd, Gm : Integer;
+   OldPattern : FillPatternType;
+ begin
+   Gd := Detect; InitGraph(Gd, Gm, ' ');
+   if GraphResult <> grOk then Halt(1);
+   GetFillPattern(OldPattern);
+   SetFillPattern(Gray50, White);
+
+
+   { Draw bar 50% gray }
+   Bar(0, 0, 100, 100);
+   ReadLn;
+   SetFillPattern(OldPattern,White);
+   { Draw bar with old pattern }
+   { (normally filled with $FF }
+   { on startup)               }
+   Bar(0, 0, 100, 100);
+   ReadLn;
+   CloseGraph;
+ end.
+
+ SetFillStyle (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets the fill pattern and color.
+
+ Declaration:
+ procedure SetFillStyle(Pattern: Word; Color: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Sets the pattern and color for all filling
+done by FillPoly, Bar, Bar3D, and PieSlice. A
+variety of fill patterns are available. The
+default pattern is solid, and the default
+color is the maximum color in the palette. If
+invalid input is passed to SetFillStyle,
+GraphResult returns a value of grError, and
+the current fill settings will be unchanged.
+If Pattern equals UserFill, the user-defined
+pattern (set by a call to SetFillPattern)
+becomes the active pattern.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ Bar
+ Bar3D
+ FillPoly
+ GetFillSettings
+ PieSlice
+ SetFillPattern
+
+ Sample Code:
+
+ {Getfsets.PAS}
+
+ {Sample code for the GetFillSettings procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  FillInfo: FillSettingsType;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  GetFillSettings(FillInfo);   { Save fill style and color }
+  Bar(0, 0, 50, 50);
+  SetFillStyle(XHatchFill, GetMaxColor);   { New style }
+  Bar(50, 0, 100, 50);
+  with FillInfo do
+    SetFillStyle(Pattern, Color);   { Restore old fill style }
+  Bar(100, 0, 150, 50);
+  Readln;
+  CloseGraph;
+ end.
+
+ SetGraphBufSize (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Changes the default graphics buffer size used
+for scan and flood fills.
+
+ Declaration:
+ procedure SetGraphBufSize(BufSize: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+The internal buffer size is set to BufSize,
+and a buffer is allocated on the heap when a
+call is made to InitGraph.
+
+ Sample Code:
+
+   {Setgbfsz.PAS}
+
+ {Sample code for the SetGraphBufSize procedure.}
+
+ uses
+  Graph;
+ const
+  BigPoly : array[1..700] of PointType =
+   ((x:  50; y: 100),
+    (x: 100; y: 100),
+       { Add 698 more points here } );
+ var
+  Gd, Gm : Integer;
+ begin
+  { Allocate 8K of buffer space so we
+    can fill a 700-vertex polygon }
+  SetGraphBufSize(8*1024);
+  Gd := Detect; InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then Halt(1);
+  FillPoly(SizeOf(BigPoly) div
+            SizeOf(PointType), BigPoly);
+  ReadLn;
+  CloseGraph;
+ end.
+
+ SetGraphMode (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets the system to graphics mode and clears
+the screen.
+
+ Declaration:
+ procedure SetGraphMode(Mode: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Mode must be a valid mode for the current
+device driver. SetGraphMode is used to select
+a graphics mode different than the default one
+set by InitGraph.
+
+SetGraphMode can also be used in conjunction
+with RestoreCrtMode to switch back and forth
+between text and graphics modes.
+
+SetGraphMode resets all graphics settings to
+their defaults (current pointer, palette,
+color, viewport, and so on).
+
+GetModeRange returns the lowest and highest
+valid modes for the current driver.
+
+If an attempt is made to select an invalid
+mode for the current device driver,
+GraphResult returns a value of grInvalidMode.
+
+ Restrictions:
+A successful call to InitGraph must have been
+made before calling this routine.
+
+ See Also:
+ ClearDevice
+ CloseGraph
+ DetectGraph
+ GetGraphMode
+ GraphResult
+ InitGraph
+ RestoreCrtMode
+
+ Sample Code:
+
+ {GetMdRng.PAS}
+
+ {Sample code for the GetModeRange procedure.}
+
+ uses Graph;
+
+ var Lowest, Highest: Integer;
+ begin
+  GetModeRange(EGA64, Lowest, Highest);
+  Write('Lowest = ', Lowest);
+  Write(' Highest = ', Highest);
+ end.
+
+ SetLineStyle (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets the current line width and style.
+
+ Declaration:
+ procedure SetLineStyle(LineStyle: Word; Pattern: Word; Thickness: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Affects all lines drawn by Line, LineTo,
+Rectangle, DrawPoly, Arc, and so on.
+
+Lines can be drawn solid, dotted, centerline,
+or dashed. If invalid input is passed to
+SetLineStyle, GraphResult returns a value of
+grError, and the current line settings will be
+unchanged. See Line style constants for a list
+of constants used to determine line styles.
+
+LineStyle is a value from SolidLn to
+UserBitLn(0..4), Pattern is ignored unless
+LineStyle equals UserBitLn, and Thickness is
+NormWidth or ThickWidth. When LineStyle equals
+UserBitLn, the line is output using the 16-bit
+pattern defined by the Pattern parameter. For
+example, if Pattern = $AAAA, then the 16-bit
+pattern looks like this:
+
+  1010101010101010         _{ NormWidth }
+  1010101010101010         _{ ThickWidth }
+  1010101010101010
+  1010101010101010
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ DrawPoly
+ GraphResult
+ Line
+ LineRel
+ LineTo
+ GraphResult
+ SetWriteMode
+ Line style constants
+
+ Sample Code:
+
+  {Setlnstl.PAS}
+
+ {Sample code for the SetLineStyle procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  X1, Y1, X2, Y2: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  X1 := 10;
+  Y1 := 10;
+  X2 := 200;
+  Y2 := 150;
+  SetLineStyle(DottedLn, 0, NormWidth);
+  Rectangle(X1, Y1, X2, Y2);
+  SetLineStyle(UserBitLn, $C3, ThickWidth);
+  Rectangle(Pred(X1), Pred(Y1), Succ(X2), Succ(Y2));
+  Readln;
+  CloseGraph;
+ end.
+
+ SetPalette (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Changes one palette color as specified by
+ColorNum and Color.
+
+ Declaration:
+ procedure SetPalette(ColorNum: Word; Color: Shortint);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Changes the ColorNum entry in the palette to
+Color. SetPalette(0, LightCyan) makes the
+first color in the palette light cyan.
+ColorNum can range from 0 to 15, depending on
+the current graphics driver and current
+graphics mode. If invalid input is passed to
+SetPalette, GraphResult returns a value of
+grError, and the palette remains unchanged.
+
+Changes made to the palette are seen
+immediately onscreen. In the example here,
+several lines are drawn onscreen, then the
+palette is changed randomly. Each time a
+palette color is changed, all onscreen
+occurrences of that color will be changed to
+the new color value. See Color constants for a
+list of defined color constants.
+
+ Restrictions:
+Must be in graphics mode, and can be used only
+with EGA, EGA 64, or VGA (not the IBM 8514).
+
+ See Also:
+ GetBkColor
+ GetColor
+ GetPalette
+ GraphResult
+ SetAllPalette
+ SetBkColor
+ SetColor
+ SetRGBPalette
+
+ Sample Code:
+
+ {Setplt.PAS}
+
+ {Sample code for the SetPalette procedure.}
+
+ uses Crt, Graph;
+
+ var
+  GraphDriver, GraphMode: Integer;
+  Color: Word;
+  Palette: PaletteType;
+ begin
+  GraphDriver := Detect;
+  InitGraph(GraphDriver, GraphMode, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  GetPalette(Palette);
+  if Palette.Size <> 1 then
+  begin
+    for Color := 0 to Pred(Palette.Size) do
+    begin
+      SetColor(Color);
+      Line(0, Color * 5, 100, Color * 5);
+    end;
+    Randomize;
+    repeat
+      SetPalette(Random(Palette.Size),Random(Palette.Size));
+    until KeyPressed;
+  end
+  else
+    Line(0, 0, 100, 0);
+  Readln;
+  CloseGraph;
+ end.
+
+ SetRGBPalette (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Modifies palette entries for the IBM 8514 and
+VGA drivers.
+
+ Declaration:
+ procedure SetRGBPalette(ColorNum, RedValue, GreenValue, BlueValue:
+    Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+ColorNum defines the palette entry to be
+loaded, while RedValue, GreenValue, and
+BlueValue define the component colors of the
+palette entry.
+
+For the IBM 8514 display, ColorNum is in the
+range 0..255. For VGA, ColorNum is in the
+range 0..15. Only the lower byte of RedValue,
+GreenValue or BlueValue is used, and out of
+this byte, only the 6 most-significant bits
+are loaded in the palette.
+
+ Restrictions:
+SetRGBPalette can be used only with the IBM
+8514 driver and the VGA.
+
+ See Also:
+ GetBkColor
+ GetColor
+ GetPalette
+ GraphResult
+ SetAllPalette
+ SetBkColor
+ SetColor
+ SetPalette
+
+ Sample Code:
+ Setrgbpl.PAS
+
+ SetTextJustify (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets text justification values used by OutText
+and OutTextXY.
+
+ Declaration:
+ procedure SetTextJustify(Horiz, Vert: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Text output after a SetTextJustify will be
+justified around the current pointer in the
+manner specified. Given the following,
+
+  SetTextJustify(CenterText, CenterText);
+  OutTextXY(100, 100, 'ABC');
+
+the point (100, 100) will appear in the middle
+of the letter B. The default justification
+settings can be restored by
+SetTextJustify(LeftText, TopText). If invalid
+input is passed to SetTextJustify, GraphResult
+returns a value of grError, and the current
+text justification settings will be unchanged.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ GetTextSettings
+ GraphResult
+ OutText
+ OutTextXY
+ SetLineStyle
+ TextHeight
+ TextWidth
+ Justification constants
+
+ Sample Code:
+
+  {Settxtjs.PAS}
+
+ {Sample code for the SetTextJustify procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  { Center text onscreen }
+  SetTextJustify(CenterText, CenterText);
+  OutTextXY( Succ(GetMaxX) div 2, Succ(GetMaxY) div 2, 'Easily Centered');
+  Readln;
+  CloseGraph;
+ end.
+
+ SetTextStyle (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets style for text output in graphics mode.
+
+ Declaration:
+ procedure SetTextStyle(Font, Direction: Word; CharSize: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Sets the current text font, style, and
+character magnification factor
+
+ See Also:
+ GetTextSettings
+ GraphResult
+ OutText
+ OutTextXY
+ SetTextJustify
+ SetUserCharSize
+ TextHeight
+ TextWidth
+ Text-style constants
+
+ Sample Code:
+
+ {Settxtst.PAS}
+
+ {Sample code for the SetTextStyle procedure.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Y, Size: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Y := 0;
+  for Size := 1 to 4 do
+  begin
+    SetTextStyle(DefaultFont, HorizDir, Size);
+    OutTextXY(0, Y, 'Size = ' + Chr(Size + 48));
+    Inc(Y, TextHeight('H') + 1);
+  end;
+  Readln;
+  CloseGraph;
+ end.
+
+ SetUserCharSize (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Varies the character width and height for
+stroked fonts.
+
+ Declaration:
+ procedure SetUserCharSize(MultX, DivX, MultY, DivY: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+MultX:DivX is the ratio multiplied by the
+normal width for the active font; MultY:DivY
+is the ratio multiplied by the normal height
+for the active font.
+
+To make the text twice as wide, for example,
+use a MultX value of 2, and set DivX equal to
+1 (2 div 1 = 2). Calling SetUserCharSize sets
+the current character size to the specified
+values.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ OutText
+ OutTextXY
+ SetTextStyle
+ TextHeight
+ TextWidth
+
+ Sample Code:
+
+ {Setuchsz.PAS}
+
+ {Sample code for the SetUserCharSize procedure.}
+
+ {This program shows how to change the height and width of text:}
+
+ uses Graph;
+
+ var Driver, Mode: Integer;
+ begin
+  Driver := Detect;
+  InitGraph(Driver, Mode, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  { Showoff }
+  SetTextStyle(TriplexFont, HorizDir, 4);
+  OutText('Norm');
+  SetUserCharSize(1, 3, 1, 1);
+  OutText('Short ');
+  SetUserCharSize(3, 1, 1, 1);
+  OutText('Wide');
+  Readln;
+  CloseGraph;
+ end.
+
+ SetViewPort (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets the current output viewport or window for
+graphics output
+
+ Declaration:
+ procedure SetViewPort(x1, y1, x2, y2: Integer; Clip: Boolean);
+
+ Target:
+Real, Protected
+
+ Remarks:
+(X1, Y1) define the upper left corner of the
+viewport, and (X2, Y2) define the lower right
+corner (0 <= X1 < X2 and 0 <= Y1 < Y2). The
+upper left corner of a viewport is (0, 0).
+
+The Boolean parameter Clip determines whether
+drawings are clipped at the current viewport
+boundaries. SetViewPort(0, 0, GetMaxX,
+GetMaxY, True) always sets the viewport to the
+entire graphics screen. If invalid input is
+passed to SetViewPort, GraphResult returns
+grError, and the current view settings will be
+unchanged.
+
+All graphics commands (for example, GetX,
+OutText, Rectangle, MoveTo, and so on) are
+viewport-relative. In the following example,
+the coordinates of the dot in the middle are
+relative to the boundaries of the viewport.
+
+If the Boolean parameter Clip is set to True
+when a call to SetViewPort is made, all
+drawings will be clipped to the current
+viewport. Note that the current pointer is
+never clipped. The following will not draw the
+complete line requested because the line will
+be clipped to the current viewport:
+
+  SetViewPort(10, 10, 20, 20, ClipOn);
+  Line(0, 5, 15, 5);
+
+The line would start at absolute coordinates
+(10,15) and terminate at absolute coordinates
+(25, 15) if no clipping was performed. But
+because clipping was performed, the actual
+line that would be drawn would start at
+absolute coordinates (10, 15) and terminate at
+coordinates (20, 15).
+
+InitGraph, GraphDefaults, and SetGraphMode all
+reset the viewport to the entire graphics
+screen. The current viewport settings are
+available by calling the procedure
+GetViewSettings, which accepts a parameter of
+ViewPortType.
+
+SetViewPort moves the current pointer to (0,
+0).
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ ClearViewPort
+ GetViewSettings
+ GraphResult
+ Clipping Constants
+
+ Sample Code:
+
+  {SetVwPrt.PAS}
+
+ {Sample code for the SetViewPort procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  if (Gd = HercMono) or (Gd = EGA) or (Gd = EGA64) or (Gd = VGA) then
+  begin
+    SetVisualPage(0);
+    SetActivePage(1);
+    Rectangle(10, 20, 30, 40);
+    SetVisualPage(1);
+  end
+  else
+    OutText('No paging supported.');
+  Readln;
+  CloseGraph;
+ end.
+
+ SetVisualPage (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets the visual graphics page number.
+
+ Declaration:
+ procedure SetVisualPage(Page: Word);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Makes Page the visual graphics page.
+
+Multiple pages are only supported by the EGA
+(256K), VGA, and Hercules graphics cards. With
+multiple graphics pages, a program can direct
+graphics output to an offscreen page, then
+quickly display the offscreen image by
+changing the visual page with the
+SetVisualPage procedure. This technique is
+especially useful for animation.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ SetActivePage
+
+ Sample Code:
+
+ {Setactpg.PAS}
+
+ {Sample code for the SetActivePage procedure.}
+
+ uses Graph;
+
+ var Gd, Gm: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  if (Gd = HercMono) or (Gd = EGA) or (Gd = EGA64) or (Gd = VGA) then
+  begin
+    SetVisualPage(0);
+    SetActivePage(1);
+    Rectangle(10, 20, 30, 40);
+    SetVisualPage(1);
+  end
+  else
+    OutText('No paging supported.');
+  Readln;
+  CloseGraph;
+ end.
+
+ SetWriteMode (procedure)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Sets the writing mode for line drawing.
+
+ Declaration:
+ procedure SetWriteMode(WriteMode: Integer);
+
+ Target:
+Real, Protected
+
+ Remarks:
+Each binary operation constant corresponds to
+a binary operation between each byte in the
+line and the corresponding bytes on the
+screen. CopyPut uses the assembly language MOV
+instruction, overwriting with the line
+whatever is on the screen. XORPut uses the XOR
+command to combine the line with the screen.
+Two successive XOR commands will erase the
+line and restore the screen to its original
+appearance.
+
+SetWriteMode affects calls to the following
+routines only: DrawPoly, Line, LineRel,
+LineTo, and Rectangle .
+
+ See Also:
+ Line
+ LineTo
+
+ Sample Code:
+
+ {Setwrtmd.PAS}
+
+ {Sample code for the SetWriteMode procedure.}
+
+ uses Crt, Graph;
+
+ var
+  Driver, Mode, I: Integer;
+  X1, Y1, Dx, Dy: Integer;
+  FillInfo: FillSettingsType;
+ begin
+  DirectVideo := False;    { Turn off screen write }
+  Randomize;
+  Driver := Detect;     { Put in graphics mode }
+  InitGraph(Driver, Mode, ' ' );
+  if GraphResult < 0 then
+    Halt(1);
+  { Fill screen with background pattern }
+  GetFillSettings(FillInfo);    { Get current settings }
+  SetFillStyle(WideDotFill, FillInfo.Color);
+  Bar(0, 0, GetMaxX, GetMaxY);
+  Dx := GetMaxX div 4;    { Determine rectangle's dimensions }
+  Dy := GetMaxY div 4;
+  SetLineStyle(SolidLn, 0, ThickWidth);
+  SetWriteMode(XORPut);        { XOR mode for rectangle }
+  repeat                       { Draw until a key is pressed }
+    X1 := Random(GetMaxX - Dx);
+    Y1 := Random(GetMaxY - Dy);
+    Rectangle(X1, Y1, X1 + Dx, Y1 + Dy);   { Draw it }
+    Delay(10);                             { Pause briefly }
+    Rectangle(X1, Y1, X1 + Dx, Y1 + Dy);   { Erase it }
+  until KeyPressed;
+  Readln;
+  CloseGraph;
+ end.
+
+ TextHeight (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the height of a string, in pixels.
+
+ Declaration:
+ function TextHeight(TextString: string): Word;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Takes the current font size and multiplication
+factor, and determines the height of
+TextString in pixels. This is useful for
+adjusting the spacing between lines, computing
+viewport heights, sizing a title to make it
+fit on a graph or in a box, and more.
+
+For example, with the 8x8 bit-mapped font and
+a multiplication factor of 1 (set by
+SetTextStyle), the string Turbo is 8 pixels
+high.
+
+It is important to use TextHeight to compute
+the height of strings, instead of doing the
+computation manually. In that way, no source
+code modifications have to be made when
+different fonts are selected.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ OutText
+ OutTextXY
+ SetTextStyle
+ TextWidth
+
+ Sample Code:
+
+ {Txthght.PAS}
+
+ {Sample code for the TextHeight function.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Y, Size: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Y := 0;
+  for Size := 1 to 5 do
+  begin
+    SetTextStyle(DefaultFont, HorizDir, Size);
+    OutTextXY(0, Y, 'Turbo Graphics');
+    Inc(Y, TextHeight('Turbo Graphics'));
+  end;
+  Readln;
+  CloseGraph;
+ end.
+
+ TextWidth (function)     (Graph unit)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+Returns the width of a string in pixels.
+
+ Declaration:
+ function TextWidth(TextString: string): Word;
+
+ Target:
+Real, Protected
+
+ Remarks:
+Takes the string length, current font size,
+and multiplication factor, and determines the
+width of TextString in pixels. This is useful
+for computing view-port widths, sizing a title
+to make it fit on a graph or in a box, and so
+on.
+
+For example, with the 8x8 bit-mapped font and
+a multiplication factor of 1 (set by
+SetTextStyle), the string Turbo is 40 pixels
+wide.
+
+It is important to use TextWidth to compute
+the width of strings, instead of doing the
+computation manually. In that way, no source
+code modifications have to be made when
+different fonts are selected.
+
+ Restrictions:
+Must be in graphics mode.
+
+ See Also:
+ OutText
+ OutTextXY
+ SetTextStyle
+ TextHeight
+
+ Sample Code:
+
+ {Txtwidth.PAS}
+
+ {Sample code for the TextWidth function.}
+
+ uses Graph;
+
+ var
+  Gd, Gm: Integer;
+  Row: Integer;
+  Title: String;
+  Size: Integer;
+ begin
+  Gd := Detect;
+  InitGraph(Gd, Gm, ' ');
+  if GraphResult <> grOk then
+    Halt(1);
+  Row := 0;
+  Title := 'Turbo Graphics';
+  Size := 1;
+  while TextWidth(Title) < GetMaxX do
+  begin
+    OutTextXY(0, Row, Title);
+    Inc(Row, TextHeight('M'));
+    Inc(Size);
+    SetTextStyle(DefaultFont, HorizDir, Size);
+  end;
+  Readln;
+  CloseGraph;
+ end.
+

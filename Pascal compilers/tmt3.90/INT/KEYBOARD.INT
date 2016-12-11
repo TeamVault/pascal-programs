@@ -1,0 +1,53 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal 3.0 Runtime Library                         *)
+(*       Advanced Keyboard Unit                                 *)
+(*                                                              *)
+(*       Copyright (c) 1995,99 TMT Development Corporation      *)
+(*       Author:  Vadim Bodrov                                  *)
+(*                                                              *)
+(****************************************************************)
+
+{$i-,r-,a+,oa+,p+,t-,x+,b-,cc+,q-,v+,s-,w-}
+
+unit Keyboard;
+
+interface
+
+const
+  ESC_Scan:     Byte = $01;      Ent_Scan:     Byte = $1c;
+  Back_Scan:    Byte = $0e;      Rsh_Scan:     Byte = $36;
+  Ctrl_Scan:    Byte = $1d;      Prt_Scan:     Byte = $37;
+  Lsh_Scan:     Byte = $2a;      Alt_Scan:     Byte = $38;
+  Caps_Scan:    Byte = $3a;      Home_Scan:    Byte = $47;
+  F1_Scan:      Byte = $3b;      Up_Scan:      Byte = $48;
+  F2_Scan:      Byte = $3c;      PgUp_Scan:    Byte = $49;
+  F3_Scan:      Byte = $3d;      Min_Scan:     Byte = $4a;
+  F4_Scan:      Byte = $3e;      Left_Scan:    Byte = $4b;
+  F5_Scan:      Byte = $3f;      Mid_Scan:     Byte = $4c;
+  F6_Scan:      Byte = $40;      Right_Scan:   Byte = $4d;
+  F7_Scan:      Byte = $41;      Plus_Scan:    Byte = $4e;
+  F8_Scan:      Byte = $42;      End_Scan:     Byte = $4f;
+  F9_Scan:      Byte = $43;      Down_Scan:    Byte = $50;
+  F10_Scan:     Byte = $44;      PgDn_Scan:    Byte = $51;
+  F11_Scan:     Byte = $d9;      Ins_Scan:     Byte = $52;
+  F12_Scan:     Byte = $da;      Del_Scan:     Byte = $53;
+  Scrl_Scan:    Byte = $46;      Num_Scan:     Byte = $45;
+  Tab_Scan:     Byte = $0f;      Space_Scan:   Byte = $39;
+
+function  ScanToAscii(ScanCode: Byte): Char;
+function  AsciiToScan(AsciiChar: Char): Byte;
+procedure FlushKeyboard;
+function  GetKey: Word;
+procedure ReadKeyScan(var Key: Char; var ScanCode: Byte);
+function  TestCapsLock: Boolean;
+function  TestNumLock: Boolean;
+function  TestScrollLock: Boolean;
+function  TestShift: Boolean;
+function  TestCtrl: Boolean;
+function  TestAlt: Boolean;
+procedure MultiKeysInit;
+procedure MultiKeysDone;
+function  TestKey(Scan: Byte): Boolean;
+
+implementation

@@ -1,0 +1,182 @@
+                       TExpress Version 2.5
+
+
+Renate Schaaf
+PO Box 186
+Providence, UT 84332
+
+Internet: renates@xmission.com   schaaf@math.usu.edu
+CompuServe: 71031,2774
+
+TExpress is a component that I wrote for my own purposes as one
+of the backbones for interactive math applications. 
+It is a component wrapper for an expression evaluator that I have worked 
+on (and (mainly) off) over the last 9 years, originally written in 
+Turbo Pascal. I just wanted to have something like this, and I needed
+it to be fast, so I wrote it. The code is still nothing like a pro would
+write, tho, but I'm proud of it.
+
+You can still easily convert it to be used with TP6 or 7 by just using
+the object OParse defined in pars.pas.
+
+*What is does
+
+It evaluates expressions for functions depending on up to three
+variables and up to 6 parameters, but it is a bit unusual.
+
+Instead of doing a recursive descent on the expression each time for
+evaluation, this evaluator only does it once, at that time quasi
+compiling the function into memory.
+
+This is what you'd like in case you want to use the function for some
+time critical things, like iterations or any serious numerics.
+
+It still usually is not as fast as a compiled function (factor ~2), 
+but beats any interpreter by miles. To get it still faster I'd have to
+learn Assembler which I don't feel like doing.
+
+
+*Platforms
+
+Works under all Delphi versions. I only got it to work under 32 bit Delphi
+though by turning Huge Strings off in the critical units. So the function
+string cannot be longer than 255 characters. I don't have the time right now
+to look into what exactly is causing this need.
+
+*Usage
+
+You have to register the component before you can use it or the demo. 
+Go to Options.InstallComponent (Delphi 1) or Components.Install (later), 
+select 'Add' and browse to the directory where you have
+these files. Express.pas is the one to install. It registers to the
+Samples part of the component palette, but you can easily change that
+by changing the procedure register.
+Express uses the following support files:
+build.pas
+pars.pas
+parsglb.pas
+syndlg.pas
+syndlg.dfm
+Those should reside in the same directory as express.pas.
+
+After you have installed the component, drop it on a form. In the object
+inspector, pick the variable and parameter names. Adjust the text for
+syntax help. You can then assign a user input string to 
+MyExpress.expression. If no exception occurs (i.e. the syntax is correct),
+the function can be called as MyExpress.TheFunction. 
+Note: Whenever the input would raise a floating point exception, the 
+      output is plain zero. Easiest way to avoid crashes and to enable
+      split definitions (see syntax help).
+
+All source code is included, basically so you can fix bugs 
+(I'd like to know about, of course) and use debugging. I haven't commented 
+the code too much though, and the logic is such that is throws me each time 
+I haven't looked at it for more than 4 weeks... It was the first serious 
+thing I tried in Pascal, and I don't dare to change it now, because it
+does work.
+
+I've used this evaluator very much, and it seems to be quite stable and
+does not leak memory.
+
+If expressions are very long and/or nested deeply, you may need to increase 
+the default stack size. I've tried to avoid all things that blow up the stack, 
+but it still could happen.
+
+*Distribution/Pricing
+
+This component is free for noncommercial and educational use.
+In case you want to use it in a commercial application or as
+a base for an improved commercial component, contact me.
+I do not want this package to be included on Shareware CD-Roms 
+or in web sites for whose access money is charged. But I guess 
+I can hardly prevent it. So if you got the component through 
+any of these sources, the most recent version is always available 
+for free at
+
+http://www.xmission.com/~renates/delphi.html
+
+or at the Delphi forum on Compuserve or at places I decide to upload it
+to. So please, do not upload the package to other places.
+
+***Disclaimer:
+
+*************** 
+This software is to be used as is. The author is not responsible for 
+any damage this software or the lack of its performance might cause.
+****************
+
+***Copyright/License:
+
+******************
+I retain the copyright to this component and its source code.
+The component is not public domain, rather I allow it to be used
+for free in noncommercial or educational applications.
+If you use it in an application or as a basis for
+building an improved component, you have to refer to the source.
+In no case is anybody allowed to sell this component or charge
+money for its distribution.
+******************
+
+
+*Documentation:
+
+The interface of the component 'Express.pas' explains the properties and 
+methods. If you edit the SyntaxText property, you get more help.
+Also, ExpDemo is an application (pretty unfancy) that demonstrates its use.
+
+
+
+*Thanks:
+
+To everybody at the Delphi-Forum, especially the TeamB members who helped me 
+a lot over the years:
+
+Kurt Barthelmess
+Ralph Friedman
+Steve Schafer.
+
+*Pointer
+
+Stefan Hoffmeister and others have developed a parser based on my old one. 
+It has more features, is written more decently, has better exception handling
+and is quite probably faster. 
+I still prefer mine, because I know its intestines...
+Try: 
+
+http://www.econos.de/software/borland/parser10/
+
+
+
+Filelist:
+
+  Express.txt  (this)
+  Express.Pas (Express component)
+  ParsGlb.Pas (Support unit for above)
+  Pars.Pas     (Same)
+  Build.Pas    (Same)   
+  SynDlg.pas   (Same)
+  SynDlg.dfm  (Form file for above)
+  Express.dc1 (Component resource for Delphi 1 rename to express.dcr)
+  Express.dc2 (Component resource for Delphi 2-4 rename to express.dcr)
+  ExpDemo.Dpr (Project file for demo)
+  ExpDem.Pas    (Form-Unit for above)
+  ExpDem.Dfm    (Form-File for above)
+
+*Whats new
+
+2.0 to 2.5:
+  Fixed a typo which returned expressions like -x^2 as invalid. Also made
+  the calling of TheFunction safer. It does compute something even if the
+  expression is invalid, but then something is always 1. (the safest number 
+  I could think of)
+
+  Number expressions should be handled correctly now under any Windows 
+  setting. Previous versions would not understand a ',' as decimal separator.
+  But if you use a different separator from '.' you still have to change the 
+  input fields of the demo accordingly.  
+  
+
+  Have fun,
+
+       Renate
+                              (August 1999)

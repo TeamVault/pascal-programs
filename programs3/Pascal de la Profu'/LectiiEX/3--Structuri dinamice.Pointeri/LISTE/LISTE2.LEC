@@ -1,0 +1,111 @@
+4.3. Specificarea structurii de date lista simplu inlantuita
+
+Structura de date lista simplu inlantuita pe care o prezentam in
+continuare are operatii proprii
+  - structurilor liniare: pozitionare (primul, ultimul, precedentul,
+                          urmatorul), element curent, cautare, traversare
+  - structurilor dinamice: creare, inserare, stergere, eliberare
+
+Specificarea unei structuri de date cuprinde urmatoarele sectiuni:
+  - Elemente: precizeaza informatii despre elementele continute in structura
+  - Structura: precizeaza informatii despre legaturile dintre elemente
+  - Domeniu: precizeaza campurile structurii
+  - Operatii: precizeaza operatiile efectuate asupra structurii
+
+Specificarea unei operatii se face prin:
+    Nume:         numele operatiei
+    Parametri:    parametrii operatiei, numele lor
+    Preconditie:  predicat referitor la datele de intrare
+                  conditiile in care se poate executa operatia
+    Postconditie: predicat referitor la datele de iesire
+                  conditiile pe care le satisfac acestea
+                  legatura dintre datele de intrare si datele de iesire
+
+Specificarea structurii de date lista simplu inlantuita
+
+Elemente:   Toate elementele sunt de acelasi tip, desemnat prin TNod
+            si se numesc noduri. Un nod contine informatie utila, de
+            tipul TInfo
+Structura:  Lista simplu inlantuita are o structura liniara. Exista un
+            nod numit primul si un nod numit ultimul. Fiecare nod (cu
+            exceptia ultimului) contine in el adresa nodului urmator.
+Domeniu:    Lista are doua campuri, Cap si Cursor. Cap refera primul
+            element al sau, iar Cursor refera elementul curent.
+Operatii:
+  Creeaza(L) - creeaza o lista L vida
+    Pre:  True
+    Post: L este vida (L.Cap si L.Cursor nu refera nimic)
+          L.Cap = Nil si L.Cursor = Nil
+
+  Vida(L) - testeaza daca L este vida
+    Pre:  True
+    Post: Vida = True daca L este vida si Vida = False in caz contrar
+
+  Insereaza(L, I) - insereaza in L un nod nou (care contine informatia
+                    utila I), pe pozitia cursorului
+    Pre:  True
+    Post: L.Cap^.Info = I si L.Cursor = L.Cap
+            (daca L.Cursor = Nil)
+          sau daca L.Cursor <> Nil, atunci
+          L.Cursor^.Urm = nodul nou inserat si apoi
+          L.Cursor := nodul nou inserat
+
+  Sterge(L) - sterge din L nodul referit de L.Cursor
+    Pre:  L nu este vida si L.Cursor refera un nod existent in L
+    Post: nodul referit de L.Cursor este sters si
+          nodul din capul listei devine nod curent (este referit de L.Cursor)
+
+  Modifica(L, I) - modifica informatia utila din nodul referit de cursor
+    Pre:  L este nevida
+    Post: informatia utila din nodul referit de cursor are valoarea I
+
+  Extrage(L, I) - extrage informatia utila din nodul referit de cursor
+    Pre:  L este nevida
+    Post: I primeste valoarea informatiei utile din nodul curent
+
+  Elibereaza(L) - sterge din L toate nodurile
+    Pre:  True
+    Post: L este vida
+
+  Cauta(L, I) - cauta in L nodul cu informatia utila I
+    Pre:  True
+    Post: Informatia utila din nodul curent este I si Cauta = True
+            ( daca exista in L un nod cu informatia utila I )
+          sau
+          L.Cursor ramane nemodificat si Cauta = False
+            ( daca nu exista in L un nod cu informatia utila I )
+
+  Primul(L) - pozitioneaza L.Cursor pe primul element din lista
+    Pre:  L este nevida
+    Post: L.Cursor := L.Cap
+
+  Ultimul(L) - pozitioneaza L.Cursor pe ultimul element din lista
+    Pre:  L este nevida
+    Post: L.Cursor refera ultimul element din lista
+
+  Precedentul(L, Esec)
+    Pre:  L este nevida
+    Post: L.Cursor refera nodul precedent lui L.Cursor si Esec = False
+            (daca L.Cursor nu refera primul nod din lista)
+            sau
+          L.Cursor ramane nemodificat si Esec = True
+            (daca nu exista un nod precedent celui curent )
+
+  Urmatorul(L, Esec)
+    Pre:  L este nevida
+    Post: L.Cursor refera nodul urmator lui L.Cursor si Esec = False
+            (daca L.Cursor nu refera ultimul nod din lista)
+            sau
+          L.Cursor ramane nemodificat si Esec = True
+            (daca nu exista un nod urmator celui curent )
+
+  Traverseaza(L)
+    Pre:  True;
+    Post: parcurge toate nodurile listei, incepand de la primul (L.Cap)
+          si pana la ultimul
+          L.Cursor nu se modifica
+
+Exemple:
+  ULsCursD - implementare dinamica
+  ULsCursA - implementare statica (cu tablouri)
+  Programul TLsCurs.PAS - apeleaza oricare dintre unit-uri

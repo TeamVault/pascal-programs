@@ -1,0 +1,331 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal Runtime Library                             *)
+(*       Math Unit v.1.8                                        *)
+(*       Targets: MS-DOS, OS/2, WIN32                           *)
+(*                                                              *)
+(*       Copyright (c) 1995,2000 TMT Development Corporation    *)
+(*       Author: Vadim Bodrov                                   *)
+(*                                                              *)
+(****************************************************************)
+
+{$i-,r-,a+,oa+,p+,t-,x+,b-,cc+,q-,v+,s-,w-}
+
+unit Math;
+
+interface
+
+const
+  MaxDoubleArray: array[0..7] of Byte =
+    ($76, $3B, $77, $30, $D1, $42, $EE, $7F);
+  MinDoubleArray: array[0..7] of Byte =
+    ($01, $00, $00, $00, $00, $00, $00, $00);
+  MaxExtendedArray: array[0..9] of Byte =
+    ($E1, $75, $58, $7F, $ED, $2A, $B1, $EC, $FE, $7F);
+  MinExtendedArray: array[0..9] of Byte =
+    ($64, $91, $8E, $05, $78, $5A, $71, $81, $01, $00);
+
+var
+  MaxDouble:   Double   absolute MaxDoubleArray;
+  MinDouble:   Double   absolute MinDoubleArray;
+  MaxExtended: Extended absolute MaxExtendedArray;
+  MinExtended: Extended absolute MinExtendedArray;
+
+const
+  MinSingle   = 1.5E-45;
+  MaxSingle   = 3.4E+38;
+
+  HalfLnMax   = 3.54863405227661E+0002;
+  Deg2Rad     = 1.74532925199433E-0002;
+  Rad2Deg     = 5.72957795130823E+0001;
+  Grad2Rad    = 1.57079632679490E-0002;
+  Rad2Grad    = 6.36619772367581E+0001;
+  DoublePI    = 6.28318530717959E+0000;
+  e           = 2.71828182845905E+0000;
+
+type
+  TPoly = record
+    Neg, Pos, DNeg, DPos: Extended
+  end;
+
+{$system}
+
+function  %CeilE(Value: Extended): Extended;
+overload  Ceil = %CeilE;
+function  %CeilL(Value: Extended): Longint;
+overload  Ceil = %CeilL;
+function  %FloorE(Value: Extended): Extended;
+overload  Floor = %FloorE;
+function  %FloorL(Value: Extended): Longint;
+overload  Floor = %FloorL;
+function  %SgnE(Value: Extended): Longint;
+overload  Sgn = %SgnE;
+function  %SgnL(Value: LongInt): Longint;
+overload  Sgn = %SgnL;
+function  Ldexp(X: Extended; P: Longint): Extended;
+procedure %FrexpD(X: Extended; var Mantissa: Extended; var Exponent: Longint);
+overload  Frexp = %FrexpD;
+function  %FrexpC(X: Extended; var Exponent: Longint): Extended;
+overload  Frexp = %FrexpC;
+
+function  Fmod(X, Y: Extended): Extended;
+function  %ModfL(X: Extended; var Y: Longint): Extended;
+overload  Modf = %ModfL;
+function  %ModfI(X: Extended; var Y: Integer): Extended;
+overload  Modf = %ModfI;
+function  LRotL(value, shift: DWORD): DWORD;
+function  LRotR(value, shift: DWORD): DWORD;
+function  ChgSign(X: Extended): Extended;
+function  CopySign(X, Y: Extended): Extended;
+
+procedure %PolyXR(const Vector: array of Real; X: Extended; var Poly: TPoly);
+overload  PolyX = %PolyXR;
+procedure %PolyXS(const Vector: array of Single; X: Extended; var Poly: TPoly);
+overload  PolyX = %PolyXS;
+procedure %PolyXD(const Vector: array of Double; X: Extended; var Poly: TPoly);
+overload  PolyX = %PolyXD;
+procedure %PolyXE(const Vector: array of Extended; X: Extended; var Poly: TPoly);
+overload  PolyX = %PolyXE;
+
+{ Angle unit conversion routines }
+function  DegToRad(Degrees: Extended): Extended;
+function  RadToDeg(Radians: Extended): Extended;
+function  GradToRad(Grads: Extended): Extended;
+function  RadToGrad(Radians: Extended): Extended;
+function  CycleToRad(Cycles: Extended): Extended;
+function  RadToCycle(Radians: Extended): Extended;
+
+{ Measure unit conversion routines }
+function  CelsToFahr(Value: Extended): Extended;
+function  FahrToCels(Value: Extended): Extended;
+function  GalToLitre(Value: Extended): Extended;
+function  LitreToGal(Value: Extended): Extended;
+function  InchToCm(Value: Extended): Extended;
+function  CmToInch(Value: Extended): Extended;
+function  LbToKg(Value: Extended): Extended;
+function  KgToLb(Value: Extended): Extended;
+
+{ Trigonometric functions }
+function  Tan(X: Extended): Extended;
+function  Cotan(X: Extended): Extended;
+function  Hypot(X, Y: Extended): Extended;
+function  Csc(X: Extended): Extended;
+function  Sec(X: Extended): Extended;
+function  ArcTan2(Y, X: Extended): Extended;
+function  ArcCos(X: Extended): Extended;
+function  ArcSin(X: Extended): Extended;
+function  ArcCotan(X: Extended): Extended;
+function  ArcSec(X: Extended): Extended;
+function  ArcCsc(X: Extended): Extended;
+
+{ Hyperbolic functions and inverses }
+function  Cosh(X: Extended): Extended;
+function  Sinh(X: Extended): Extended;
+function  Tanh(X: Extended): Extended;
+function  Sech(X: Extended): Extended;
+function  Csch(X: Extended): Extended;
+function  ArcCosh(X: Extended): Extended;
+function  ArcSinh(X: Extended): Extended;
+function  ArcTanh(X: Extended): Extended;
+function  ArcCotanh(X: Extended): Extended;
+function  ArcSech(X: Extended): Extended;
+function  ArcCsch(X: Extended): Extended;
+
+{ Logorithmic functions }
+function  Log10(X: Extended): Extended;
+function  Log2(X: Extended): Extended;
+function  LogN(X, Base: Extended): Extended;
+function  %PowerE(Base, Exponent: Extended): Extended;
+overload  Power = %PowerE;
+function  IntPower(X: Extended; N: Longint): Extended;
+overload  Power = IntPower;
+
+{ Percentage calculation }
+function  Percent(Value1, Value2: Extended): Extended;
+function  DeltaPercent(Value1, Value2: Extended): Extended;
+
+{ Sorting }
+procedure %QuickSortR(var Vector: array of Real; function CompFunc(A, B: Real): Boolean);
+overload  QuickSort = %QuickSortR;
+procedure %QuickSortS(var Vector: array of Single; function CompFunc(A, B: Single): Boolean);
+overload  QuickSort = %QuickSortS;
+procedure %QuickSortD(var Vector: array of Double; function CompFunc(A, B: Double): Boolean);
+overload  QuickSort = %QuickSortD;
+procedure %QuickSortE(var Vector: array of Extended; function CompFunc(A, B: Extended): Boolean);
+overload  QuickSort = %QuickSortE;
+procedure %QuickSortC(var Vector: array of Char; function CompFunc(A, B: Char): Boolean);
+overload  QuickSort = %QuickSortC;
+procedure %QuickSortSS(var Vector: array of String; function CompFunc(A, B: String): Boolean);
+overload  QuickSort = %QuickSortSS;
+procedure %QuickSortL(var Vector: array of Longint; function CompFunc(A, B: Longint): Boolean);
+overload  QuickSort = %QuickSortL;
+
+procedure %BubbleSortSS(var Vector: array of String; function CompFunc(A, B: String): Boolean);
+overload  BubbleSort = %BubbleSortSS;
+procedure %BubbleSortL(var Vector: array of Longint; function CompFunc(A, B: Longint): Boolean);
+overload  BubbleSort = %BubbleSortL;
+procedure %BubbleSortR(var Vector: array of Real; function CompFunc(A, B: Real): Boolean);
+overload  BubbleSort = %BubbleSortR;
+procedure %BubbleSortS(var Vector: array of Single; function CompFunc(A, B: Single): Boolean);
+overload  BubbleSort = %BubbleSortS;
+procedure %BubbleSortD(var Vector: array of Double; function CompFunc(A, B: Double): Boolean);
+overload  BubbleSort = %BubbleSortD;
+procedure %BubbleSortE(var Vector: array of Extended; function CompFunc(A, B: Extended): Boolean);
+overload  BubbleSort = %BubbleSortE;
+procedure %BubbleSortC(var Vector: array of Char; function CompFunc(A, B: Char): Boolean);
+overload  BubbleSort = %BubbleSortC;
+
+procedure %ShakeSortR(var Vector: array of Real; function CompFunc(A, B: Real): Boolean);
+overload  ShakeSort = %ShakeSortR;
+procedure %ShakeSortS(var Vector: array of Single; function CompFunc(A, B: Single): Boolean);
+overload  ShakeSort = %ShakeSortS;
+procedure %ShakeSortD(var Vector: array of Double; function CompFunc(A, B: Double): Boolean);
+overload  ShakeSort = %ShakeSortD;
+procedure %ShakeSortE(var Vector: array of Extended; function CompFunc(A, B: Extended): Boolean);
+overload  ShakeSort = %ShakeSortE;
+procedure %ShakeSortC(var Vector: array of Char; function CompFunc(A, B: Char): Boolean);
+overload  ShakeSort = %ShakeSortC;
+procedure %ShakeSortSS(var Vector: array of String; function CompFunc(A, B: String): Boolean);
+overload  ShakeSort = %ShakeSortSS;
+procedure %ShakeSortL(var Vector: array of Longint; function CompFunc(A, B: Longint): Boolean);
+overload  ShakeSort = %ShakeSortL;
+
+{ Statistic functions }
+function  %MaxE(A, B: Extended): Extended;
+overload  Max = %MaxE;
+function  %MaxL(A, B: Longint): Longint;
+overload  Max = %MaxL;
+
+function  %MinE(A, B: Extended): Extended;
+overload  Min = %MinE;
+function  %MinL(A, B: Longint): Longint;
+overload  Min = %MinL;
+
+function  %MaxValueR(const Vector: array of Real): Real;
+overload  MaxValue = %MaxValueR;
+function  %MaxValueS(const Vector: array of Single): Single;
+overload  MaxValue = %MaxValueS;
+function  %MaxValueD(const Vector: array of Double): Double;
+overload  MaxValue = %MaxValueD;
+function  %MaxValueE(const Vector: array of Extended): Extended;
+overload  MaxValue = %MaxValueE;
+function  MaxIntValue(const Vector: array of Longint): Longint;
+overload  MaxValue = MaxIntValue;
+
+function  %MinValueR(const Vector: array of Real): Real;
+overload  MinValue = %MinValueR;
+function  %MinValueS(const Vector: array of Single): Single;
+overload  MinValue = %MinValueS;
+function  %MinValueD(const Vector: array of Double): Double;
+overload  MinValue = %MinValueD;
+function  %MinValueE(const Vector: array of Extended): Extended;
+overload  MinValue = %MinValueE;
+function  MinIntValue(const Vector: array of Longint): Longint;
+overload  MinValue = MinIntValue;
+
+function  %SumR(const Vector: array of Real): Extended;
+overload  Sum = %SumR;
+function  %SumS(const Vector: array of Single): Extended;
+overload  Sum = %SumS;
+function  %SumD(const Vector: array of Double): Extended;
+overload  Sum = %SumD;
+function  %SumE(const Vector: array of Extended): Extended;
+overload  Sum = %SumE;
+function  SumInt(const Vector: array of Longint): Longint;
+overload  Sum = SumInt;
+
+function  %SumOfSquaresR(const Vector: array of Real): Extended;
+overload  SumOfSquares = %SumOfSquaresR;
+function  %SumOfSquaresS(const Vector: array of Single): Extended;
+overload  SumOfSquares = %SumOfSquaresS;
+function  %SumOfSquaresD(const Vector: array of Double): Extended;
+overload  SumOfSquares = %SumOfSquaresD;
+function  %SumOfSquaresE(const Vector: array of Extended): Extended;
+overload  SumOfSquares = %SumOfSquaresE;
+function  %SumOfSquaresL(const Vector: array of Longint): Longint;
+overload  SumOfSquares = %SumOfSquaresL;
+
+procedure %SumsAndSquaresR(const Vector: array of Real; var Sum, SumOfSquares: Extended);
+overload  SumsAndSquares = %SumsAndSquaresR;
+procedure %SumsAndSquaresS(const Vector: array of Single; var Sum, SumOfSquares: Extended);
+overload  SumsAndSquares = %SumsAndSquaresS;
+procedure %SumsAndSquaresD(const Vector: array of Double; var Sum, SumOfSquares: Extended);
+overload  SumsAndSquares = %SumsAndSquaresD;
+procedure %SumsAndSquaresE(const Vector: array of Extended; var Sum, SumOfSquares: Extended);
+overload  SumsAndSquares = %SumsAndSquaresE;
+procedure %SumsAndSquaresL(const Vector: array of Longint; var Sum, SumOfSquares: Longint);
+overload  SumsAndSquares = %SumsAndSquaresL;
+
+function  %MeanR(const Vector: array of Real): Extended;
+overload  Mean = %MeanR;
+function  %MeanS(const Vector: array of Single): Extended;
+overload  Mean = %MeanS;
+function  %MeanD(const Vector: array of Double): Extended;
+overload  Mean = %MeanD;
+function  %MeanE(const Vector: array of Extended): Extended;
+overload  Mean = %MeanE;
+function  %MeanL(const Vector: array of Longint): Extended;
+overload  Mean = %MeanL;
+
+function  %TotalVarianceR(const Vector: array of Real): Extended;
+overload  TotalVariance = %TotalVarianceR;
+function  %TotalVarianceS(const Vector: array of Single): Extended;
+overload  TotalVariance = %TotalVarianceS;
+function  %TotalVarianceD(const Vector: array of Double): Extended;
+overload  TotalVariance = %TotalVarianceD;
+function  %TotalVarianceE(const Vector: array of Extended): Extended;
+overload  TotalVariance = %TotalVarianceE;
+
+function  %VarianceR(const Vector: array of Real): Extended;
+overload  Variance = %VarianceR;
+function  %VarianceS(const Vector: array of Single): Extended;
+overload  Variance = %VarianceS;
+function  %VarianceD(const Vector: array of Double): Extended;
+overload  Variance = %VarianceD;
+function  %VarianceE(const Vector: array of Extended): Extended;
+overload  Variance = %VarianceE;
+
+function  %PopnVarianceR(const Vector: array of Real): Extended;
+overload  PopnVariance = %PopnVarianceR;
+function  %PopnVarianceS(const Vector: array of Single): Extended;
+overload  PopnVariance = %PopnVarianceS;
+function  %PopnVarianceD(const Vector: array of Double): Extended;
+overload  PopnVariance = %PopnVarianceD;
+function  %PopnVarianceE(const Vector: array of Extended): Extended;
+overload  PopnVariance = %PopnVarianceE;
+
+function  %PopnStdDevR(const Vector: array of Real): Extended;
+overload  PopnStdDev = %PopnStdDevR;
+function  %PopnStdDevS(const Vector: array of Single): Extended;
+overload  PopnStdDev = %PopnStdDevS;
+function  %PopnStdDevD(const Vector: array of Double): Extended;
+overload  PopnStdDev = %PopnStdDevD;
+function  %PopnStdDevE(const Vector: array of Extended): Extended;
+overload  PopnStdDev = %PopnStdDevE;
+
+function  %NormR(const Vector: array of Real): Extended;
+overload  Norm = %NormR;
+function  %NormS(const Vector: array of Single): Extended;
+overload  Norm = %NormS;
+function  %NormD(const Vector: array of Double): Extended;
+overload  Norm = %NormD;
+function  %NormE(const Vector: array of Extended): Extended;
+overload  Norm = %NormE;
+
+function  RandG(Mean, StdDev: Extended): Extended;
+
+{ Business functions }
+function  Sln(InitialValue, Residue: Extended; Time: DWord): Extended;
+function  Syd(InitialValue, Residue: Extended; Period, Time: DWord): Extended;
+function  Cterm(Rate: Extended; FutureValue, PresentValue: Extended): Extended;
+function  Term(Payment: Extended; Rate: Extended; FutureValue: Extended): Extended;
+function  Pmt(Principal: Extended; Rate: Extended; Term: DWord): Extended;
+function  Rate(FutureValue, PresentValue: Extended; Term: DWord): Extended;
+function  Pv(Payment: Extended; Rate: Extended; Term: DWord): Extended;
+function  Npv(Rate: Extended; Series: array of Double): Extended;
+function  Fv(Payment: Extended; Rate: Extended; Term: DWord): Extended;
+
+{ Evaluate procedure }
+procedure Evaluate(Expr: String; var Result: Extended; var ErrCode: Longint);
+
+implementation

@@ -1,0 +1,20 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal 3 Runtime Library                           *)
+(*       Printer Interface Unit                                 *)
+(*                                                              *)
+(*       Copyright (c) 1995,2000 TMT Development Corporation    *)
+(*       Authors: Anton Moscal, Vadim Bodrov                    *)
+(*                                                              *)
+(****************************************************************)
+
+unit Printer;
+
+{$i-,opt+,a+,cc+}
+
+interface
+
+var
+  LST: Text;
+
+implementation

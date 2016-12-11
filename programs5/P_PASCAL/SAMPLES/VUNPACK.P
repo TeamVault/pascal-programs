@@ -1,0 +1,27 @@
+PROCEDURE vunpack(VAR intarray : I_ARRAY;
+	start_index : INTEGER;
+	VAR boolarray : B_ARRAY;
+	lb, ub : INTEGER);
+VAR i, j, end_index, unpack_index : INTEGER;
+BEGIN
+ { intarray IS THE ARRAY TO UNPACK FROM INTEGER BITS }
+ { TO CHAR FORMAT;  boolarray IS THE UNPACKING DESTINATION. }
+ { ACTUAL UPPER ARRAY BOUNDS ARE IGNORED C-STYLE, AND IT IS }
+ { ASSUMED THAT BOUNDS CHECKING HAS BEEN TURNED OFF TO PREVENT }
+ { SPURIOUS 'ERROR' MESSAGES. start_index IS THE BEGINNING }
+ { PACKED ARRAY ADDRESS; lb IS THE LOWER BOUND INDEX OF THE }
+ { UNPACKED DESTINATION ARRAY, AND ub IS THE UPPER BOUND. A }
+ { 16-bit WORD ARCHITECTURE IS ASSUMED FOR THIS VERSION OF }
+ { THE ALGORITHM: }
+ end_index := (ub - lb + 1) * 16 + start_index;
+ { ZERO OUT THE ARRAY PRIOR TO UNPACKING INTO IT: }
+ FOR i := lb TO ub DO boolarray[i] := FALSE;
+ FOR i := start_index TO end_index DO
+  BEGIN
+   unpack_index := i DIV 16 + 1; j := i MOD 16;
+   { 'OR' FOR INTEGERS IS 'LOGICAL OR'; SHL = 'SHIFT LEFT' }
+   IF (intarray[unpack_index] AND (1 SHL (j-1))) <> 0 THEN
+    boolarray[i] := TRUE
+   ELSE boolarray[i] := FALSE
+  END
+END;

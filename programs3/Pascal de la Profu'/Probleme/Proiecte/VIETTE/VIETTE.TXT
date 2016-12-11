@@ -1,0 +1,20 @@
+Problema Formule Viette
+
+    Se dau radacinile unui polinom de gradul n<=100. S† se calculeze formulele
+Viette pentru polinomul dat.
+
+Intrarea :
+ - datele se citesc dintr-un fisier al carui nume se introduce de la tastatu-
+ra;
+ - pe prima linie a fisierului de intrare se gaseste gradul polinomului, iar
+pe urmatoarea se afla radacinile polinomului.
+
+Iesirea :
+ - formulele Viette se vor scrie intr-un fisier al carui nume va fi introdus de
+la tastatura;
+ - formulele vor fi scrise cƒte una pe linie.
+
+
+
+
+

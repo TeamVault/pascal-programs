@@ -1,0 +1,32 @@
+
+     1        9 program sieve;  
+     2        9 const size=8190;  
+     3        9       loops= 1;  
+     4        9 var  
+     5        9         flags:array[0..size] of boolean;  
+     6     8200         i,prime,k,count,iter:integer;  
+     7     8205 begin  
+     8        3         writeln(loops, ' iterations');  
+     9       16         for iter:=1 to loops do begin  
+    10       24         count:=0;  
+    11       26         for i:=0 to size do  
+    12       34             flags[i]:=true;  
+    13       45         for i:=0 to size do  
+    14       53                 if flags[i] then begin  
+    15       59                         prime:=i+i+3;  
+    16       65                         k:=i+prime;  
+    17       69                         while k<=size do begin  
+    18       73                                 flags[k]:=false;  
+    19       80                                 k:=k+prime  
+    20       81                         end;  
+    21       85                         count:=count+1;  
+    22       89                 end;  
+    23       93        end;  
+    24       97        writeln(count,' primes');  
+    25      108 end. 
+
+
+Output from running sieve.pas:
+
+         1 iterations
+      1899 primes

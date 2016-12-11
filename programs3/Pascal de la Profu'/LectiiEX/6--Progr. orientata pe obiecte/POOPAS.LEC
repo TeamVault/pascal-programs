@@ -1,0 +1,739 @@
+4.2. PROGRAMARE ORIENTATA PE OBIECTE IN TURBO PASCAL
+4.2.1. Clase si obiecte in Turbo Pascal. Terminologie
+4.2.2. Mostenire. Obiecte statice
+4.2.3. Constructori si destructori. Metode statice si virtuale.
+       Legare statica si dinamica. Implementarea obiectelor
+4.2.4. Proiectarea si implementarea metodelor virtuale
+4.2.5. Clase abstracte
+4.2.6. Colectii de obiecte polimorfice
+
+4.2.1. Clase si obiecte in Turbo Pascal. Terminologie
+
+Turbo Pascal (TP) este in acelasi timp un mediu si un limbaj de programare
+puternic tipizat, ce poseda o extensie POO incepand de la versiunea 5.5.
+Fiind un mediu de programare binecunoscut utilizatorilor de PC-uri, Turbo
+Pascal este accesibil incepatorilor si capabil sa ofere suficiente
+instrumente pentru realizarea de aplicatii profesionale. In plus, exista
+un mare numar de carti si articole de specialitate legate de el. Deoarece
+limbajul Pascal este folosit pe scara larga in procesul de invatare a
+programarii calculatoarelor (in scoli si universitati), Turbo Pascal
+cunoaste o mare popularitate in mediile academice, fiind, prin extensia POO,
+un mijloc relativ facil de familiarizare cu conceptele programarii orientate
+pe obiecte. Din punctul de vedere conceptual, extensia POO din Turbo Pascal
+se inspira din limbajele C++ si Object Pascal.
+
+La prima vedere, ar putea apare o confuzie in notatii. In TP, o clasa este
+de tipul predefinit 'object' si se defineste (in versiunea 5.5) cu ajutorul
+mecanismului 'type' (propriu limbajului Pascal), in forma:
+
+     type nume_clasa = object[(nume_superclasa)]
+       declaratii de campuri   { publice }
+       specificari de metode
+     end;
+
+Conceptual, o clasa este tratata ca un tip virtual de date, pentru ea fiind
+definite campurile (ce formeaza domeniul TVD) si operatiile (metodele).
+Definitia de mai sus corespunde partii de interfata a unui TVD, ea trebuind
+completata cu partea de implementare a metodelor. La implementare, antetul
+unei metode este calificat cu numele clasei:
+
+	procedure nume_clasa.nume_metoda[(parametri_formali)];
+sau
+	function nume_clasa.nume_metoda[(parametri_formali)] : tip;
+
+Instantele unei clase, numite obiecte, sunt declarate ca variabile de tip
+nume_clasa:
+
+	var ob1,ob2 : nume_clasa;
+
+Declaratia de mai sus corespunde unor obiecte statice (alocate in segmentul
+de date sau in stiva de executie). Folosind pointerii, se poate lucra si cu
+obiecte dinamice, alocate in heap:
+
+	type pointer_nume_clasa = ^nume_clasa;
+	var pob1,pob2 : pointer_nume_clasa;
+
+Apelul unei metode se face printr-un mesaj de forma:
+
+	ob1.nume_metoda(lista_de_parametri_actuali);
+sau
+
+	pob1^.nume_metoda(lista_de_parametri_actuali);
+
+in care ob1 (respectiv pob1^) este receptorul, iar numele metodei este
+selectorul.
+
+Prin definitia unei clase nume_clasa se specifica si interfata clasei
+respective cu mediul extern. Regulile de vizibilitate permit ca atat
+campurile cat si metodele sa fie vizibile (deci utilizabile) in exterior.
+Daca pentru metode acest lucru este normal, accesul din exterior la campuri
+(inclusiv posibilitatea modificarii valorii lor) incalca una din regulile
+de baza ale abstractizarii datelor:
+
+   modificarea valorii campurilor unui obiect trebuie sa se faca numai
+   prin operatiile proprii obiectului respectiv.
+
+Pentru inlaturarea acestui neajuns, in versiunea 6.0 a limbajului Turbo
+Pascal exista posibilitatea declararii de metode si campuri private, ce
+sunt invizibile in exterior. Campurile private pot fi referite numai in
+partea de implementare a metodelor (publice sau private) ale obiectului,
+iar metodele private servesc la implementarea celor publice. Schema de
+definire a unei clase de obiecte in Turbo Pascal 6.0 este:
+
+         type nume_clasa = object[(nume_superclasa)]
+           declaratii de campuri publice
+           specificari de metode publice
+           private
+         	declaratii de campuri private
+         	specificari de metode private
+         end;
+
+Pentru protejarea eficienta a campurilor unui obiect, se recomanda ca ele
+sa fie declarate in zona 'private'. Dezavantajul acestei metode de
+proiectare a claselor de obiecte consta in aceea ca utilizatorul nu va avea
+acces la aceste campuri, nici macar pentru a citi valoarea lor. Acest
+impediment poate fi surmontat prin adaugarea de metode publice, care sa
+furnizeze valoarea acestor campuri private. In acest fel, campurile devin
+accesibile in citire (read only), dar valoarea lor nu se va putea modifica
+decat prin metode. In specificarea 1 este definita clasa Locatie, cu
+urmatoarele atribute:
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ campuri: X,Y                                         (private) ³
+³ metode:  Init        {modifica campurile X si Y ale obiectului ³
+³                         la valorile specificate prin aX si aY} ³
+³          XCoord                 {intoarce valoarea abscisei X} ³
+³          YCoord                {intoarce valoarea ordonatei Y} ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+  Type  { unit-ul ULoc.PAS }
+    Locatie = Object
+      procedure Init(aX,aY:Integer);
+      function XCoord : Integer;
+      function YCoord : Integer;
+      private
+        X,Y : Integer;
+    End;
+
+	Specificarea 1. Campuri private si metode publice
+
+Metodele publice XCoord si YCoord au fost concepute tocmai pentru a permite
+mediului extern (clientului) sa cunoasca valoarea coordonatelor obiectului.
+
+4.2.2. Mostenire. Obiecte statice
+
+In Turbo Pascal mostenirea este simpla. Prin mostenire, campurile
+superclasei se pastreaza si nu pot fi redefinite. In schimb, metodele unei
+superclase se pot redefini in conformitate cu comportamentul specific al
+subclasei careia le apartin. In specificarea 2, se considera clasa
+Punct, descendenta a clasei Locatie definita anterior. Obiectul geometric
+punct (in plan) poseda doua coordonate si un atribut de vizibilitate: el
+poate fi desenat (este vizibil) sau nu.
+
+  type  { unit-ul UPctS.PAS }
+    Punct = Object(Locatie)
+      procedure Init(aX,aY:Integer);   { rescrie Locatie.Init }
+      procedure Deseneaza;             { noua }
+      procedure Ascunde;               { noua }
+      function EVizibil : Boolean;     { noua }
+      procedure MutaIn(nouX,nouY:Integer);   { noua }
+      procedure Translateaza(pas:Integer);   { noua }
+      procedure Roteste(centru:Locatie; unghi:Integer);  { noua }
+      function Caracteristici: String;                   { noua }
+      procedure Listeaza;                                { noua }
+      private
+        Vizibil : Boolean;                               { nou }
+    End;
+
+	Specificarea 2. Mostenire in Turbo Pascal
+
+Atributele clasei Punct sunt urmatoarele:
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ campuri:X,Y             (private si mostenite de la Locatie) ³
+³         Vizibil                                     (privat) ³
+³ metode: Init          {redefineste metoda Init de la Locatie ³
+³                        initializeaza in plus campul Vizibil} ³
+³         XCoord, YCoord             {mostenite de la Locatie} ³
+³         Deseneaza            {desenarea obiectului pe ecran} ³
+³         Ascunde           {stergerea obiectului de pe ecran} ³
+³         EVizibil        {intoarce valoarea campului Vizibil} ³
+³         MutaIn         {muta obiectul in locatia nouX, nouY} ³
+³         Translateaza        {efectueaza o translatie, marind ³
+³                      valorile coordonatelor cu valoarea pas} ³
+³         Roteste          {roteste obiectul in jurul locatiei ³
+³                                    centru, cu unghiul unghi} ³
+³         Caracteristici      {intoarce un sir de caractere ce ³
+³                              contine valorile coordonatelor} ³
+³         Listeaza      {afiseaza caracteristicile obiectului} ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+In aceasta specificare, metoda Init a clasei Punct redefineste metoda
+omonima de la superclasa Locatie, concretizand comportamentul specific al
+descendentului, iar metoda EVizibil permite cunoasterea valorii campului
+Vizibil in mediul extern.
+
+  Type
+    Cerc = Object(Punct)
+      procedure Init(aX,aY,aRaza:Integer);
+      procedure Deseneaza;
+      procedure Ascunde;
+      procedure MutaIn(nouX,nouY:Integer);
+      procedure Translateaza(pas:Integer);
+      procedure Roteste(centru:Locatie; unghi:Integer);
+      procedure Mareste(CuCit:Integer);
+      function Raza : Integer;
+      function Caracteristici : String;
+      private
+        R : Integer;
+    End;
+
+	Specificarea 3. Rafinarea mostenirii
+
+O ilustrare mai cuprinzatoare a redefinirii metodelor este prezentata in
+specificarea 3, corespunzatoare clasei Cerc, descendenta a clasei Punct.
+Conceptual, obiectul geometric cerc are ca invariant un obiect geometric
+punct, numit centrul cercului, prin urmare mostenirea este naturala. In
+afara centrului, cercul poseda o raza (atribut specific). Atributele clasei
+Cerc sunt urmatoarele:
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ campuri: X,Y,Vizibil      (private si mostenite de la Punct) ³
+³          R                                    (raza, privat) ³
+³ metode:  Init           {redefineste metoda Init de la Punct ³
+³                              initializeaza in plus campul R} ³
+³          XCoord                    {mostenita de la Locatie} ³
+³          YCoord                    {mostenita de la Locatie} ³
+³          EVizibil                    {mostenita de la Punct} ³
+³          Listeaza                    {mostenita de la Punct} ³
+³          Deseneaza             {trasarea obiectului pe ecran ³
+³                      redefineste metoda omonima de la Punct} ³
+³          Ascunde           {stergerea obiectului de pe ecran ³
+³                      redefineste metoda omonima de la Punct} ³
+³          MutaIn           {muta obiectul in locatia definita ³
+³                                   de coordonatele nouX, nouY ³
+³                      redefineste metoda omonima de la Punct} ³
+³          Translateaza       {efectueaza o translatie, marind ³
+³                                valorile coordonatelor cu pas ³
+³                      redefineste metoda omonima de la Punct} ³
+³          Roteste         {roteste obiectul in jurul locatiei ³
+³                                     centru, cu unghiul unghi ³
+³                      redefineste metoda omonima de la Punct} ³
+³          Mareste                   {mareste raza cercului cu ³
+³                                   valoarea parametrului pas} ³
+³          Raza                 {intoarce valoarea campului R} ³
+³          Caracteristici     {intoarce un sir de caractere ce ³
+³                     contine valorile coordonatelor si razei} ³
+³                      redefineste metoda omonima de la Punct} ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+Metoda Raza permite cunoasterea valorii razei cercului in mediul extern.
+Metodele Init, Deseneaza, Ascunde, MutaIn, Roteste si Translateaza sunt
+redefiniri ale metodelor omonime ale superclasei Punct, ele concretizand
+comportamentul specific al clasei Cerc, diferit de cel al parintelui sau
+Punct. Astfel, desenarea unui cerc inseamna desenarea centrului si a
+circumferintei; stergerea trebuie sa le ascunda. Mutarea unui cerc (de fapt
+mutarea centrului sau) presupune stergerea vechii imagini, mutarea
+centrului si desenarea noii imagini a obiectului. In mod analog se
+procedeaza si in cazul translatiei sau rotatiei obiectului Cerc. Acest
+lucru va rezulta cu exactitate din implementarea claselor Locatie, Punct si
+Cerc, care este data in continuare. Se observa gradul ridicat de
+simplitate al algoritmilor folositi.
+
+Exemplul 1. Unit-ul ULOC.PAS: Implementarea metodelor clasei Locatie
+
+Exemplul 2. Unit-ul UPctS.PAS: Implementarea metodelor clasei Punct
+
+Exemplul 3. Unit-ul UCercS.PAS: Implementarea metodelor clasei Cerc
+
+In implementarea metodelor claselor mai sus definite s-au folosit proceduri si
+functii din doua unit-uri: Graph (unit sistem, ce contine extensia grafica a
+limbajului Turbo Pascal) si UGraph (unit utilizator). Pentru o mai usoara
+accesare a claselor enumerate, s-au conceput trei unit-uri Turbo Pascal: ULoc
+pentru clasa Locatie, UPctS pentru clasa Punct si UCercS pentru clasa Cerc.
+Fiecare unit contine in partea de interfata definitia clasei, iar in partea
+de implementare textele sursa ale metodelor.
+
+Utilizarea instantelor claselor Cerc si Punct este prezentata in programele
+ExObSt1.PAS si ExObSt2.PAS. Primul dintre ele lucreaza cu obiecte statice, iar
+al doilea cu obiecte dinamice.
+
+Obiectele din clasele Punct si Cerc reactioneaza diferit la mesajele
+Deseneaza, Ascunde, MutaIn, Roteste, Translateaza, Listeaza. Numele metodelor
+apelate este acelasi pentru o actiune data, indiferent de obiect (punct sau
+cerc), sugerand actiunea ce trebuie efectuata. Evident, metodele vor avea
+implementari diferite pentru cele doua clase Punct si Cerc. Ar fi interesant
+de vazut daca se poate lucra cu colectii de astfel de obiecte polimorfe,
+colectii care contin pointeri la obiectele respective. Un exemplu simplu este
+programul ExObSt3.PAS, ce reprezinta transpunerea programului ExObSt2.PAS,
+colectia considerata aici fiind un tablou A de doua elemente, cu elementul de
+tablou de tip PointerLaPunct.
+
+Din pacate, desi programele ExObSt2 si ExObSt3 sunt echivalente semantic
+(cel putin la prima vedere), la executie ele se comporta diferit, in sensul
+ca al doilea obiect (referit de A[2]), chiar daca este instanta a clasei Cerc,
+se comporta ca o instanta a clasei Punct. "Necazul" este generat de
+instructiunea de atribuire:
+
+  A[2] := PC;
+
+si nu poate fi evitat nici printr-un subterfugiu de forma:
+
+  New(A[2]); 	{alocarea obiectului dinamic referit de A[2]}
+  A[2]^.Init(150,230,50);
+
+deoarece protesteaza compilatorul (A[2] este PointerLaPunct, iar metoda Init
+din urmatoarea instructiune apartine clasei Cerc). Acest program este o prima
+tentativa de lucru cu obiecte polimorfice. Reamintim ca aceste obiecte sunt
+instante ale unor clase diferite, untre care exista relatia de mostenire si
+care pot sa raspunda la aceleasi mesaje. Se pune intrebarea:
+
+Cum se rezolva lucrul cu obiecte polimorfice in Turbo Pascal?
+
+Analizand textele sursa ale metodelor clasei Cerc ce sunt redefiniri ale
+metodelor clasei Punct, constatam ca MutaIn, Translateaza, Roteste si Listeaza
+sunt identice din punctul de vedere al apelului (este clar ca, semantic,
+actiunile sunt diferite). Se pune intrebarea:
+
+Nu s-ar putea ca metodele amintite sa fie mostenite de la clasa Punct?
+
+Raspunsul la aceste doua intrebari este afirmativ. In Turbo Pascal, ca in
+toate limbajele orientate pe obiecte, acest lucru se realizeaza prin actiunea
+conjugata a celor trei mecanisme discutate in sectiunea 4.1.5: constructorii
+si destructorii, metodele virtuale si legarea dinamica. Pe langa acestea si
+in stransa legatura cu folosirea constructorilor, s-a prevazut si o extensie
+a procedurilor standard New si Dispose. Sa le discutam pe rand.
+
+4.2.3. Constructori si destructori. Metode statice si virtuale.
+       Legare statica si dinamica. Implementarea obiectelor
+
+In exemplele discutate pana acum, mostenirea a fost folosita pentru campuri
+(clasele Punct si Cerc mostenesc de la Locatie campurile X si Y) si pentru
+metode (ale superclasei, care nu sunt redefinite in subclase: XCoord, YCoord).
+Metode omonime (Deseneaza, Ascunde, MutaIn, Translateaza, Roteste) au fost
+definite in clasa Punct si au fost redefinite (toate) in clasa derivata, Cerc.
+
+Mai mult, fiecare apel de metoda este rezolvat la compilare, in sensul ca se
+deduce, din tipul receptorului, clasa a carei metoda este apelata. Din acest
+motiv, in programul ExObSt3 nu functioneaza polimorfismul dinamic: desi PC
+este pointer la cerc si obiectul referit de PC este initializat ca atare, prin
+atribuirea A[2] := PC are loc o constrangere (elementele tabloului A sunt
+pointeri la punct) si in continuare compilatorul va considera ca A[2] refera
+un punct, selectand in consecinta metodele clasei Punct la intalnirea
+receptorului A[2]^. Aceasta maniera de legare a metodei la tipul clasei
+instantei a fost numita in 4.1.5.2 legare statica.
+
+Toate metodele prevazute in exemplele discutate pana acum sunt metode statice
+(implicit, orice metoda este statica in Turbo Pascal). Cand un mesaj contine
+apelul unei metode statice cu selectorul nume_metoda, apelul se poate rezolva
+la compilare prin parcurgerea arborelui de mostenire de la clasa obiectului
+receptor (cunoscuta la compilare) spre radacina arborelui. Prima metoda gasita
+ce are ca selector nume_metoda va fi metoda apelata si acest apel se rezolva
+in mod obisnuit (ca apelul unei proceduri din Pascal Standard). Algoritmic,
+legarea statica pentru mesaje de forma
+
+	ob1.nume_metoda_statica(lista_de_parametri_actuali);
+sau
+	pob1^.nume_metoda_statica(lista_de_parametri_actuali);
+
+inseamna:
+
+  1. Se determina clasa receptorului (ob1 sau pob1^), cunoscuta la compilare
+     (ob1 sau pob1 sunt declarate ca variabile);
+  2. Se selecteaza din dictionarul de metode al clasei respective adresa
+     punctului de intrare al metodei specificate;
+  3. Se pune in cod apelul metodei respective (salt la punctul de intrare
+     aferent procedurii in cauza).
+
+Din punctul de vedere al implementarii, pentru o instanta a unei clase se
+aloca un numar de octeti egal cu suma lungimilor de reprezentare ale
+campurilor instantei (la fel ca la TD record). In cazul exemplelor de mai sus,
+se vor aloca 5 octeti pentru o instanta a clasei Punct:
+
+	SizeOf(Punct) = SizeOf(X) + SizeOf(Y) + SizeOf(Vizibil),
+
+respectiv 7 octeti pentru o instanta a clasei Cerc:
+
+	SizeOf(Cerc) := SizeOf(Punct) + SizeOf(R).
+
+Prin urmare, in timpul executiei, o instanta nu-si "cunoaste" clasa sa. Acest
+lucru este valabil in situatia in care clasele nu poseda metode constructor,
+toate exemplele anterioare fiind din aceasta categorie. Rolul unui constructor
+este in primul rand acela de a atasa fiecarei instante "semnatura" clasei la
+care aceasta apartine. In Turbo Pascal acest lucru se realizeaza atasand
+inca doi octeti reprezentarii fiecarei instante. In spatiul astfel rezervat,
+constructorul va pune un pointer la tabela de metode virtuale (VMT) a clasei
+la care apartine instanta. Informatia de instantiere este accesibila numai
+in citire, ea putand fi modificata doar printr-un alt constructor. Reamintim
+ca, pe langa aceasta functie (principala in POO), un constructor are de
+obicei sarcina de a initializa campurile instantei (rolul metodelor Init din
+exemplele discutate) sau de a aloca memorie dinamica pentru instanta sau
+pentru acele campuri ale acesteia ce refera variabile dinamice.
+
+Distrugerea informatiei de instantiere se face printr-o alta metoda speciala,
+numita destructor in Turbo Pascal. Pe langa aceasta sarciba, un destructor
+poate realiza dealocarea memoriei dinamice alocata de constructor.
+
+O clasa poate avea mai multi constructori si destructori. Specificarea lor
+se face in definitia clasei, in forma:
+
+	constructor nume_constructor[(parametri_formali)];
+si
+	destructor nume_destructor[(parametri_formali)]; [virtual;]
+
+iar implementarea lor se face in aceeasi maniera ca si implementarea
+celorlalte metode, antetele fiind:
+
+	constructor nume_clasa.nume_constructor[(parametri_formali)]
+respectiv
+	destructor nume_clasa.nume_destructor[(parametri_formali)];
+
+Declararea metodelor virtuale se face atasand cuvantul cheie 'virtual' la
+specificarea acestora, in maniera:
+
+	procedure nume_metoda[(parametri_formali)]; virtual;
+sau
+	function nume_metoda[(parametri_formali)] : tip; virtual;
+
+Inainte de a discuta rolul metodelor virtuale, sa precizam restrictiile de
+proiectare si utilizare a lor, date sub forma urmatoarelor reguli (deduse din
+regulile R1-R6 prezentate in sectiunea 4.1):
+
+ V1. Orice clasa ce poseda metode virtuale trebuie sa aiba cel putin un
+     constructor.
+ V2. In programul utilizator, o instanta isi va apela constructorul inaintea
+     oricarui apel de metoda virtuala.
+ V3. Orice specializare (rescriere) a unei metode virtuale in descendentii
+     clasei trebuie sa fie tot virtuala;
+ V4. Orice specializare (rescriere) a unei metode virtuale in descendentii
+     clasei trebuie sa aiba exact acelasi antet (acelasi nume si aceeasi
+     lista de parametri).
+ V5. Constructorii nu pot fi virtuali.
+
+Pentru fiecare clasa ce poseda metode virtuale, compilatorul Turbo Pascal
+creeaza o tabela de metode virtuale (Virtual Method Table, VMT), ce contine:
+   - dimensiunea unei instante a clasei;
+   - numarul de metode virtuale;
+   - pointeri la codul fiecarei metode (adrese de puncte de intrare).
+
+Asadar, VMT este proprie clasei. Am vazut mai inainte ca fiecare instanta
+creata cu un constructor poarta in ea "semnatura" clasei prototip, care nu
+este altceva decat adresa VMT.
+
+Apartenenta unei instante 'ob' la o clasa data 'nume_clasa' se poate testa
+in Turbo Pascal astfel:
+
+	TypeOf(ob) = TypeOf(nume_clasa);
+
+iar faptul ca doua obiecte ob1 si ob2 sunt instantee ale aceleiasi clase prin:
+
+	TypeOf(ob1) = TypeOf(ob2);
+
+Am vazut in 4.1.5 ca metodele virtuale servesc la modelarea comportamentului
+polimorfic al obiectelor. Daca apelul metodelor statice se rezolva la
+compilare, apelul de metode virtuale se rezolva numai la executie. Astfel,
+concretizand consideratiile prezentate in 4.1.5, un mesaj de forma:
+
+	ob1.nume_metoda_virtuala(lista_de_parametri_actuali);
+sau
+	pob1^.nume_metoda_virtuala(lista_de_parametri_actuali);
+
+se rezolva la executie in urmatoarele etape:
+
+  1. Se determina clasa receptorului (ob1 sau pob1^), de fapt adresa VMT
+     corespunzatoare clasei sale, din informatia existenta in instanta
+     respectiva;
+  2. Se selecteaza din VMT adresa codului metodei specificate (adresa
+     punctului de intrare);
+  3. Se lanseaza in executie respectiva metoda (se face salt la punctul de
+     intrare corespunzator acesteia).
+
+Spre deosebire de legarea statica, unde conteaza doar tipul clasei instantei
+(cunoscut la compilare), aceasta maniera de legare a selectorului de receptor
+in timpul executiei a fost numita in 4.1.5.2 'legare dinamica'. Accentuam
+faptul ca se apeleaza metoda adecvata instantei, in conformitate cu atributele
+ei din timpul executiei, si nu metoda adecvata clasei statice a instantei,
+declarata la compilare prin 'var'. Un obiect 'o', instanta a unei clase 'c',
+poate fi considerat in dOUA ipostaze distincte:
+
+  a) la compilare, cand i se cunoaste clasa statica (declarata cu 'var o:c;'
+     in Turbo Pascal); in acest moment se pot rezolva toate apelurile de
+     metode statice 'ms' prin: 'o.ms(...);'
+  b) la executie, cand i se cunoaste clasa efectiva 's_c' (ca urmare a
+     apelului unui constructor, de exemplu 'Init' al clasei 's_c', care va
+     trebui sa fie o extensie a clasei 'c' (in arborele de mostenire al
+     clasei statice 'c'): 'o.Init(...);' dupa acest moment (al apelului de
+     constructor), orice apel de metoda virtuala 'mv' cu receptorul 'o':
+     'o.mv(...);' va tine cont de clasa efectiva 's_c' si nu de clasa statica
+     'c'.
+
+Ipostaza a) corespunde legarii statice, pe cand b) corespunde legarii
+dinamice. Cunoscand aceste lucruri, se poate explica necesitatea regulilor
+V1-V5 enuntate anterior:
+
+ V1. Prezenta imperativa a constructorului pentru clasele ce poseda metode
+     virtuale: daca nu exista constructor, instanta nu va contine spatiu
+     pentru adresa VMT, deci nu se va putea cunoaste clasa efectiva a
+     instantei;
+ V2. Apelul constructorului unei instante 'o' trebuie sa preceada apelul
+     oricarei metode virtuale a lui o: numai dupa apelul constructorului se
+     cunoaste clasa efectiva a instantei;
+ V3. Orice rescriere a unei metode virtuale trebuie sa fie la randul ei
+     metoda virtuala: absenta acestei reguli ar provoca combinarea celor doua
+     modalitati de legare a metodelor, complicand implementarea legarii
+     statice si dinamice;
+ V4. O metoda virtuala cu numele 'mv' trebuie sa aiba aceeasi lista de
+     parametri in toate clasele din arborele de mostenire in care ea este
+     redefinita: acest lucru este impus de caracterul puternic (static)
+     tipizat al Pascal-ului (antetul metodei din clasa statica, de declarare,
+     asupra careia se face verificarea la compilare, trebuie sa fie identic
+     cu antetul metodei din clasa efectiva, dinamica care se va apela la
+     executie).
+ V5. Constructorii sunt proprii fiecarei clase, deci nu pot fi virtuali; doua
+     clase diferite au tabele de metode virtuale diferite.
+
+4.2.4. Proiectarea si implementarea metodelor virtuale
+
+Vom relua specificatiile claselor Punct si Cerc in care vom folosi metode
+virtuale. Conform precizarilor V1-V5, aceasta inseamna ca in fiecare clasa vor
+fi prevazute:
+  - un constructor;
+  - un destructor (necesar pentru dealocarea obiectelor dinamice);
+  - metode virtuale.
+Inainte de a discuta noile specificatii, ne vom referi la lucrul cu obiecte
+dinamice in Turbo Pascal.
+
+Un obiect dinamic este alocat in memoria dinamica (heap), fiind referit de un
+pointer ce contine adresa lui. Programele ExObSt2 si ExObSt3 contin exemple de
+obiecte dinamice din clasele Punct si Cerc. Uzual, in situatia:
+
+	type pointer_nume_clasa = ^nume_clasa;
+	var pob : pointer_nume_clasa;
+
+crearea unui obiect dinamic se face cu ajutorul unei proceduri de initializare
+(numita Init in exemplul nostru), in maniera:
+
+        New(pob);	{se aloca memorie dinamica pentru obiectul
+                         dinamic referit de pob}
+	pob^.Init(...);	{se apeleaza metoda Init}
+
+In versiunea 6.0, Turbo Pascal introduce extensii ale procedurilor standard
+New si Dispose, care se pot apela in cazul existentei constructorilor,
+respectiv destructorilor. Astfel, extensiile au sintaxa (Init este
+constructorul clasei nume_clasa, iar Done este destructorul acesteia):
+
+	New(pob,Init(...));
+
+respectiv
+
+	Dispose(pob,Done(...));
+
+Actiunile efectuate de procedura standard New in exemplul de mai sus sunt:
+  1. Se aloca in memoria dinamica spatiu pentru obiectul dinamic referit de
+     pob, in conformitate cu specificatiile clasei nume_clasa;
+  2. Se apeleaza cu pob^ ca receptor constructorul Init, care:
+     2.1. pune in instanta pob^ adresa VMT a clasei nume_clasa;
+     2.2. initializeaza (si eventual aloca dinamic unele dintre) campurile
+          obiectului pob^.
+Reciproc, procedura standard Dispose (versiunea extinsa) realizeaza:
+  1. Apelarea destructorului Done (cu pob^ ca receptor), care:
+     1.1. reseteaza pe valorile implicite (si eventual dealoca unele dintre)
+          campurile pob^;
+     1.2. distruge in instanta pob^ adresa VMT a clasei nume_clasa;
+  2. Dealocarea din memoria dinamica a spatiului pentru obiectul pob^.
+
+Procedura standard New mai are o extensie, cu sintaxa:
+
+	pob := New(pointer_nume_clasa,Init(...));
+
+caz in care New va intoarce un pointer de tip pointer_nume_clasa, efectuand
+actiunile precizate anterior. Bineinteles, Init trebuie sa fie constructorul
+clasei nume_clasa. Se observa ca in aceasta situatie apelul lui New are
+sintaxa apelului de functie si nu de procedura.
+
+Revenind la specificatiile claselor Punct si Cerc si tinand cont de
+observatiile facute, acestea se vor scrie astfel:
+
+  type
+    PointerLaPunct = ^Punct;
+    Punct = Object(Locatie)
+      constructor Init(aX,aY:Integer);
+      destructor Done; virtual;
+      procedure Deseneaza; virtual;
+      procedure Ascunde; virtual;
+      function EVizibil : Boolean;
+      procedure MutaIn(nouX,nouY:Integer);
+      procedure Translateaza(pas:Integer);
+      procedure Roteste(centru:Locatie; unghi:Integer);
+      function Caracteristici: String; virtual;
+      procedure Listeaza(c,l:Integer);
+      private
+        Vizibil : Boolean;
+    End;
+    PointerLaCerc = ^Cerc;
+    Cerc = Object(Punct)
+      constructor Init(aX,aY,aRaza:Integer);
+      procedure Deseneaza; virtual;
+      procedure Ascunde; virtual;
+      procedure Mareste(CuCit:Integer);
+      function Raza : Integer;
+      function Caracteristici : String; virtual;
+      private
+        R : Integer;
+    End;
+
+	Specificarea 4. Metode virtuale, constructori si destructori
+
+Implementarea metodelor este data in unit-urile UPctD.PAS si UCercD.PAS.
+
+Exemplul 4: unit-urile UPctD.PAS si UCercD.PAS
+
+Comparand specificarea 4 cu specificarea 3 (pentru clasa Cerc), se constata un
+grad mare de reutilizare a codului, in sensul ca metodele MutaIn, Roteste,
+Translateaza si Listeaza nu mai apar ca metode proprii ale acestei clase, ele
+fiind mostenite de la clasa parinte, Punct. Deoarece toate aceste metode
+apeleaza la randul lor metode virtuale, legarea acestora se va face dinamic.
+De exemplu, in situatia:
+
+  var P : Punct;
+      C : Cerc;
+
+mesajul P.MutaIn(100,200) va avea ca efect (programul ExObSt2):
+
+        P.Ascunde;	{Punct.Ascunde}
+        Locatie.Init(100,200);
+        P.Deseneaza	{Punct.Deseneaza}
+
+pe cand mesajul C.MutaIn(100,200) se va traduce astfel:
+
+        C.Ascunde;	{Cerc.Ascunde}
+        Locatie.Init(100,200);
+        C.Deseneaza	{Cerc.Deseneaza}
+
+Mai mult, cand se lucreaza cu obiecte polimorfice, ca in situatia:
+
+  var A:Array[1..2] of PointerLaPunct;
+
+si
+    A[1] := New(PointerLaPunct,Init(100,200));
+    A[2] := New(PointerLaCerc, Init(150,230,50));
+
+mesajul A[1]^.MutaIn(100,200) va avea ca efect:
+
+        A[1]^.Ascunde;	{Punct.Ascunde}
+        Locatie.Init(100,200);
+        A[1]^.Deseneaza	{Punct.Deseneaza}
+
+pe cand mesajul A[2]^.MutaIn(100,200) se va traduce astfel:
+
+        A[2]^.Ascunde;	{Cerc.Ascunde}
+        Locatie.Init(100,200);
+        A[2]^.Deseneaza	{Cerc.Deseneaza}
+
+Se observa clar, in cazul obiectelor polimorfice, maniera in care se
+stabileste la executie metoda virtuala adecvata instantei receptorului.
+
+Programele ExObSt1, ExObSt2 si ExObSt3 prezentate anterior vor functiona
+corect in prezenta noilor specificatii ale clasei Cerc. In fond, nu este vorba
+de modificarea algoritmilor care implementeaza metodele acestei clase, ci de
+o utilizare mai eficienta a mostenirii prin utilizarea metodelor virtuale.
+De aceasta data si programul ExObSt3 va functiona corect (exemplul are
+numele ExObSt4).
+
+4.2.5. Clase abstracte
+
+In proiectarea ierarhiei claselor, exista unele dintre ele care nu vor poseda
+instante. Rolul lor este o mai buna structurare a acestei ierarhii, ele
+colectand caracteristicile comune (campuri si metode) pentru mai multe clase
+descendente. Clasa Locatie din specificarea 1 este un exemplu de clasa
+abstracta. Rolul ei este definirea caracteristicilor (coordonatele, metodele
+de initializare si de accesare a acestora) comune pentru clasele descendente.
+Toate aceste clase, avand clasa Locatie in arborele lor de mostenire, vor
+poseda atributele respective.
+
+Pe de alta parte, Locatie poate fi considerata o clasa abstracta si deoarece
+comportamentul ei nu este suficient de bogat pentru a fi utilizat de
+instantele sale. Astfel, Locatie nu poseda metode de vizualizare sau
+manipulare, cum poseda descendentul sau direct, clasa Punct.
+
+4.2.6. Colectii de obiecte polimorfice
+
+4.2.6.1. Liste
+
+In programul 4.2.3 este prezentat un exemplu simplu de colectie de obiecte
+polimorfice, depozitate in tabloul A cu doua elemente de tip PointerLaPunct.
+O alta maniera de implementare a unei colectii de obiecte va folosi o lista
+simplu inlantuita. Intreaga colectie poate fi considerata ca o noua clasa,
+asupra careia se prelungesc operatiile proprii obiectelor ei. In unit-ul
+UListF.PAS este prezentata specificarea si implementarea clasei Lista.
+
+Exemplul 5: Unit-ul UListF.PAS
+
+In afara claselor mentionate mai inainte, in acest exemplu se folosesc inca
+doua:
+  Arc - clasa derivata a clasei Cerc, a carei specificare si implementare
+        este prezentata in unit-ul UArc;
+  Segment - clasa derivata a clasei Punct, prezentata in unitul USeg.
+
+Exemplul 4.2.6: Unit-ul UArc.PAS
+
+Exemplul 4.2.7. Unit-ul USeg.PAS
+
+Metodele clasei Lista se impart in doua categorii:
+  - metode proprii listelor:
+      Init - constructor, creeaza o lista vida;
+      Done - destructor, dealoca elementele listei;
+      Adauga - adauga un nou element la coada listei;
+  - metode ce vor reflecta comportamentul obiectelor memorate
+    in elementele listei:
+      Listeaza - listeaza caracteristicile fiecarui element din lista;
+      Deseneaza - deseneaza fiecare obiect din lista;
+      Ascunde - ascunde fiecare obiect din lista;
+      Roteste - roteste fiecare obiect din lista cu acelasi unghi, in jurul
+                obiectului precedent din lista (prin parcurgerea circulara a
+                listei);
+      Translateaza - translateaza fiecare obiect din lista cu aceeasi marime;
+      Mareste - mareste raza fiecarui obiect rotund din lista cu aceeasi
+                marime.
+
+A doua categorie de metode foloseste din plin apelul de metode virtuale, fie
+direct, fie indirect. O atentie speciala trebuie acordata metodei Mareste,
+care nu este comuna tuturor claselor mentionate, fiind proprie numai claselor
+Cerc si Arc (prototipuri de obiecte rotunde). In implementarea ei se foloseste
+functia TypeOf pentru determinarea clasei efective a obiectului. O alta
+solutie de implementare ar fi adaugarea metodei virtuale Mareste la clasa
+Punct (la care ea n-ar face nimic sau eventual ar desena obiectul), caz in
+care implementarea metodei Mareste a clasei s-ar face in aceeasi maniera ca
+si metodele anterioare. Aceasta se poate realiza astfel:
+  - la clasa Punct se declara metoda virtuala Mareste, care se implementeaza
+    astfel:
+
+    Procedure Punct.Mareste(CuCit:Integer);
+      Begin
+        Deseneaza
+      End; { Mareste }
+
+  - la clasa Cerc se declara Mareste ca virtuala;
+  - la clasa Lista se modifica implementarea metodei Mareste astfel:
+
+    Procedure Lista.Mareste(CuCit:Integer);
+      Var
+        N : PointerLaNod;
+        PP : PointerLaPunct;
+      Begin
+        N := Ultimul;
+        While N <> Nil do
+          Begin
+            PC := N^.Element;
+            PC^.Mareste(CuCit)
+            N := N^.Precedentul
+          End;
+      End; { Mareste }
+
+	Lucrul cu obiecte polimorfe este ilustrat in programul ExObDi.PAS
+
+4.2.6.2. Unitul UGraph
+
+Pentru implementarea unor functii grafice specifice exemplelor discutate
+anterior, s-a proiectat unit-ul UGraph, ce exporta o serie de astfel de
+operatii. Textul sursa este prezentat in unit-ul UGraph.PAS.

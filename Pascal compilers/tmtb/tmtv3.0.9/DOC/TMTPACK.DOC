@@ -1,0 +1,36 @@
+                                  TMTPACK
+                             By Rustam Gadeyev
+                             
+TMTPACK is a packer for TMT Pascal executables. It has a good compression
+ratio.   Also it hide internal body of program to prevent unwanted
+modifications.
+
+Version 0.2b has an improved compression ratio because of the preliminary
+processing code and relocations of the packed program and the advantage of
+the new APLIB.
+
+The packer works with any version of TMT Pascal for DOS.
+It no longer needs the special stub tmt32.exe instead of the beta version.
+However the tmt32 stub is smaller and therefore a program packed with it is
+smaller than one packed with the beta version.
+The packed program may use any stub.
+
+For safety the original program is now renamed with the extension, "OLD".
+
+
+                             Version 0.3b
+                             
+Slightly improved compression ratio because the E8 optimization is changed
+and the coding is improved.
+
+If it is desired, we can put built-in TMTPACK binding/unbinding
+of any stub from program without recompilation in the next version.
+
+Acknowledgements:
+
+To Joergen Ibsen, jibz@hotmail.com for a nice APLIB and an example using it
+To Laszlo & Markus, (http://cdata.tvnet.hu/~ml/upx.html) for the nice EXE-packer
+To Charles Scheffold & Thomas Pytel, http://www.di.net/pmw for a good extender
+To Vadim Suhomlinov who suggested TMTPACK and sent APLIB.
+
+

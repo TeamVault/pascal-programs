@@ -1,0 +1,20 @@
+procedure readint (var fp : text; var x : integer);
+{ DECIMAL 9 IS THE VALUE OF THE TAB CHARACTER: }
+const tab = #9;
+    blank = ' ';
+begin
+ { 'x' BEHAVES LIKE A C POINTER VARIABLE HERE: }
+ x := 0; reset(fp);
+ while not eoln(fp) and (fp^ in [blank,tab]) do get(fp);
+ { NOTE THAT RANGES CAN BE SET ELEMENTS, BUT }
+ { ORD(element) <= 63 FOR ALL ELEMENTS, AND }
+ { (a in b) IS FALSE FOR (ORD(a) > 63) or (ORD(a) < 0): }
+ while fp^ in ['0' .. '9'] do
+  begin
+   writeln('ORD(fp^) is ', ord(fp^):1,
+	'; CHR(', ord(fp^):1, ') is ', chr(ord(fp^)), '.');
+   x := (ord(fp^) - ord('0')) + 10 * x;
+   get(fp)
+  end
+end;
+

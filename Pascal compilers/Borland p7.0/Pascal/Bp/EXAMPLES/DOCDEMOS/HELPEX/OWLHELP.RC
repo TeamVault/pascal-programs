@@ -1,0 +1,49 @@
+#include <windows.h>
+#include <wobjects.h>
+#include "owlhelp.h"
+#include "helpex.dlg"
+
+HelpexMenu MENU
+BEGIN
+    POPUP        "&File"
+    BEGIN
+	MENUITEM    "&New",                cm_FileNew
+	MENUITEM    "&Open...",            cm_FileOpen
+	MENUITEM    "&Save",               cm_FileSave
+	MENUITEM    "Save &As...",         cm_FileSaveAs
+	MENUITEM    "&Print",              cm_Print
+	MENUITEM    SEPARATOR
+	MENUITEM    "E&xit",               cm_Exit
+    END
+
+    POPUP        "&Edit"
+    BEGIN
+	MENUITEM    "&Undo\tAlt+Bksp",     cm_EditUndo
+	MENUITEM    SEPARATOR
+	MENUITEM    "Cu&t\tShift+Del",     cm_EditCut
+	MENUITEM    "&Copy\tCtrl+Ins",     cm_EditCopy
+	MENUITEM    "&Paste\tShift+Ins",   cm_EditPaste
+	MENUITEM    "C&lear\tDel",         cm_EditClear,  GRAYED
+    END
+
+    POPUP   "&Help"
+    BEGIN
+	MENUITEM    "&Index",         	   cm_HelpIndex
+	MENUITEM    "&Keyboard",      	   cm_HelpKeyboard
+	MENUITEM    "Using &Help",    	   cm_HelpHelp
+	MENUITEM    SEPARATOR
+	MENUITEM    "&About HelpEx...",    cm_About
+    END
+END
+
+HelpexAcc ACCELERATORS
+BEGIN
+    VK_BACK,   cm_EditUndo,  VIRTKEY, ALT
+    VK_DELETE, cm_EditCut,   VIRTKEY, SHIFT
+    VK_INSERT, cm_EditCopy,  VIRTKEY, CONTROL
+    VK_INSERT, cm_EditPaste, VIRTKEY, SHIFT
+    VK_DELETE, cm_EditClear, VIRTKEY, SHIFT
+END
+
+HelpCursor CURSOR help.cur
+

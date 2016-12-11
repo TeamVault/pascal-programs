@@ -1,0 +1,187 @@
+This README file contains new information about the PROCDESC and
+PROCTYPE directives. Review this file for information on how to use
+these directives when you are writing Pascal programs.
+
+Using procedure prototypes
+--------------------------
+For versions 3.2 and later, Turbo Assembler lets you declare procedure
+prototypes much like procedure prototypes in C. To do so, use the
+PROCDESC directive. 
+
+The Ideal mode syntax of PROCDESC is:
+
+     PROCDESC name [procedure_description]
+
+Use the following syntax in MASM mode:
+
+     name PROCDESC [procedure_description]
+
+procedure_description is similar to the language and argument
+specification used in the PROC directive. Its syntax is:
+
+     [[language_modifier] language] [distance] [argument_list]
+
+language_modifier, language, and distance have the same syntax as in
+the PROC directive. argument_list has the form:
+
+     argument [,argument] ...
+
+An individual argument has the following syntax:
+
+     [argname] [[count1_expression]]:complex_type [:count2_expression]
+
+complex_type is the data type of the argument, and can be either a
+simple type or a pointer expression. count2_expression specifies how
+many items of this type the argument defines. The default value of
+count2_expression is 1, except for arguments of BYTE, which have a
+default count of 2 (since you can't PUSH a byte value onto the 80x86
+stack).
+
+For the last argument, in procedure types whose calling convention
+allows variable-length arguments (like C), count2_expression can be ?,
+to indicate that the procedure caller will determine the size of the
+array.
+
+Note that the name of each argument (argname) is optional, but
+complex_type is required for each argument because procedure types are
+used mainly for type checking purposes. The names of the arguments do
+not have to agree, but the types must.
+
+Here's an example:
+
+     test PROCDESC pascal near a:word,b:dword,c:word
+
+This example defines a prototype for the procedure test as a PASCAL
+procedure taking three arguments (WORD, DWORD, WORD). Argument names
+are ignored, and you can omit them in the PROCDESC directive, as
+follows:
+
+     test PROCDESC pascal near :word,:dword,:word
+
+The procedure prototype is used to check calls to the procedure, and
+to check the PROC declaration against the language, number of
+arguments, and argument types in the prototype. For example,
+
+     test PROC pascal near
+       ARG a1:word,a2:dword,a3:word       ;matches PROCDESC for test
+
+PROCDESC also globally publishes the name of the procedure. Procedures
+that are not defined in a module are published as externals, while
+procedures that are defined are published as public. Be sure that
+PROCDESC precedes the PROC declaration, and any use of the procedure
+name. 
+
+Procedure prototypes can also use procedure types (defined with
+PROCTYPE). For example,
+
+     footype PROCTYPE pascal near :word,:dword,:word
+     foo PROCDESC footype
+
+
+Calling procedures that have been prototyped
+--------------------------------------------
+If you've defined the procedure prior to the call or used PROCDESC to
+prototype the procedure, Turbo Assembler will type check any language
+and arguments specified in the call and generate a warning if the
+language, number of parameters, or types of parameters don't match.
+
+For example,
+
+     test PROCDESC pascal far :word,:dword,:word
+     .
+     .
+     .
+     call test pascal ax,ds bx,cx            ;works fine
+     call test c, ax,dx, bx,cx               ;wrong language!
+     call test pascal, eax, ebx, ecx         ;wrong parameter types!
+     call test pascal, ax,ds bx              ;too few parameters!
+
+Since the language of the procedure has been specified, you don't have
+to include it in the call. If you omit it, however, make sure to
+include the comma that would normally follow it:
+
+     call test,ax,ds bx,cx                   ;works fine
+
+You can also use procedure types (declared with PROCTYPE) to supply a
+distance and language, and force type-checking to occur. For example,
+
+     footype proctype pascal near :word,:dword,:word
+     .
+     .
+     .
+     call footype ptr[bx],ax,ds bx,cs            ;no error!
+
+
+Defining a procedure type
+-------------------------
+For Turbo Assembler version 3.2 or higher, you can use a user-defined
+data type (called a procedure type) to describe the arguments and
+calling conventions of a procedure. Turbo Assembler treats procedure
+types like any other types; you can use it wherever types are allowed.
+Note that since procedure types don't allocate data, you can't create
+an instance of a procedure type.
+
+Use the PROCTYPE directive to create a procedure type. Here is the
+Ideal mode syntax:
+
+     PROCTYPE name [procedure_description]
+
+The MASM mode syntax is:
+
+     name PROCTYPE [procedure_description]
+
+procedure_description is similar to the language and argument
+specification for the PROC directive. Its syntax is:
+
+     [[language_modifier] language] [distance] [argument_list]
+
+specify language_modifier, language, and distance exactly the same way
+you would for the corresponding fields in the PROC directive. 
+
+Use the following form for argument_list:
+
+     argument [,argument] ...
+
+An individual argument has the following syntax:
+
+     [argname] [[count1_expression]]:complex_type [:count2_expression]
+
+
+complex_type is the data type of the argument. It can be either a
+simple type or a pointer expression.
+
+count2_expression specifies how many items of this type the argument
+defines. Its default value is 1, except for BYTE arguments. Those
+arguments have a default count of 2, since you can't PUSH a byte value
+onto the 80x86 stack.
+
+In procedure types whose calling convention permits variable-length
+arguments (like C), count2_expression (for the last argument) can be
+the special keyword ?, which indicates that the procedure caller will
+determine the size of the array. The type UNKNOWN also indicates a
+variable-length parameter.
+
+The name of each argument is optional, but complex_type is required
+because procedure types are used mainly  for type checking purposes.
+The names of the arguments don't have to agree, but the types must.
+
+Defining procedures using procedure types
+-----------------------------------------
+You can use a procedure type (defined with PROCTYPE) as a template for
+the procedure declaration itself. For example,
+
+     footype PROCTYPE pascal near :word, :dword,:word
+     .
+     .
+     .
+     foo PROC footype                    ;pascal near procedure
+     arg a1:word,a2:dword,a3:word        ;an error would occur if
+                                         ;arguments did not match
+                                         ;those of footype
+
+When you declare a procedure using a named procedure description, the
+number and types of the arguments declared for PROC are checked
+against those declared by PROCTYPE. The procedure description supplies
+the language and distance of the procedure declaration.
+
+ 

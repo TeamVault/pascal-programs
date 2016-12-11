@@ -1,0 +1,762 @@
+2. Abstractizarea datelor
+2.1. Istoric
+2.2. Ce este abstractizarea datelor
+2.2.1. Tipuri de date definite de utilizator
+2.2.2. Nivele de abstractizare a tipurilor de date
+2.3. Tipuri abstracte de date
+2.3.1. Specificarea tipurilor abstracte de date
+2.3.2. Proiectarea operatiilor unui TAD
+2.3.3. Implementarea tipurilor abstracte de date
+2.3.4. Avantajele TAD
+2.4. Exemple
+
+2.1. Istoric
+
+     Date                  Operatii                 Imbunatatire
+     --------------------------------------------------------------
+     adrese de memorie     instructiuni masina      performanta
+
+     celule de memorie     instructiuni in          lizibilitate
+     cu nume               limbaj de asamblare      mai usor de
+                           (mnemonice)              inteles
+
+     tipuri de date        instructiuni standard    independenta de
+     standard              (secventa, decizie,      masina
+                            repetitie)
+
+     tipuri de date         subprograme             limbaje virtuale
+     utilizator
+                   \      /
+                     \  /
+                    module                          ascunderea informatiei
+
+             tipuri abstracte de date               instante multiple
+             (abstractizarea datelor)
+             (programare bazata pe obiecte)
+
+             clase                                  polimorfism dinamic
+             (programare orientata pe               mostenire
+              obiecte)                              legare dinamica
+
+2.2. Ce este abstractizarea datelor
+2.2.1. Tipuri de date definite de utilizator
+2.2.2. Nivele de abstractizare a tipurilor de date
+
+Abstractizarea inseamna
+  - neglijarea detaliilor nesemnificative
+  - concentrarea asupra esentei.
+
+2.2.1. TDU - Tipuri de date definit de utilizator
+
+  Am vazut ca limbajul Pascal ne permite, prin intermediul declaratiei
+  'type', sa definim tipuri de date proprii, altele decat cele standard.
+  Stim ca un tip de date T este caracterizat de
+    - domeniul valorilor (multimea valorilor pe care le poate lua o
+      variabila de tipul T); domeniul este precizat prin componentele
+      noului tip definit
+        - enumerare
+        - subdomeniu
+        - multime
+        - tablou
+        - record
+    - multimea operatiilor care se pot efectua asupra variabilelor de
+      tipul T.
+
+  Din pacate, daca Pascal acorda atentie speciala numai definirii
+  domeniului unui nou tip T, lasand nerezolvata problema definirii
+  operatiilor pe noul tip T. Cu exceptia tipurilor multime, toate
+  celelalte tipuri definite de utilizator au ca operatii predefinite:
+    - atribuirea (componenta cu componenta)
+    - testul de egalitate (componenta cu componenta).
+
+  Exemple:
+    Type T = ...         tip definit de utilizator
+    var a1,a2: T;        a1 si a2 sunt variabile de tipul T
+
+    - atribuirea (componenta cu componenta)
+       - T de tip tablou: a1 := a2 inseamna
+           a1[i] := a2[i] pentru i luand valori de la cel mai mic indice
+                                                pana la cel mai mare indice
+       - T de tip record: a1 := a2 inseamna
+           a1.c1 := a2.c1;     c1, c2, ..., cn sunt campurile din
+           a1.c2 := a2.c2;                     declaratia lui T
+           ...
+           a1.cn := a2.cn;
+    - testul de egalitate (componenta cu componenta)
+       - T de tip tablou: a1 = a2 inseamna
+           a1[i] = a2[i] pentru i luand valori de la cel mai mic indice
+                                               pana la cel mai mare indice
+       - T de tip record: a1 = a2 inseamna
+           a1.c1 = a2.c1;     c1, c2, ..., cn sunt campurile din
+           a1.c2 = a2.c2;                     declaratia lui T
+           ...
+           a1.cn = a2.cn;
+
+2.2.2. Nivele de abstractizare a tipurilor de date
+
+      Notiunea de tip de date este discutata aici din punctul de vedere
+al programarii. In fond, exista doua entitati care coopereaza: utilizatorul
+uman, ce poseda inteligenta si  foloseste un limbaj specific speciei umane
+si masina fizica (calculatorul), care executa un program format din
+instructiuni pe care el le Œntelege. Intermediarul Œntre aceste entitati
+este o masina virtuala, necesara unei comunicari cƒt mai lesnicioase Œntre
+ele, cu alte cuvinte un limbaj de programare.
+
+      Se  pot distinge trei nivele de abstractizare ale unui TD simplu sau
+structurat: abstract, virtual si fizic. Ordinea de enumerare a acestor
+nivele pleaca de la utilizatorul uman si are ca destinatie masina fizica
+pe care se lucreaza, calculatorul.
+
+      Plecƒnd de la rationamentul uman, primul nivel este cel abstract,
+concretizat Œn ceea ce numim tip abstract de date TAD. Abstractizarea are
+rolul de a pune accent pe proprietatile esentiale ale TD (vizƒnd atƒt
+domeniul, cƒt si operatiile), neglijƒnd detaliile de reprezentare si
+algoritmii necesari pentru realizarea concreta a operatiilor. Altfel spus,
+TAD pune accent pe semantica TD, Œn mod esential pe comportamentul
+acestuia, precizƒnd CE trebuie sa faca fiecare operatie si NU CUM
+actioneaza aceasta.
+
+      Abstractizarea poate fi vazuta si ca o modalitate de ordonare a
+gƒndirii umane. Conceperea unui TAD Œnseamna:
+   - identificarea TAD (Œn termenii rationamentului uman),
+   - stabilirea unui nume (care sa sintetizeze proprietatile sale),
+   - precizarea  domeniului si a operatiilor.
+
+      Definirea domeniului TAD Œnseamna enumerarea proprietatilor pe care
+trebuie sa le Œndeplineasca valorile TAD, iar definirea fiecarei operatii
+o : E -> F Œnseamna:
+   - stabilirea conditiilor de utilizare corecta a ei,
+   - stabilirea domeniului E (parametrii de intrare) si a codomeniului F
+     (parametrii de iesire), precum si
+   - precizarea rezultatului ei.
+
+      Nivelul abstract este cel mai apropiat de definitia datei, vazuta ca
+element purtator de informatie. La acest nivel, detaliile de reprezentare a
+valorilor posibile ale ei (domeniul TD) nu sunt precizate, esentiale fiind
+operatiile, adica comportamentul, functionalitatea datei, posibilitatile de
+valorificare a informatiei continuta Œn data.
+
+      Definirea TAD poarta numele de specificare.
+
+      Nivelul intermediar de abstractizare este cel virtual, Œn care
+se executa urmatoarele actiuni:
+   - se alege un limbaj de programare LP (masina virtuala);
+   - se defineste reprezentarea TAD Œn termenii LP;
+     Niklaus Wirth: Algorithms + Data Structures = Programs
+     Prentice-Hall, 1976
+   - se proiecteaza algoritmii necesari pentru operatii cu ajutorul
+     reprezentarii alese;
+   - se scrie codul sursa pentru operatiile TAD sub forma de subprograme
+     Œn LP.
+
+      Masina virtuala exista numai ca o combinatie Œntre compilatorul
+(sau interpretorul) LP, sistemul de operare si arhitectura hard a
+calculatorului gazda. LP poseda TD proprii si/sau mecanisme de tipizare,
+precum si un set de instructiuni, cu ajutorul carora se pot exprima
+reprezentarea si operatiile TD concepute la nivelul abstract.
+La nivelul virtual putem vorbi de o concretizare a TAD, obtinƒndu-se un
+tip virtual de date TVD. Trecerea de la TAD la TVD este numita
+implementare sau codificare.
+
+      Ultimul nivel de abstractizare este cel fizic, Œn care componentele
+TVD sunt exprimate folosind resursele fizice ale calculatorului (memorie
+si instructiuni cablate), ca rezultat al procesului de traducere a TVD.
+Masina fizica poate fi considerata si ea ca un TD, Œn care domeniul ar
+fi memoria, iar operatiile ar fi instructiunile cablate. Din punct de vedere
+fizic, memoria poate fi vazuta ca un vector de octeti (octetul fiind
+unitatea adresabila), iar instructiunile cablate sunt singurele operatii
+pe care masina stie sa le execute, ele formƒnd limbajul masina. Acest model
+de TD Œl vom numi tip fizic de date TFD. Trecerea de la TVD la TFD se
+realizeaza prin traducerea programului, cu ajutorul unui translator
+(compilator, asamblor sau interpretor) si eventual a unui editor de
+legaturi.
+
+      Rezumƒnd, cele trei nivele de abstractizare ale unui TD si
+transformarile de trecere sunt prezentate Œn figura 1.
+
+OM                                                       MASINA
+     ÄÄÄÄÄÄÄÄÄÄÄ> TAD  ÄÄÄÄÄÄÄÄÄÄÄÄ> TVD ÄÄÄÄÄÄÄÄÄÄÄÄ> TFD
+     specificare       implementare      traducere
+
+     Figura 1. Nivele de abstractizare a unui tip  de date
+
+      Fiecarui nivel de abstractizare Œi corespunde un limbaj Œn care
+trebuiesc precizate componentele TD, adica domeniul si operatiile,
+conform tabelului 1.
+
+            ÚÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+            ³ Nivel     ³  Limbaj         ³
+            ÃÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+            ³ abstract  ³  de specificare ³
+            ³ virtual   ³  de programare  ³
+            ³ fizic     ³  masina         ³
+            ÀÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+      Tabelul 1. Nivele de abstractizare si limbaje
+
+      Limbajul de specificare a TAD poate fi formal sau informal. Limbajul
+formal este riguros, exact, dar greu de Œnteles de nespecialisti (facƒnd
+apel la notatii matematice), pe cƒnd limbajul informal este mult mai
+apropiat de exprimarea umana, chiar daca el sufera Œn rigoare si exactitate.
+Specificarea formala a TAD utilizeaza Œn esenta mecanisme algebrice
+(algebre universale, algebre multisortate, ä-algebre), reprezentƒnd astazi
+o directie importanta de cercetare Œn informatica teoretica.
+       Limbajul de programare, vazut ca mijloc de exprimare la nivelul
+virtual de abstractizare, poate fi mai apropiat de masina fizica (limbaj de
+asamblare) sau de utilizatorul uman (limbaj de nivel Œnalt). In ambele
+ipostaze, folosirea lui este conditionata de existenta unui translator
+capabil sa traduca TVD Œntr-un program executabil pe masina fizica.
+
+       Traducerea TVD Œnseamna exprimarea lui (ca reprezentare si operatii)
+Œn limbaj masina. Ca programe, TVD si TFD sunt semantic echivalente (adica
+produc acelasi rezultat), deosebirea dintre ele constƒnd doar Œn mijloacele
+de exprimare, adica Œn limbajul folosit.
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³   Nivel      ³ Nivel virtual            ³  Nivel fizic     ³
+³  abstract    ³ (Turbo Pascal)           ³ (procesor 80x86) ³
+ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³  Adresa      ³ Record                   ³  Implementarea   ³
+³              ³   Localitate:string[20]; ³   TD Record pe   ³
+³              ³   Strada:String[10];     ³   IBM-PC         ³
+³              ³   Numar:Integer          ³  34=21+11+2 oct. ³
+³              ³ End;                     ³                  ³
+³              ³                          ³                  ³
+³  Temperaturi ³  Array[1..12] of Real;   ³  Implementarea   ³
+³  medii       ³                          ³  TD Array pe     ³
+³  lunare      ³                          ³  IBM-PC          ³
+³              ³                          ³  12*6=72 octeti  ³
+³              ³                          ³                  ³
+³  Vƒrsta      ³ Integer                  ³  Œntreg 80x86    ³
+³              ³                          ³  2 octeti        ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+Figura 2. Tipuri de date si nivele de abstractizare
+
+2.3. Tipuri abstracte de date (TAD)
+
+2.3.1. Specificarea tipurilor abstracte de date
+
+      Asa cum am aratat mai inainte, TAD se precizeaza cu ajutorul unui
+asa-numit limbaj de specificare, formal sau informal. In cele ce urmeaza
+vom folosi un limbaj de specificare informal, cu ajutorul caruia vom defini
+scheme de specificare pentru TD simple si pentru TD structurate. In esenta,
+o schema de specificare a TAD contine doua parti: specificarea domeniului
+TD si specificarea operatiilor. In cazul TD structurate, specificarea
+domeniului TD Œnseamna:
+  - specificarea elementelor (descrierea elementelor componente),
+  - specificarea structurii (adica a relatiei sau legaturii dintre elemente)
+  - specificarea propriu-zisa a domeniului (descrierea multimii valorilor
+    posibile).
+
+      Specificarea unei operatii se realizeaza Œn maniera procedurala,
+operatiei atasƒndu-i-se un nume, o lista de parametri, ea furnizƒnd un
+rezultat. De asemenea, pentru fiecare operatie trebuiesc precizate
+preconditia si postconditia. Preconditia este o asertiune (afirmatie)
+care precizeaza Œn ce conditii operatia are sens si ea trebuie verificata
+inainte, pentru ca operatia sa se execute corect, iar postconditia exprima
+legaturile dintre rezultatele obtinute Œn urma executarii operatiei si
+operanzi Œn ipoteza ca preconditia este verificata.
+      Este important de precizat ca postconditia specifica numai CE
+rezultate se obtin, fara a intra Œn detalii privind CUM se obtin acestea.
+In figura 3 prezentam schemele de specificare pentru TAD simplu, TAD
+structurat si pentru o operatie.
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³   a) Schema de specificare a unui TAD simplu           ³
+³                                                        ³
+³    Domeniu: descrierea multimii valorilor posibile     ³
+³                                                        ³
+³    Operatii: specificarea fiecarei operatii, vezi c)   ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³   b) Schema de specificare a unui TAD structurat           ³
+³                                                            ³
+³     Elemente: descrierea elementelor componente            ³
+³                                                            ³
+³     Structura: descrierea relatiilor sau legaturilor Œntre ³
+³                            elemente                        ³
+³                                                            ³
+³     Domeniu: descrierea multimii valorilor posibile        ³
+³                                                            ³
+³     Operatii: specificarea fiecarei operatii, vezi c)      ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³   c) Schema de specificare a unei operatii                   ³
+³                                                              ³
+³     Nume: numele operatiei (identificator, cƒt mai sugestiv) ³
+³                                                              ³
+³     Lista de parametri: specificarea parametrilor, ca        ³
+³                         perechi (identificator, TD)          ³
+³                                                              ³
+³     Rezultat: (cƒnd operatia are sensul unei functii Pascal) ³
+³                TD al rezultatului Œntors                     ³
+³                                                              ³
+³     Pre: preconditia (eventuale conditii impuse parametrilor ³
+³                       de intrare)                            ³
+³                                                              ³
+³     Post: postconditia (precizarea legaturilor dintre        ³
+³                         rezultatele obtinute si parametrii   ³
+³                         de intrare)                          ³
+³                                                              ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+         Figura 3. Scheme de specificare
+
+      Pentru  exemplificare, vom specifica cƒteva TAD simple:  Zile,
+Natural si Sutime si TAD structurat Monede.
+
+Specificarea 1. Tipul abstract simplu Zile
+
+    Domeniu: multimea valorilor posibile este:
+       SAP={luni,marti,miercuri,joi,vineri,sƒmbata,duminica}.
+    Operatii:
+      Ieri(z:Zile):Zile       {Stabileste ziua precedenta a zilei z}
+        Pre:  zîSAP.
+        Post: Ieri(z) este ziua precedenta a zilei z.
+      Mƒine(z:Zile):Zile      {Stabileste ziua ce urmeaza zilei z}
+        Pre:  zîSAP.
+        Post: Mƒine(z) este ziua urmatoare a zilei z.
+      Libera(z:Zile):Boolean  {z este zi nelucratoare ?}
+        Pre:  zîSAP.
+        Post: Daca z este zi nelucratoare.
+                atunci Libera(z) este True
+                altfel Libera(z) este False.
+      Scrie(z:Zile)   {scrie valoarea lui z la dispozitivul standard
+                       de iesire}
+        Pre:  zSAP.
+        Post: Se va afisa ziua z ca sir de caractere.
+      Citeste(var z:Zile)   {citeste valoarea lui z de la dispozitivul
+                             standard de intrare}
+        Pre:  TRUE.
+        Post: rezultatul z se va citi ca sir de caractere ce reprezinta
+              o valoare din domeniul SAP.
+
+Specificarea 2. Tipul abstract simplu Natural
+
+    Domeniu: multimea valorilor posibile este multimea N a numerelor
+             naturale.
+    Operatii:
+      MaiMare(n1,n2:Natural):Boolean        {n1 > n2 ?}
+        Pre:  n1,n2îN.
+        Post: Daca n1 > n2
+                atunci MaiMare(n1,n2) va fi True
+                altfel MaiMare(n1,n2) va fi False.
+      Egal(n1,n2:Natural):Boolean           {n1 = n2 ?}
+        Pre:  n1,n2îN.
+        Post: Daca n1 = n2
+                atunci Egal(n1,n2) va fi True
+                altfel Egal(n1,n2) va fi False.
+      Aduna(n1,n2:Natural; var n:Natural)  {calculeaza suma lui n1 si n2}
+        Pre:  n1,n2îN.
+        Post: n = n1 + n2.
+      Scade(n1,n2:Natural; var n:Natural)  {scade n2 din n1}
+        Pre:  n1,n2îN si MaiMare(n1,n2).
+        Post: n = n1 - n2.
+      Ori(n1,n2:Natural; var n:Natural)    {calculeaza produsul lui n1 si n2}
+        Pre:  n1,n2îN.
+        Post: n = n1 * n2.
+      Cƒt(n1,n2:Natural; var n:Natural)
+             {calculeaza cƒtul Œmpartirii lui n1 la n2}
+        Pre:  n1,n2îN si n2>0.
+        Post: n = partea Œntreaga a cƒtului n1 / n2.
+      Rest(n1,n2:Natural; var n:Natural)
+            {calculeaza restul Œmpartirii lui n1 la n2}
+        Pre:  n1,n2îN si n2>0.
+        Post: n = n1 - Cƒt(n1,n2) * n2.
+
+Specificarea 3. Tipul abstract simplu Sutime
+
+    Domeniu: multimea valorilor posibile este multimea numerelor naturale
+             cuprinse Œntre 0 si 99, notata prin DS.
+    Operatii:
+      MaiMare(s1,s2:Sutime):Boolean         {s1 > s2 ?}
+        Pre:  s1,s2îDS.
+        Post: Daca s1 > s2
+                atunci MaiMare(s1,s2) va fi True
+                altfel MaiMare(s1,s2) va fi False.
+      Egal(s1,s2:Sutime):Boolean            {s1 = s2 ?}
+        Pre:  s1,s2îDS.
+        Post: Daca s1 = s2
+                atunci Egal(s1,s2) va fi True
+                altfel Egal(s1,s2) va fi False.
+      Aduna(s1,s2:Sutime; var n:Natural; var s:Sutime)
+                         {calculeaza suma lui s1 si s2}
+        Pre:  s1,s2îDS.
+        Post: s va contine partea fractionara a sumei dintre s1 si s2
+              iar n va contine partea Œntreaga a acesteia (transportul).
+      Scade(s1,s2:Sutime; var s:Sutime)     {scade s2 din s1}
+        Pre:  s1,s2îDS si MaiMare(s1,s2) sau Egal(s1,s2).
+        Post: s = s1 - s2.
+
+Specificarea 4. Tipul abstract structurat Monede
+
+    Elemente:   Elementele componente sunt partea Œntreaga, respectiv
+                partea fractionara a unei sume monetare.
+    Structura:  Se noteaza cu Lei partea Œntreaga a sumei, respectiv cu
+                Bani partea fractionara a acesteia.
+                Exista o corespondenta unu-la-unu Œntre fiecare
+                identificator si elementul component corespunzator.
+    Domeniu:    Valoarea partii Œntregi a sumei, Lei, este un numar natural,
+                iar cea a partii fractionare, Bani, este Œn intervalul
+                natural 0..99. Domeniul tipului Monede, DM este vazut ca
+                produsul cartezian al acestor doua domenii ale elementelor
+                componente.
+    Operatii:
+
+      BaniInMonede(n:Sutime; var r:Monede)
+                   {transforma suma n exprimata Œn Bani Œn Lei si Bani}
+        Pre:  nîDS.
+        Post: r este valoarea lui n exprimata Œn Lei si Bani.
+      LeiInMonede(n:Natural; var r:Monede)
+                   {transforma suma n exprimata Œn Lei Œn Lei si Bani}
+        Pre:  nîN.
+        Post: r este valoarea lui n exprimata Œn Lei si Bani.
+      LeiDinMonede(s:Monede):Natural{partea Œntreaga a sumei}
+        Pre:  sîDM.
+        Post: LeiDinMonede(s) este valoarea cƒmpului Lei al lui s.
+      BaniDinMonede(s:Monede):Sutime {partea fractionara a sumei}
+        Pre:  sîDM.
+        Post: BaniDinMonede(s) este valoarea cƒmpului Bani al lui s.
+      MonedeInReal(s:Monede):Real  {valoarea sumei s ca numar real}
+        Pre:  sîDM.
+        Post: numarul real MonedeInReal(s) va avea partea intreaga
+              egala cu Lei si partea fractionara egala cu Bani / 100.
+      RealInMonede(r:Real; var s:Monede)
+                    {valoarea numarului real r convertita la tipul Monede}
+        Pre:  rîR.
+        Post: sîDM are componentele:
+                cƒmpul Lei este partea Œntreaga a numarului real  r,
+                cƒmpul Bani are ca cifre primele doua zecimale din partea
+                  fractionara a lui r.
+      MaiMare(s1,s2:Monede):Boolean         {s1 > s2 ?}
+        Pre:  s1,s2îDM.
+        Post: Daca s1 > s2
+                atunci MaiMare (s1,s2)  va fi True
+                altfel MaiMare (s1,s2)  va fi False.
+      Egal(s1,s2:Monede):Boolean            {s1 = s2 ?}
+        Pre:  s1,s2îDM.
+        Post: Daca s1 = s2
+                atunci Egal (s1,s2)  va fi True
+                altfel Egal (s1,s2)  va fi False.
+      Aduna(s1,s2:Monede; var r:Monede)  {aduna s1 si s2}
+        Pre:  s1,s2îDM.
+        Post: r = s1 + s2.
+      Scade(s1,s2:Monede; var r:Monede)  {scade s2 din s1}
+        Pre:  s1,s2îDM si MaiMare(s1,s2).
+        Post: r = s1 - s2.
+      Scrie(s:Monede)  {scrie valoarea lui s la dispozitivul standard
+                        de iesire}
+        Pre:  sîDM.
+        Post: se va afi_a s Œn formatul '999999,99 lei'.
+      Dobƒnda(s:Monede; d:Real; var r:Monede)
+              {calculeaza dobƒnda r aferenta sumei s si ratei r}
+        Pre:  s  DM si dR.
+        Post: r = dobƒnda la suma s calculata cu rata dobƒnzii d.
+
+
+2.3.2. Proiectarea operatiilor unui TAD
+
+      Cea mai importanta faza Œn specificarea unui TAD este proiectarea
+multimii operatiilor. Multimea operatiilor Œn ansamblul ei trebuie sa
+Œndeplineasca urmatoarele conditii:
+  (1) sa fie completa;
+  (2) sa fie minimala.
+
+      Dupa criteriul functionalitatii lor, clasele de operatii ale unui
+TAD sunt urmatoarele (clasificare data de Riley, 1987):
+  (1) constructori;
+  (2) operatii de intrare/iesire;
+  (3) operatii de conversie;
+  (4) operatii de test;
+  (5) operatii de copiere;
+  (6) operatii de selectare.
+
+Vom discuta Œn cele ce urmeaza caracteristicile fiecarei clase de
+operatii. Exemplele furnizate apartin specificarii 4.
+
+      Constructorii sunt operatii prin care se atribuie valori unor
+realizari ale TAD, adica creeaza sau modifica instante ale TAD. In cazul
+Œn care operatia se realizeaza prin utilizarea unor date de alt tip,
+constructorii se numesc initiali. Completitudinea setului de operatii
+se poate formula astfel:
+
+      Constructorii unui TAD trebuie sa produca orice element din domeniul
+      acestuia.
+
+Exemple de constructori: BaniInMonede, LeiInMonede (initiali),
+                         Aduna, Scade, Dobƒnda.
+
+      Operatiile de intrare-iesire (numite prescurtat operatii de I/O)
+permit citirea sau scrierea valorii unei realizari a TAD de pe/pe suport
+extern. Acest lucru este necesar deoarece, cu putine exceptii, TAD sunt
+structurate si majoritatea LP nu dispun de operatii de I/O cu care sa
+se poata implementa TVD asociate TAD. Operatiile de intrare pot fi
+considerate si constructori. Scrie este o operatie de I/O (de iesire mai
+exact, deci nu este constructor).
+
+      Operatiile de conversie realizeaza transformarea valorii instantelor
+TD Œn valori de instante ale altor TD. Operatiile MonedeInReal si
+RealInMonede fac parte din aceasta clasa. RealInMonede se poate
+considera si constructor pentru Monede.
+
+      Operatiile de test sunt necesare Œn primul rƒnd pentru testarea
+preconditiilor, putƒnd fi folosite chiar Œn specificarea TAD (vezi
+specificarile 2-4). MaiMare si Egal sunt astfel de operatii.
+
+      Operatiile de copiere sunt necesare cƒnd nu se poate folosi
+instructiunea de atribuire pentru a copia valoarea unei instante de TAD
+Œntr-o alta instanta. Ele sunt considerate si constructori, numiti uneori
+chiar constructori de copiere (in C++). Pentru TAD Monede, o operatie
+
+     Copy(m1:Monede; var m2:Monede)        { m2 := m1 }
+
+ar fi o operatie de copiere care ar copia fiecare camp al instantei m1
+in campul corespunzator al instantei m2.
+
+      Operatiile de selectare permit (Œn cazul TAD structurate) operarea
+cu elementele componente ale unei instante a TAD. LeiDinMonede si
+BaniDinMonede sunt astfel de operatii. Cu alte cuvinte, operatiile de
+selectare permit aflarea valorii unei componente a instantei (pentru TAD
+structurate), fara a permite modificarea ei.
+
+      O  alta clasificare a operatiilor, data de Meyer (1988) distinge 3
+clase:
+  - constructori (creeaza noi instante ale TAD),
+  - accesori (permit accesul la valorile anumitor componente, fara a le
+    modifica)   si
+  - modificatori (modifica anumite componente ale instantei).
+
+Legatura dintre aceste doua clasificari este sintetizata Œn tabelul 2.
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³         Meyer                ³         Riley                   ³
+ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+³   constructori               ³ constructori initiali           ³
+³                              ³ operatii de conversie spre  TAD ³
+³                              ³ operatii de intrare             ³
+³   modificatori               ³ constructori (altii decƒt cei   ³
+³                              ³         initiali)               ³
+³   accesori                   ³ operatii de test                ³
+³                              ³ operatii de conversie de la TAD ³
+³                              ³ operatii de selectare           ³
+³                              ³ operatii de iesire              ³
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+          Tabelul 2. Tipuri de operatii pentru TAD
+
+2.3.3. Implementarea tipurilor abstracte de date
+
+      Asa cum am precizat anterior, implementarea unui TAD presupune
+parcurgerea urmatoarelor etape:
+  - alegerea unui limbaj de programare LP,
+  - stabilirea reprezentarii domeniului TAD Œn termenii acestui limbaj,
+  - proiectarea algoritmilor necesari pentru implementarea operatiilor
+    (tinƒnd cont de reprezentare)  si,
+  - scrierea de  subprograme corespunzatoare fiecarei operatii, in LP.
+
+In mod normal, faza de implementare mai contine o etapa de testare,
+vazuta atƒt la nivelul fiecarei operatii, cƒt si al TAD Œn ansamblu
+(testarea procedurala si testarea de modul). Rezultatul implementarii,
+tipul virtual de date, TVD, va fi numit Œn cele ce urmeaza modul sau
+pachet, Œn ideea ca el este o unitate sintactica de sine statatoare,
+compilabila separat. In sectiunea 2.4. vom prezenta implementarile TAD
+prezentate Œn specificarile 1 - 4.
+
+2.3.4. Avantajele TAD
+
+      Abordarea la nivel abstract a TD ofera cƒteva avantaje importante
+pentru activitatea de programare Œn general:
+  (1) specificatii precise;
+  (2) modularitate;
+  (3) Œncapsularea si ascunderea informatiei;
+  (4) simplitate Œn proiectare si utilizare;
+  (5) integritatea reprezentarii;
+  (6) independenta de implementare si
+  (7) modificabilitate.
+
+      Deoarece specificarea TAD se face folosind un limbaj precis, iar
+semantica operatiilor nu face apel la reprezentarea domeniului,
+definitiile obtinute sunt clare, neambigue si independente de contextul de
+utilizare.
+     Despre modularitate: putem  discuta de doua tipuri de module: TAD si
+TVD. Este extrem de important ca definirea unui TAD (care utilizeaza
+operatii sau elemente ale altor tipuri de date) sa utilizeze numai
+definitiile TAD respective, fara vreo referire la TVD ce le implementeaza.
+In exemplele prezentate de noi Œn 2.3.1, TAD Monede este construit cu
+ajutorul TAD Natural si Sutime, Œnsa fara nici o referire la implementarea
+acestora. In mod natural, implementarea unui astfel de TAD va trebui sa
+apeleze operatiile TAD ale componententelor sale, prevazute Œn specificare.
+     Incapsularea reprezentarii si operatiilor (punerea lor Œmpreuna)
+induce ordine si eficienta. Pentru o anumita structura de date este
+natural sa se conceapa nu numai o operatie, ci toate operatiile de
+manipulare a respectivei structuri. Acest lucru, facut independent de
+utilizarea respectivei structuri, permite o testare usoara a operatiilor
+proiectate si asigura flexibilitate, o noua operatie putƒnd fi introdusa
+oricƒnd, daca e nevoie. Acordarea unei atentii egale reprezentarii si
+operatiilor conduce la realizarea de module mai stabile, deschizƒnd
+poarta reutilizarii lor Œn contexte adecvate.
+      Ascunderea informatiei este una dintre cerintele majore ale
+modularizarii. Modulul client nu trebuie sa cunoasca decƒt modul de apelare
+a serviciilor din modulul furnizor (server).
+      Abstractizarea datelor ofera simplitate. La prima vedere, termenul
+abstract ar avea Œntelesul de teoretic, abscons, greu de Œnteles. In cazul
+nostru, abstractizarea are o semnificatie opusa. Esenta ei consta tocmai
+Œn surprinderea aspectelor si comportamentului esential al datelor
+(ca structura si operatii) prin neglijarea detaliilor de reprezentare
+si de implementare. Aceasta concentrare pe aspectele esentiale ofera
+simplitate Œn proiectarea TAD de catre specialist. Pe de alta parte,
+cerinta de minimalitate a setului de operatii ale TAD ofera simplitate Œn
+utilizarea acestora, adica o Œntelegere usoara de catre utilizator a
+comportamentului TAD. Din aceste afirmatii nu trebuie sa se Œnteleaga ca
+aspectele de implementare sunt neglijate. La nivelul abstract acestea nu
+sunt luate Œn considerare nu pentru ca ele nu sunt importante, ci pentru
+ca aceste detalii vor fi discutate la vremea lor. Principiul rafinarii
+succesive (stepwise refinement) aplicat TAD Œnseamna trei etape:
+  - abstractizare,
+  - definirea reprezentarii si
+  - implementare.
+
+      Un  TVD poate fi vazut ca o cutie neagra, Œn care operatiile sunt
+butoane ce realizeaza anumite functii (operatii) ale cutiei. Proiectantul
+(implementatorul) cutiei cunoaste interiorul ei, dar utilizatorul
+(programatorul client) nu o poate desface pentru a vedea ce e Œnauntru,
+ci o poate folosi prin apasarea butoanelor ei. Integritatea reprezentarii
+poate fi discutata pe doua nivele: abstract si virtual. La nivelul
+abstract, integritatea TAD este asigurata de maniera Œn care sunt
+concepute operatiile sale. La nivelul virtual, daca toate operatiile sunt
+implementate corect, atunci nici una dintre ele nu poate afecta
+integritatea reprezentarii. In plus, programatorul client nu va avea acces
+la reprezentarea informatiei din interiorul modulului server (principiul
+ascunderii informatiei). Notiunea de integritate (consistenta) a
+reprezentarii se poate defini cu ajutorul invariantului acesteia, care
+este un predicat: I : D Ä> {false,true} .
+
+      Spunem ca reprezentarea este consistenta daca I are valoarea true
+pentru orice element din domeniul TAD. De exemplu, pentru TAD Monede,
+invariantul reprezentarii este:
+
+    I(r:Monede) =
+      0  <= r.Lei  <= MaxLongInt si
+      0  <= r.Bani <=  99 .
+
+      La nivelul abstract detaliile de reprezentare si implementare a
+operatiilor sunt neglijate intentionat. De asemenea, specificarea se face
+folosind un limbaj specializat si nu unul de programare. Prima decizie
+Œn faza de implementare este alegerea LP. Acest lucru se bazeaza pe
+cunoasterea TD si a instructiunilor cu care acest limbaj poate opera si
+are o importanta decisiva Œn succesul implementarii. Urmatoarea etapa
+importanta este stabilirea reprezentarii TD, concretizare a celei abstracte
+prin utilizarea TD ale LP ales. Pentru acelasi TAD se pot alege
+reprezentari structural diferite, ceea ce conduce la algoritmi diferiti.
+Mai mult, pentru aceeasi reprezentare se pot concepe mai multi algoritmi
+(deci implementari diferite) pentru o aceeasi operatie. Daca specificarea
+operatiei o este corecta, modificarea codului de implementare al ei are
+un efect local, aceasta neimplicƒnd modificari Œn alte module sau programe
+ce apeleaza o. Multi autori recomanda o abordare gradata a ultimelor doua
+faze de implementare a unui TAD, Œn maniera urmatoare, pentru o
+reprezentare fixata:
+   (1) se  stabilesc algoritmii cei mai simpli pentru fiecare operatie;
+   (2) se implementeaza operatiile;
+   (3) se testeaza TVD Œn ansamblu (teste de anduranta), evidentiindu-se
+       operatiile care sunt mari consumatoare de resurse (timp sau memorie);
+   (4) se reproiecteaza algoritmii Œn cauza si se reia ciclul de la faza (2).
+
+      Procesul  se Œncheie cƒnd Œn faza (3) rezultatele obtinute satisfac
+cerintele impuse. In cazul cƒnd nu se obtin rezultate satisfacatoare, se
+Œncearca o alta reprezentare.
+
+2.4. Exemple
+
+      In cele ce urmeaza vom ilustra implementarea Œn Turbo Pascal a TAD
+specificate Œn paragraful 3.2.
+      Datorita restrictiilor limbajului, numele modulului va fi compus din
+litera U (de la Unit) si numele TAD.
+
+2.4.1. TVD Zile
+
+      TAD Zile poate fi implementat natural Œn Turbo Pascal, folosind TVD
+enumerare. Remarcam parcurgerea circulara a domeniului SAP pentru
+operatiile Ieri si Mƒine si implementarea acestora ca subprograme de tip
+functie Œn Turbo Pascal.
+
+Vezi UZile.PAS
+
+2.4.2. TVD Natural
+
+      Implementarea  TAD Natural pe care o prezentam corespunde numerelor
+naturale ce se pot reprezenta Œn memoria calculatorului pe 4 octeti
+(intervalul [0..MaxLongInt], MaxLongInt = 2^31-1 Œn Turbo Pascal).
+Un numar natural este deci considerat Œntreg masina pe 4 octeti. Tinƒnd
+cont de aceasta reprezentare, implementarea TAD Natural se face extrem de
+simplu, folosindu-se  operatiile tipului predefinit LongInt (aritmetice si
+relationale) din Turbo Pascal. Sugeram alte doua modalitati de
+reprezentare a TVD Natural, diferite de cea aleasa, care sa permita
+manipularea de numere naturale n > MaxLongInt, cu:
+   - n reprezentat ca tablou cu MaxDim cifre (MaxDim constanta,
+     elementul de tablou sa fie de tip Byte si sa contina o cifra a
+     numarului scris Œntr-o baza de numeratie numita Baza;
+     (elementul de indice i va contine cifra de rang i = coeficientul lui
+      Baza^i);
+   - n reprezentat ca lista Œnlantuita, nodul i al listei continƒnd ca
+     informatie utila cifra i a numarului scris Œn baza Baza.
+
+      Pentru fiecare dintre cele doua reprezentari sugerate, implementarea
+trebuie refacuta, plecƒnd de la specificatiile 2 si obtinƒndu-se astfel noi
+variante ale TVD Natural, care vor diferi ca functionalitate de cea de mai
+jos doar prin domeniu.
+
+Vezi Unit-ul UNatural.PAS
+
+      Din motive de simplificare a implementarii, la operatiile Aduna si
+Ori nu este testata depasirea valorii maxime reprezentabile, MaxLongInt.
+Sugeram cititorului sa realizeze singur o alta implementare a acestor
+operatii, Œn care sa se semnaleze eroare Œn cazul depasirii.
+
+2.4.3. TVD Sutime
+
+      Implementarea TAD Sutime pe care o prezentam considera reprezentarea
+domeniului acestui TAD ca subdomeniu al tipului predefinit Integer din
+Turbo Pascal. Tinƒnd cont de aceasta reprezentare, implementarea se face
+extrem de simplu, folosindu-se operatiile tipului predefinit Integer
+(aritmetice si relationale) din Turbo Pascal. In interfata si implementarea
+unit-ului se foloseste TVD Natural, prezentat Œn 2.4.2.
+
+Vezi Unit-ul USutime.PAS
+
+      Analizƒnd implementarea operatiei Aduna, putem sugera si o alta
+solutie, mai generala:
+
+       Procedure Aduna(s1,s2:Sutime; var n:Natural; var s:Sutime);
+        Var
+          n1,n2,n3 : Natural;
+        Begin
+          n1 := SutimeToNatural(s1);
+          n2 := SutimeToNatural(s2);
+          UNatural.Adun_(n1,n2,n3);
+          UNatural.Cƒt(n3,100,n);
+          UNatural.Rest(n3,100,n1);
+          s := NaturalToSutime(n1)
+        End; { Aduna }
+
+Œn care am folosit operatii de conversie de la tipul Sutime la tipul Natural
+(SutimeToNatural) si invers (NaturalToSutime), iar calculele s-au facut
+folosind operatiile tipului Natural.
+
+2.4.4. TVD Monede
+
+      Acest TVD este un exemplu de folosire intensiva a altor TVD (Natural,
+Sutime) pentru implementarea TAD Monede. Se remarca calificarea operatiei
+cu numele modulului (Œn situatia conflictului de nume). Folosirea
+operatiilor relationale ale TVD Natural (MaiMare, Egal) Œn locul
+operatorilor relationali (predefiniti) este un exemplu de apel independent
+de implementare: daca TVD Natural ar fi altfel implementat (vezi sugestiile
+facute Œn 3.2.3.1), n-ar putea fi folositi respectivii operatori, prin
+urmare codul sursa al TVD  Monede (operatiile MaiMare si Egal) ar trebui
+rescris). Utilizƒnd operatiile cu care a fost dotat TAD Natural, se obtine
+o implementare mult mai generala si mai flexibila, care nu este afectata
+de modificarea TVD folosite Œn ea.
+
+Vezi UMonede.PAS
+

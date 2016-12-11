@@ -1,0 +1,57 @@
+l   3
+ ent   1   l   4
+ ent   2   l   5
+ lca'Hello World                                                                     '
+ ldci 11
+ ldci 11
+ lda   0       6
+ csp         wrs
+i   10
+ lda   0       6
+ csp         wln
+ lca'1 + 2 =                                                                         '
+ ldci 8
+ ldci 8
+ lda   0       6
+ csp         wrs
+ ldci 1
+ ldci 2
+ adi
+i   20
+ ldci 10
+ lda   0       6
+ csp         wri
+ lda   0       6
+ csp         wln
+ lca'Enter a small integer :                                                         '
+ ldci 23
+ ldci 23
+ lda   0       6
+ csp         wrs
+i   30
+ lao           9
+ lda   0       5
+ csp         rdi
+ lda   0       5
+ csp         rln
+ lca'you entered :                                                                   '
+ ldci 14
+ ldci 14
+ lda   0       6
+ csp         wrs
+i   40
+ ldoi          9
+ ldci 10
+ lda   0       6
+ csp         wri
+ lda   0       6
+ csp         wln
+ retp
+l   4=10
+l   5=9
+q
+i    0
+ mst           0
+ cup   0   l   3
+ stp
+q

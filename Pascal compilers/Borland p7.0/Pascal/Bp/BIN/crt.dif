@@ -1,0 +1,28 @@
+Changed line 45
+  >DelayCnt        DW      ?
+To
+  >DelayCnt        DD      ?
+
+Changed lines 105-107
+  >        MOV     CX,55
+  >        DIV     CX
+  >        MOV     DelayCnt,AX
+To
+  >        xchg    dx,cx
+  >        mov     bx,1193
+  >        mul     bx
+  >        xchg    cx,dx
+  >        xchg    dx,ax
+  >        mul     bx
+  >        add     ax,cx
+  >        adc     dx,0
+  >        MOV     word ptr DelayCnt,AX
+  >        MOV     word ptr DelayCnt+2,DX
+
+Changed lines 447-448
+  >@@1:    MOV     AX,DelayCnt
+  >        XOR     DX,DX
+To
+  >@@1:    MOV     AX,word ptr DelayCnt
+  >        MOV     DX,word ptr Delaycnt+2
+

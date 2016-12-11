@@ -1,0 +1,19 @@
+C++ Editor version 1.8
+for Win9x/NT/2000/XP
+Copyright © UA1ZCL Tools
+http://www.ua1zcl.com
+
+Description:
+ C++ Editor is a small text editor
+ with syntax highlighting, designed
+ for C++ programmers.
+
+Ced.zip file content:
+Ced.cab: archive file
+Ced_license.txt: licence agreement
+Ced.xml: PAD file
+Readme.txt: readme text file
+Release.txt: release notes
+Setup.exe: setup program
+Setup.ini: setup initialization file
+File_id.diz:  this file

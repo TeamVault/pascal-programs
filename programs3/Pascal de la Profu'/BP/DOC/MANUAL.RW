@@ -1,0 +1,88 @@
+                            MANUAL.RW
+                            =========
+
+
+This file contains additions and corrections to the Resource
+Workshop User's Guide.
+
+The Resource Workshop online documentation also includes these
+files:
+
+BWCCAPI.RW    Describes technical aspects of Borland Windows
+              Custom Controls.
+
+CUSTCNTL.RW   Describes creating Windows custom controls classes,
+              with C and Pascal programming examples.
+
+BWCCSTYL.RW   Describes general style guidelines for creating
+              resources using BWCC.
+
+
+
+1        Changes to the Resource Workshop User's Guide
+------------------------------------------------------
+
+The following sections describe corrections to the Resource
+Workshop User's Guide or changes to existing functionality.
+
+
+1.1      Chapter 8, Using the Paint editor
+------------------------------------------
+
+p. 186   If you hold down the Shift key when you use the Paint
+Can, you replace all instances of the color you click on,
+contiguous or not. For example, if you select red from the Colors
+palette and Shift-click with the Paint Can on a blue pixel in
+your bitmapped resource, all blue pixels in the image are changed
+to red.
+
+
+1.2      Chapter 12, Fonts
+--------------------------
+
+p. 254   Windows 3.1 includes a third type of font: TrueType
+fonts, which are an enhanced form of vector font. They are
+described in your Windows documentation.
+
+p. 269-270  The description of "Creating an .FON file with
+Borland Pascal" will work with Windows 3.0, but not Windows 3.1.
+
+To create a Windows 3.1-compatible .FON file with Borland Pascal,
+follow the Turbo Assembler and TLINK instructions in the previous
+section, "Creating an .FON file with C++" (page 267-269).
+
+
+1.3      Appendix A, Technical Notes
+------------------------------------
+
+p. 283   The sections on the #undef preprocessor directive and
+token pasting in preprocessor statements apply only to the C
+programming language. They do not apply to Resource Workshop and 
+Borland Pascal.
+
+p. 288-292       The syntax descriptions and examples for the
+command-line tools (RLINK, BRCC, and BRC) use the notation
+"<filename>" to indicate where you must supply a file name. The
+file names need not be the same. For example, when using RLINK,
+you can specify a .RES input file and an .EXE ouput file with
+different names, as below:
+
+    rlink my_res.res my_exe.exe
+
+In some cases, using the same file name will return an error. In
+the following example:
+
+    rlink -fihello.res hello.res hello.exe
+
+you're linking the same file twice.
+
+Note also that, for RLINK, the .RES file name is optional.
+
+p. 291   If you're using Borland command-line tools only, the -30
+and -31 switches are not invalid when the -r switch is specified.
+The incompatibility arises only when you use the Microsoft 3.1
+Resource Compiler, which can't produce 3.0-compatible .RES files.
+
+
+            ========= END OF FILE MANUAL.RW =========
+

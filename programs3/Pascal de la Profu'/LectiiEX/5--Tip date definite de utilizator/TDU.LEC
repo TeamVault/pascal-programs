@@ -1,0 +1,514 @@
+3. Tipuri de date definite de utilizator
+
+Aceasta sectiune a fost scrisa cu scopul de a ilustra modul in care a evoluat
+conceptul de tip de date in limbajele de programare. Intr-un viitor volum ce
+se va constitui ca partea a doua a lucrarii de fata, doua dintre momentele
+marcante ale evolutiei tipurilor, programarea bazata pe obiecte si programarea
+orientata pe obiecte vor fi tratate detaliat in capitole distincte.
+
+Din punctul de vedere al extensibilitatii sistemului lor de tipuri, limbajele
+de programare se pot clasifica in:
+
+1) Limbaje de programare cu tipuri de date (TD) predefinite;
+2) Limbaje de programare cu TD structurate;
+3) Limbaje de programare bazata pe obiecte;
+4) Limbaje de programare orientata pe obiecte;
+
+Prima categorie corespunde limbajelor ce nu poseda mecanisme de tipizare:
+FORTRAN, COBOL, BASIC etc. Unele dintre aceste limbaje permit si lucrul cu
+variabile structurate, fara ca acestea sa posede un tip recunoscut de sistemul
+de tipuri al limbajului. Prin urmare, verificarea tipurilor este slaba si
+neuniforma, aceasta aplicandu-se doar la tipurile predefinite.
+
+Limbajele din a doua categorie permit construirea de noi tipuri de date si
+integrarea partiala a acestora in sistemul propriu de tipuri. Mecanismele de
+tipizare de care dispun aceste limbaje se folosesc la declararea de tipuri cu
+nume, simplificand atat exprimarea programelor, cat si verificarile de
+consistenta a folosirii variabilelor. Pentru declararea unui nou tip de date,
+sintaxa limbajului pune la dispozitia programatorului constructorii de tipuri,
+care pot combina ortogonal tipurile deja recunoscute de sistemul de tipuri.
+Din pacate, declararea noilor tipuri de date utilizator (in esenta tipurile
+structurate) acopera doar un aspect al acestora, si anume structura, adica
+informatia de reprezentare. Din acest motiv, integrarea in sistemul de tipuri
+este partiala: operatiile asupra instantelor noilor tipuri definite de
+programator isi gasesc exprimarea (cu cateva exceptii, Algol68 de exemplu,
+care permite definirea operatorilor) doar sub forma unor subprograme, iar
+verificarea folosirii corecte a variabilelor (in concordanta cu tipul lor) nu
+poate fi realizata de sistemul de tipuri. Prin urmare, tipurile utilizator nu
+sunt tratate de sistemul de tipuri in aceeasi maniera ca si tipurile
+predefinite, primele fiind "cetateni de mana a doua" (second class citizens)
+ai universului limbajului. Exemple tipice de astfel de limbaje sunt Pascal si
+Modula.
+
+Plecand de la ideea integrarii complete a tipurilor utilizator in sistemul de
+tipuri al unui limbaj, proiectantii de limbaje au realizat la inceput
+completarea declaratiei unui tip de date utilizator cu specificarea operatiilor
+noului tip, considerate ca subprograme. Aceasta maniera de declarare a
+tipurilor utilizator se numeste abstractizarea datelor (engl. data abstraction).
+Noile tipuri astfel declarate se numesc fie tipuri abstracte de date (engl.
+abstract data types), fie tipuri de date definite de utilizator (engl.
+user-defined data types). Consideram, la fel cu Bjarne Stroustrup [Str91] ca
+ultima definitie este mai potrivita in contextul limbajelor de programare,
+deoarece termenul de tip abstract de date este folosit si consacrat in domeniul
+specificarilor formale (algebrice).
+
+O variabila a unui tip de date utilizator poarta numele de obiect (instanta a
+tipului de date utilizator). Termenul obiect a fost definit in capitolul
+precedent ca fiind si o regiune de memorie impreuna cu valoarea continuta in
+ea (referinta impreuna cu valoarea unei variabile). Consideram ca definitia
+termenului de obiect data mai sus nu contravine acceptiunii anterioare, ci o
+completeaza. Limbajele de programare care permit construirea de tipuri de date
+definite de utilizator (in acceptiunea prezentata anterior) si lucrul cu
+obiecte se numesc limbaje de programare bazata pe obiecte (engl. object-based
+programming languages). Limbaje tipice sunt Simula (primul), Concurrent Pascal,
+Euclid, Clu, Ada.
+
+In general, un tip de date utilizator se declara intr-o maniera similara
+tipului inregistrare. Diferentele dintre tipul inregistrare si tipul de date
+utilizator TDU constau in:
+  1) componentele TDU sunt campuri si operatii, pe cand componentele
+     inregistrarii sunt doar campuri;
+  2) declararea TDU trebuie completata cu definirea acestuia, unde se
+     precizeaza codul operatiilor (la inregistrare nu exista partea de
+     definire, pentru ca nu exista componente operatii);
+     declaratia completa a TDU inseamna deci precizarea structurii acestuia
+     (declaratii de componente), numita de obicei interfata TDU, insotita de
+     precizarea codului operatiilor TDU, numita de obicei implementarea TDU;
+     interfata, impreuna cu implementarea TDU formeaza un domeniu de
+     vizibilitate inchis;
+  3) din punctul de vedere al accesibilitatii, componentele unui TDU se impart
+     in doua categorii: publice (accesibile si din exteriorul domeniului de
+     vizibilitate al TDU) si private (accesibile numai in interiorul domeniului
+     de vizibilitate al TDU); componentele tipului inregistrare sunt toate
+     publice.
+
+La fel ca si declaratia tipului inregistrare, declaratia unui TDU stabileste
+un domeniu de vizibilitate inchis pentru numele campurilor si operatiilor
+acestuia. La folosirea unui obiect o de tipul T (tip de date utilizator),
+accesarea unui camp c si a unei operatii p, ambele publice, se va face tot
+prin calificarea acestora cu numele obiectului: de exemplu o.c sau o.p in
+Modula sau Turbo (Borland) Pascal. Daca insa c si p sunt private, atunci
+constructiile o.c sau o.p din Modula sau Turbo (Borland) Pascal vor fi valide
+numai in partea de implementare a tipului T (domeniul sau de vizibilitate
+inchis).
+
+Caracteristicile abstractizarii datelor sunt incapsularea si ascunderea
+datelor. Prin incapsulare (engl. encapsulation) se pun impreuna declaratiile
+campurilor si operatiilor unui nou tip. Ascunderea datelor (engl. data hiding)
+inseamna ca toate campurile unui obiect sunt inaccesibile in mod direct.
+Accesarea campurilor unui obiect se face numai prin intermediul operatiilor
+tipului acestuia. In cazul ideal, cand declararea tipurilor se face abstract,
+folosind un limbaj de specificare, se atinge inca un deziderat: independenta
+de reprezentare, adica tipul este discutat in termenii comportamentului sau
+(semantica operatiilor) si nu in termenii unei reprezentari particulare.
+Unei singure specificari abstracte pot sa-i corespunda mai multe implementari
+concrete (in care este precizata reprezentarea campurilor tipului si in functie
+de aceasta algoritmii operatiilor).
+
+In capitolul precedent s-a afirmat ca tipul de date este un mecanism de
+clasificare a expresiilor. Apare o intrebare fireasca: tipurile de date
+utilizator nu se pot clasifica la randul lor? Precedente exista: intre tipurile
+predefinite (cele numerice, de exemplu) exista relatii de incluziune.
+Incluziunea este considerata, la aceste tipuri numerice, ca o incluziune a
+domeniilor valorilor tipurilor, in conditiile in care gama de operatii ramane,
+principial, aceeasi. Raspunsul la intrebarea de mai sus este afirmativ, insa
+incluziunea trebuie tratata atat din punctul de vedere al domeniului valorilor,
+cat si din punctul de vedere al multimii operatiilor.
+
+Un tip de date are doua componente definitorii: domeniul valorilor (notat cu D)
+si multimea operatiilor (notata cu O).
+
+Spunem ca tipul B (de baza) este inclus in tipul D (derivat) daca are loc
+incluziunea:
+
+	DB < DD, OB < OD   (< inseamna aici 'inclus')
+
+unde:
+	D = (DD, OD)  DD - domeniul lui D, OD - operatiile lui D
+	B = (DB, OB)  DB - domeniul lui B, OD - operatiile lui B
+
+Ideea este urmatoarea: un tip nou, D, se poate declara cu ajutorul unui tip
+existent, B (de la care "mosteneste" atat domeniul valorilor, cat si multimea
+operatiilor). Pentru noul tip D trebuiesc precizate in plus elementele
+specifice, care cu ajutorul notatiilor de mai sus inseamna:
+
+	DD = DB U (DD \ DB)	mostenit: DB; specific: DD \ DB
+	OD = OB U (OD \ OB)	mostenit: OB; specific: OD \ OB
+
+Prin urmare, declararea unui nou tip D trebuie sa contina specificarea
+mostenirii si precizarea elementelor specifice (structura si operatii) care-l
+deosebesc de tipul de baza B.
+
+Din pacate, terminologia folosita in diverse limbaje de programare nu este de
+cele mai multe ori adecvata. Astfel, tipul de baza se numeste supertip, iar
+tipul derivat subtip (Simula, Object Pascal, Smalltalk), fapt ce provoaca
+confuzie: prefixul "super" inseamna ceva mai larg, mai cuprinzator, iar prefixul
+"sub" inseamna ceva mai restrans, mai particular. De fapt, termenii de
+cuprinzator (in sensul de general) si de particular (in sensul de specializat)
+se potrivesc: tipul de baza poseda caracteristicile generale ale unei familii
+de tipuri, iar tipul derivat este o specializare a tipului de baza. Termenii de
+tip de baza si tip derivat sunt preluati din terminologia limbajului C++. O
+notatie alternativa si adecvata este: tip parinte sau ascendent (pentru tip de
+baza) si tip fiu sau descendent (pentru tip derivat). Se foloseste mai putin
+termenul de incluziune a tipurilor.
+
+Pe de alta parte, sintagma "tip de date definit de utilizator" are prea multe
+cuvinte. In cele ce urmeaza, preluand terminologia limbajului C++, vom inlocui
+aceasta sintagma cu termenul de clasa. Acest termen provine din limbajul Simula,
+primul care a introdus majoritatea terminologiei in domeniul obiectual si este
+cvasiunanim acceptat. Termenii de clasa si obiect (instanta) sunt sinonimi
+termenilor de tip de date si variabila de tipul respectiv. Componentele unei
+clase sunt campuri (variabile de instanta, date) si metode (operatii). Fiecare
+obiect al clasei va avea o stare proprie (definita de valorile campurilor sale;
+campurile sunt cele precizate in declaratia clasei, iar valorile acestora se
+stabilesc la construirea obiectului - initializare, sau la modificarea acestuia)
+si un comportament propriu, in cadrul oferit de metodele clasei si (foarte
+important) in functie de starea sa. Obiectele comunica intre ele prin mesaje,
+care sunt de fapt apeluri de metode. Obiectul caruia ii este destinat mesajul
+se numeste obiect receptor, iar metoda apelata se numeste selector. Mesajul
+mai poate contine eventuale argumente de apel al metodei: "o.m(lista_arg)"
+inseamna apelul metodei "m" a obiectului "o" cu lista de argumente "lista-arg".
+
+Prin urmare, se pot defini clase noi (derivate), folosind mostenirea. Relatia
+de mostenire este o relatie de la clasa derivata la clasa de baza. O clasa
+derivata poate fi, la randul ei, clasa de baza pentru alte clase. Prin urmare,
+o clasa derivat_apoate avea mai multi parinti: clasa de baza directa
+(specificata in declaratia clasei derivate) si clase de baza indirecte
+(specificate in declaratia clasei de baza sau in declaratiile ascendentilor
+acesteia). Exista mostenire simpla (clasa derivata are cel mult o clasa de baza
+directa) si mostenire multipla (clasa derivata are mai multe clase de baza
+directe).
+
+Relatia de mostenire este o relatie de ordine partiala pe multimea claselor
+ce au aceeasi clasa de baza, stabilindu-se astfel o structura de mostenire.
+In cazul mostenirii simple, structura se poate reprezenta printr-un arbore,
+numit arbore de mostenire. Radacina acestui arbore se numeste clasa de baza a
+ierarhiei. In cazul mostenirii multiple, reprezentarea claselor se face
+printr-un graf de mostenire (numit si latice de mostenire).
+
+Clasa sau clasele de baza ale unei structuri de mostenire stabilesc
+comportamentul comun al tuturor claselor din aceasta structura. Prin urmare,
+orice obiect al unei clase derivate C dintr-o structura de mostenire cu radacina
+B va avea (intre altele) reprezentarea clasei B si operatiile clasei B.
+
+In afara de mostenire, este nevoie de inca o proprietate pentru a defini
+complet termenul de programare orientata pe obiecte. Aceasta proprietate,
+numita polimorfismul operatiilor sau mai pe scurt polimorfism, asigura o notatie
+unitara pentru operatii care semantic sunt diferite. Termenul de polimorfism
+este imprumutat din biologie, unde inseamna forme (aspecte, insusiri) multiple,
+notate identic. In termenii programarii orientate pe obiecte, polimorfismul se
+defineste astfel: obiecte diferite recunosc (si pot raspunde la) acelasi mesaj.
+Acest lucru inseamna ca un apel de metoda "o.m(lista_arg)" va fi tratat in
+functie de tipul receptorului "o", adica se va selecta si se va executa metoda
+"To.m" unde "To" este tipul (clasa) obiectului "o". Polimorfismul necesita 
+mostenire si se bazeaza pe faptul ca toate metodele declarate in clasa radacina 
+sunt recunoscute de toate obiectele ce sunt instante ale claselor din ierarhie.
+
+Programarea orientata pe obiecte se defineste ca fiind programare bazata pe 
+obiecte plus mostenire plus polimorfism. Pentru ilustrarea conceptelor 
+introduse in aceasta sectiune, vom prezenta in continuare un exemplu scurt si 
+sugestiv, care incearca rezolvarea unei aceleiasi probleme folosind toate cele 
+patru abordari enumerate la inceputul sectiunii. 
+
+Consideram problema cu urmatorul enunt: 
+  Sa se implementeze o stiva de numere intregi si sa se introduca in ea
+  numerele cuprinse intre 1 si 10, dupa care sa se scoata elementele introduse.
+  Dupa fiecare operatie sa se afiseze elementul din varful stivei.
+
+Conceptual, stiva este un container cu un singur capat, prin care se introduc
+sau se scot elemente din ea. De fiecare data, este accesibil doar elementul din
+varful stivei, deci stategia de servire a stivei este LIFO (Last In, First Out,
+adica ultimul intrat, primul iesit). Ca maniera de implementare (reprezentare),
+containerul va fi un tablou cu o dimensiune prefixata, iar varful stivei va fi
+indicele de tablou corespunzator ultimului element introdus in acesta. Asupra
+stivei se pot efectua doua operatii de baza, notate cu numele lor consacrat
+in limba engleza: Push (apasa), care adauga un nou element in varful stivei,
+impingandu-le pe cele existente in jos, si Pop (scoate), care extrage elementul
+din varful stivei, impingandu-le pe cele ramase in sus. Stiva este vida daca
+nu contine nici un element. Desigur, nu se poate scoate un element dintr-o
+stiva vida, deci la executia (sau inainte de apelul) operatiei Pop trebuie
+verificata starea stivei (varful acesteia trebuie sa aiba o valoare strict
+pozitiva). De asemenea, daca containerul este un tablou de o dimensiune 
+maximala cunoscuta, poate apare si situatia opusa: stiva este plina cand 
+varful acesteia este egal cu aceasta dimensiune maxima (considerand ca indicele 
+tabloului are limita inferioara egala cu 1).
+
+Programele ce vor ilustra evolutia tratarii tipurilor de date sunt prezentate
+si comentate in continuare, fiind scrise in Turbo Pascal 7.0. Ca structura,
+ele sunt compuse dintr-un program principal si urmatoarele subprograme:
+  - Eroare(M: String): afiseaza un mesaj de eroare si opreste executia;
+  - Push(Stiva, Element): adauga un Element la Stiva;
+  - Pop(Stiva, Element): scoate Elementul din varful Stivei;
+  - Top(Stiva): intoarce valoarea elementului din varful stivei, fara a o
+    modifica;
+  - Operatii(Stiva): efectueaza operatiile cerute in enuntul problemei.
+
+Programul principal initializeaza stiva S si apeleaza apoi Operatii(S),
+asteptand tastarea tastei ENTER pentru terminarea executiei. In toate
+implementarile, subprogramele Push, Pop si Top verifica validitatea valorii
+varfului stivei, in concordanta cu actiunea corespunzatoare.
+
+Parametrii subprogramelor Push, Pop, Top si Operatii difera de la o
+implementare la alta.
+
+Exemplu: Programul Stiva1.PAS
+
+Programul Stiva1 este tipic pentru un limbaj fara mecanisme de declarare de
+tipuri noi. Intr-un astfel de limbaj, cele doua elemente (date) ce
+caracterizeaza stiva (containerul, adica tabloul de intregi si varful stivei)
+sunt considerate variabile distincte, neavand nimic in comun. Acest lucru se
+reflecta in sintaxa de declarare si apel pentru subprogramele Push, Pop si Top.
+Tablourile care apar in declaratiile acestora sunt tablouri deschise. Desigur,
+exemplul este fortat, deoarece in Pascal se poate folosi mecanismul type.
+
+In limitele stilului de programare folosit si in cadrul restrictiilor de
+limbaj (fara tipuri utilizator) impuse, acest program are o singura
+caracteristica de generalitate: declararea printr-o constanta simbolica
+(MaxDim) a numarului maxim de elemente din containerul stivei. Simpla
+modificare a declaratiei de constanta este suficienta pentru a lucra cu
+tablouri de alte dimensiuni.
+
+Sa remarcam ca in procedura Operatii adaugarea de elemente se face intr-un
+ciclu For, pe cand scoaterea de elemente din stiva se face intr-un ciclu
+While, conditia de terminare fiind V (adica indicele varfului) egal cu Low(S).
+Stiva S este implementata aici ca tablou deschis, element propriu nu
+limbajului Pascal, ci doar limbajului Turbo (Borland) Pascal 7.0.
+
+Programul Stiva2 respecta intru-totul standardul Pascal (exceptand folosirea
+tipului String):
+
+Exemplu: Programul Stiva2.PAS
+
+In aceasta implementare, mecanismul type s-a folosit la:
+  - declararea tipului elementului stivei, TElement;
+  - declararea domeniului indicilor containerului stivei, TIndice;
+  - declararea tipului de date TStiva.
+
+Sintaxa de declarare si apel pentru subprogramele Push, Pop, Top si Operatii
+s-a simplificat prin folosirea numelor de tipuri utilizator, imbunatatindu-se
+si gradul de intelegere a textului scris. Pe langa acestea, campul Virf (cel
+mai sensibil din punctul de vedere al integritatii stivei) nu este referit
+decat in subprogramele Push, Pop si Top si in programul principal, iar
+folosirea accidentala a lui nu este permisa (este nevoie de calificare); se
+obtine astfel un prim nivel de protectie. In subprogramele amintite,
+calificarea componentelor tipului TStiva se face cu instructiunea with.
+Campurile variabilei A de tip TStiva sunt toate publice: dovada este prima
+instructiune din programul principal, care initializeaza campul Virf.
+
+Parametrizarea tipului elementului stivei (TElement) atribuie un anumit grad
+de generalitate subprogramelor scrise. Daca se modifica declaratia respectiva
+(un alt tip predefinit in locul lui integer), subprogramele Push, Pop si Top
+raman valide; trebuie, in schimb, modificata procedura Operatii, in concordanta
+cu caracteristicile noului tip de element.
+
+In procedura Operatii, conditia de terminare a scoatere de elemente din Stiva
+s-a modificat (ca sintaxa): Stiva.Virf = 0.
+
+A treia varianta de implementare, programul Stiva3, se incadreaza in cerintele
+limbajului Turbo Pascal 6.0, corespunzand, ca stil, programarii bazate pe
+obiecte (nu se face apel la mostenire si polimorfism):
+
+Exemplu: Programul Stiva3.PAS
+
+Declaratiile de tipuri sunt identice cu cele de la programul Stiva2, cu exceptia
+declaratiei pentru TStiva, care este o clasa. S-a respectat principiul
+ascunderii informatiei (campurile sunt private, iar metodele sunt publice).
+Prin urmare, nici un camp al unui obiect TStiva nu se poate modifica in afara
+implementarii metodelor tipului (el nu este accesibil, referirea lui producand
+eroare de compilare). Datorita acestui fapt, este necesara o metoda (operatie)
+speciala pentru initializarea unui obiect de tip TStiva, in locul initializarii
+explicite a campului Virf cu 0, din prima linie a corpului programelor Stiva1
+si Stiva2; o astfel de metoda poarta numele de constructor (de instante sau
+obiecte) ale clasei, in cazul nostru Init. In general, un constructor
+initializeaza campurile unui obiect si aloca memorie pentru variabilele
+dinamice referite de campurile de tip pointer ale obiectului (daca obiectul
+are astfel de campuri). Reversul operatiei de construire este distrugerea,
+care inseamna in special dealocarea memoriei dinamice alocata la construire;
+procedura care realizeaza distrugerea obiectului se numeste destructor.
+
+Ca sintaxa, se observa ca numarul de parametri ai subprogramelor s-a micsorat
+fata de versiunea anterioara (parametrul de tip TStiva nu mai face parte dintre
+ei, acesta aflandu-se pe post de receptor, cu care se califica apelul: pentru
+un obiect A, apelul unei metode M se face prin A.M). In textul scris se
+observa delimitarea dintre zona de declarare a clasei TStiva si zona de
+implementare a operatiilor acesteia.
+
+O ultima remarca: prezenta intre operatiile clasei TStiva a operatiei de test
+Vida, care intoarce True daca stiva este vida. Este nevoie de aceasta operatie
+pentru a putea implementa elegant procedura Operatii (care arata altfel decat
+in exemplele anterioare). Conditia de de terminare a scoaterii de elemente
+din Stiva s-a modificat din nou: Stiva.Vida. Operatia Vida se foloseste si in
+implementarea operatiilor Top si Pop.
+
+In Turbo Pascal 6.0, declaratia unei clase se face cu cuvantul rezervat
+'object', iar componentele private ale clasei trebuie precizate in ultima
+parte a declaratiei de tip, in zona delimitata de cuvintele rezervate
+'private' si 'end' (terminatorul declaratiei 'object;). In absenta clauzei
+'private', toate componentele unei clase se considera publice. Se observa
+similitudinea cu declaratia tipului 'record'.
+
+Ultimul exemplu prezentat (programul Stiva4) foloseste conceptele programarii
+orientate pe obiecte. In el se implementeaza un tip abstract de date, TStiva,
+si doua tipuri derivate ale sale: AStiva si LStiva:
+
+Exemplu: Programul Stiva4.PAS
+
+Acest ultim exemplu este programat in limbajul Turbo Pascal 7.0, in care s-a
+eliminat restrictia privitoare la dispunerea zonelor 'private' si 'public' in
+declaratia unei clase. Incepand cu versiunea 5.5, acest limbaj permite
+specificarea mostenirii simple, in forma 'object(tip-de-baza)'. In cazul
+nostru, TStiva este radacina arborelui de mostenire, care are doua frunze,
+AStiva si LStiva, ambele derivate direct din TStiva.
+
+Programul Stiva4 isi propune sa ilustreze folosirea tipurilor abstracte de
+date (claselor abstracte), a mostenirii si polimorfismului pentru a
+exemplifica conceptele de baza ale abstractizarii datelor si programarii
+orientate pe obiecte. Folosind aceste concepte se pot realiza ierarhii de
+tipuri de date cu aceeasi semantica generala, care difera prin modul de
+reprezentare a lor. In cazul de fata, sunt propuse doua implementari
+alternative ale tipului de date Stiva, una folosind reprezentarea din
+exemplele anterioare (AStiva), iar cealalta reprezentand stiva sub forma de
+lista simplu inlantuita la care inserarea se face in cap (LStiva). Ambele
+tipuri deriva dintr-un tip abstract, TStiva.
+
+Tipul TStiva este abstract deoarece pentru el nu este specificata
+reprezentarea campurilor sale, fiind declarate doar metodele. In plus,
+metodele declarate au toate atributul 'virtual'; aceasta inseamna ca legarea
+(apelul) lor se va face dinamic, in functie de tipul dinamic al receptorului.
+Discutarea efectiva a apelului se va face ulterior, la comentarea programului
+principal.
+
+Metodele tipului TStiva nu fac in esenta nimic; dimpotriva, corpul lor
+contine doar apelul unei metode 'Abstract', iar daca se ajunge cumva ca una
+dintre ele sa fie apelata, 'Abstract' va provoca intreruperea executiei
+programului (aceasta este o garantie ca niciodata nu se va lucra cu obiecte
+ale clasei abstracte si ca toate metodele clasei abstracte sunt redefinite in
+clasele derivate din ea).
+
+Metodele virtuale ale unei clase de baza specifica un protocol comun de
+comunicatie pentru toate obiectele claselor descendente. In cazul nostru, asa
+cum am afirmat mai sus, un tip abstract de date nu acorda atentie
+reprezentarii, ci pune accent pe operatii, pe acest protocol de comunicatie.
+Prin urmare, daca campurile nu sunt precizate, atunci metodele (care
+actioneaza asupra acestora) n-au cum sa fie exprimate.
+
+Fata de metodele discutate la programul Stiva3, TStiva are prevazuta doua
+metode noi: ClassType, care intoarce numele clasei, ca sir de caractere si
+Plina, care intoarce True daca nu mai este spatiu pentru introducerea unui
+nou element in ea. ClassType este utila la ilustrarea executiei (ea este
+apelata in procedura Operatii), iar Plina (opusul lui Vida) s-a folosit la
+implementarea metodelor Push. Fiind clasa abstracta, TStiva nu are
+constructor; destructorul este declarat si el virtual.
+
+Clasa AStiva reprezinta concretizarea tipului abstract TStiva folosind
+reprezentarea stivei ca tablou. Operatiile se implementeaza identic cu cele de
+la programul Stiva3; singura deosebire este aceea ca metodele Push, Pop si Top
+sunt declarate virtuale.
+
+Clasa LStiva reprezinta concretizarea tipului abstract TStiva folosind
+reprezentarea stivei ca lista simplu inlantuita. Elementele stivei sunt de
+tipul LNod, fiecare element continand informatia utila (Info, de tipul
+TElement) si informatia de inlantuire (campul Prec, de tipul PLNod, pointer
+la LNod).
+
+Inserarea si stergerea elementelor se face in capul listei, respectandu-se
+astfel semantica LIFO. Informatia de reprezentare a stivei este un pointer
+Stiva de tipul PLNod (pointer la LNod), care se initializeaza in constructor
+cu Nil. Desi semantica lor este aceeasi cu a metodelor de la AStiva,
+implementarea metodelor virtuale si a constructorului Init de la clasa LStiva
+este radical diferita; este normal, deoarece reprezentarea tipului LStiva
+este radical diferita de cea a tipului AStiva.
+
+Procedura Operatii este scrisa o singura data si este apelata in programul
+principal de patru ori. Variabilele globale ale programului sunt:
+
+  A: AStiva;	{ stiva implementata ca tablou }
+  L: LStiva;	{ stiva implementata ca lista inlantuita }
+  T: Array[1..2] of PtrTStiva;	 {tablou de 2 pointeri la TStiva}
+
+Se observa deja un prim avantaj al programarii orientate pe obiecte: nu este
+nevoie sa se scrie doua proceduri Operatii (una cu parametrul de tip AStiva
+si una cu parametrul LStiva, cum ar cere limbajul Pascal Standard), ci este
+suficienta scrierea unei singure proceduri Operatii, in care parametrul este
+de tipul abstract TStiva, din care deriva celelalte doua clase. Prin urmare,
+parametrul formal Stiva al procedurii Operatii are tipul static TStiva.
+Compilatorul poate verifica daca metodele obiectului Stiva sunt apelate corect
+(daca sunt declarate in definitia clasei TStiva si daca listele de parametri
+formali si actuali concorda: este adevarat).
+
+La executie, parametrul din apelul procedurii Operatii are tipul extensie a
+tipului precizat in declararea acesteia (Turbo Pascal accepta o astfel de
+compatibilitate de parametri). La primele doua apeluri, Operatii(A) si
+Operatii(L) parametrii actuali au tipul (static si dinamic) AStiva,
+respectiv LStiva.
+
+In cazul apelului Operatii(A), corpul procedurii Operatii este tratat astfel:
+
+    For I := 1 to 10 do begin
+      A.Push(I);
+      WriteLn(' S-a introdus in ', A.ClassType, ': ', A.Top);
+    end;
+    While not A.Vida do begin
+      WriteLn(' Se scoate din ', A.ClassType, ': ', A.Top);
+      A.Pop(E);
+    end;
+
+iar metodele care se apeleaza sunt AStiva.Push, AStiva.ClassType, AStiva.Top,
+AStiva.Vida si AStiva.Pop (deoarece A are tipul AStiva, atat la compilare,
+cat si la executie).
+
+Similar, la apelul Operatii(L), corpul procedurii Operatii se trateaza astfel:
+
+    For I := 1 to 10 do begin
+      L.Push(I);
+      WriteLn(' S-a introdus in ', L.ClassType, ': ', L.Top);
+    end;
+    While not L.Vida do begin
+      WriteLn(' Se scoate din ', L.ClassType, ': ', L.Top);
+      L.Pop(E);
+    end;
+
+iar metodele care se apeleaza sunt LStiva.Push, LStiva.ClassType, LStiva.Top,
+LStiva.Vida si LStiva.Pop (deoarece L are tipul LStiva, atat la compilare,
+cat si la executie).
+
+Ultimele doua apeluri sunt si mai sugestive, fiind un exemplu de lucru cu o
+colectie de obiecte polimorfice. Colectia este tabloul T de doi pointeri
+de tipul PtrTStiva (pointer la clasa de baza TStiva). In primele doua apeluri,
+discutate anterior, tipul static al argumentului de apel coincide cu tipul
+dinamic al acestuia. Spre deosebire de acestea, in ultimele doua apeluri tipul
+static al elementelor tabloului este diferit de tipul lor dinamic; in plus, 
+tipurile dinamice ale lui T[1] _i T[2] sunt diferite intre ele: T[1] are tipul
+dinamic PtrAStiva, iar T[2] are tipul dinamic PtrLStiva. Valorile elementelor
+tabloului T sunt initializate prin apelarea procedurii New cu sintaxa extinsa,
+in care este specificat tipul dinamic si constructorul aferent tipului.
+Tabloul T este un mic exemplu de colectie polimorfica: elementele sale sunt
+diferite, desi provin din acelasi tip comun (prin care se pastreaza
+omogenitatea, impusa de altfel la declarare).
+
+Apelul procedurii Operatii pentru elementele tabloului T se face intr-un ciclu
+For. Executia programului va demonstra ca in procedura Operatii se vor apela
+metodele corespunzatoare tipului dinamic al argumentului de apel, conform
+exemplelor precedente. In fapt, apelul Operatii(T[1]^) va avea o semantica
+identica cu apelul Operatii(A), iar Operatii(T[2]^) este tratat la fel cu
+Operatii(L). De remarcat notatia unitara si compacta pe care o ofera
+polimorfismul.
+
+Am afirmat la inceputul discutarii acestui exemplu ca el ilustreaza conceptele
+de baza ale abstractizarii datelor si programarii orientate pe obiecte. Acum,
+la sfarsitul discutiei, suntem in masura sa le rezumam.
+
+Abstractizarea datelor inseamna: independenta de reprezentare (clasa abstracta
+TStiva), incapsularea reprezentarii si operatiilor (sintaxa declaratiei
+'object'), ascunderea informatiei (toate campurile claselor AStiva si LStiva
+sunt private) si implementari multiple pentru acelasi tip abstract (AStiva si
+LStiva), care folosesc aceeasi sintaxa de apel (ilustrata in textul procedurii
+Operatii).
+
+Orientarea pe obiecte adauga abstractizarii datelor mostenirea (clasele AStiva
+si LStiva deriva din clasa de baza TStiva) si polimorfismul (ilustrat in
+scrierea unitara a apelurilor, conforma cu declaratiile statice si manifestat
+in maniere de executie diferite, conforme tipului dinamic: procedura care se
+apeleaza este identificata pe baza tipului dinamic al receptorului).
+
+Polimorfismul se realizeaza prin mostenire si prin legare dinamica.

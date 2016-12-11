@@ -1,0 +1,19 @@
+
+     1        9 PROGRAM TestP4;  
+     2        9 VAR  
+     3        9   i : INTEGER;  
+     4       10   
+     5       10 BEGIN  
+     6        3   Writeln('Hello World');  
+     7       12   Writeln('1 + 2 = ', 1+2);  
+     8       25   Write('Enter a small integer :'); Readln(i);  
+     9       35   Writeln('you entered : ', i);  
+    10       46 END. 
+
+
+Output from running test.pas:
+
+Hello World
+1 + 2 =          3
+Enter a small integer : 123
+you entered :        123

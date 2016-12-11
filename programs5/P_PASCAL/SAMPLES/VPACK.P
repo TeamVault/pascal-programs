@@ -1,0 +1,26 @@
+PROCEDURE vpack(VAR boolarray : B_ARRAY;
+	start_index : INTEGER;
+	VAR intarray : I_ARRAY;
+	lb, ub : INTEGER);
+VAR	i, j, end_index, pack_index : INTEGER;
+BEGIN
+ { boolarray IS THE ARRAY TO PACK FROM CHAR FORMAT }
+ { TO INTEGER BITS; intarray IS THE PACKING DESTINATION. }
+ { ACTUAL UPPER ARRAY BOUNDS ARE IGNORED C-STYLE, AND IT }
+ { IS ASSUMED THAT BOUNDS CHECKING HAS BEEN TURNED OFF TO }
+ { PREVENT SPURIOUS 'ERROR' MESSAGES. start_index IS THE }
+ { BEGINNING UNPACKED ARRAY ADDRESS; lb IS THE LOWER BOUND }
+ { INDEX OF THE PACKED DESTINATION ARRAY, AND ub IS THE }
+ { UPPER BOUND. A 16-bit WORD ARCHITECTURE IS ASSUMED }
+ { FOR THIS VERSION OF THE ALGORITHM: }
+ end_index := (ub - lb + 1) * 16 + start_index;
+ { ZERO OUT THE ARRAY PRIOR TO PACKING IT: }
+ FOR i := lb TO ub DO intarray[i] := 0;
+ FOR i := start_index TO end_index DO
+  BEGIN
+   pack_index := i DIV 16 + 1; j := i MOD 16;
+   { 'OR' FOR INTEGERS IS 'LOGICAL OR'; SHL = 'SHIFT LEFT' }
+   intarray[pack_index] :=
+	intarray[pack_index] OR (ORD(boolarray[i]) SHL (j-1))
+  END
+END;

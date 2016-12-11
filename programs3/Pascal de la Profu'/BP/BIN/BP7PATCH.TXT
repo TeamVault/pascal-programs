@@ -1,0 +1,148 @@
+From grizzled.sysop@worldnet.att.net@worldnet.att.net Mon Jul 07 17:11:15 1997
+Newsgroups: borland.public.turbopascal
+Subject: Re: BP7PATCH.ZIP - bp7patch.zip (1/1)
+From: Fred VonBerg <"grizzled.sysop@worldnet.att.net"@worldnet.att.net>
+Date: Mon, 07 Jul 1997 14:11:15 -0700
+
+We got all of our programs operational on the Dell Pentium II - 266
+using your supplied patch, BP7PATCH.ZIP and also the following patches:
+All patches for runtime 200 that we know of are included in this message
+
+Turbo Professional and Async Professional tools both required patches
+following. We also use TechnoJock Gold tools, and no problems were
+noticed ( yet )
+
+
+==================================================================
+For Async Professional 2.03:
+
+APTIMER   fix  CalibrateDelay divide overflow on PentiumPro 200's
+----------------------------------------------------------------------
+Timer divide overflows are still possible with the new timer routines on
+very
+fast machine. The problem occurs when the counts-per-ms value, divided
+by 55,
+no longer fits in 16-bits. The solution is to slow the DelayMS routine
+down a
+bit to lower the count values. Add the following marked lines to DelayMS
+in
+APTIMER:
+
+procedure DelayMS; assembler;
+asm
+  push  cx
+{!!.04}
+@@DMSdec:
+  mov   cx,10
+{!!.04}
+@@1:
+{!!.04}
+  loop @@1
+{!!.04}
+  sub   ax,1
+  sbb   dx,0
+  jc    @@DMSexit
+  cmp   bl,es:[di]
+  je    @@DMSdec
+@@DMSexit:
+  pop   cx
+{!!.04}
+end;
+
+
+==================================================================
+
+For TurboProfessional 5.22:
+
+
+TPCRT     fix  CalibrateDelay divide overflow on PentiumPro 200's
+-------------------------------------------------------------------
+
+Timer divide overflows are still possible with the new timer routines on
+very
+fast machine. The problem occurs when the counts-per-ms value, divided
+by 55,
+no longer fits in 16-bits. The solution is to slow the DelayMS routine
+down a
+bit to lower the count values. Add the following marked lines to DelayMS
+in
+TPCRT.ASM:
+
+DelayMS PROC NEAR
+
+  push  cx                                 ;!!.23
+DMSdec:
+  mov   cx,10                              ;!!.23
+DMS1:                                      ;!!.23
+  loop DMS1                                ;!!.23
+  sub   ax,1
+  sbb   dx,0
+  jc    DMSexit
+  cmp   bl,es:[di]
+  je    DMSdec
+DMSexit:
+  pop   cx                                 ;!!.23
+  RET
+
+DelayMS ENDP
+
+
+----------------------------------------------------------------
+------------------  Novell Network fix -------------------------
+----------------------------------------------------------------
+
+Subject:  CRT unit & fast CPU - Msg Number: 777020
+   From:  Joanne Spotten 73561,331
+     To:  Robert Norton 76013,443
+  Forum:  DELPHI   Sec: 06-Delphi Database
+   Date:  24-May-97  8:08
+
+There  was a  problem with  one  of  the versions  of Novell's  32 bit
+client. When running  a dos program from explorer,  interrupts are not
+enabled. Since  the CRT unit's  initialization code needs  interrupts,
+the program hangs. Following is Pat Ritchey's work around (sometimes I
+actually keep the right stuff in my archives).
+
+>>
+
+As an FYI,
+
+For those that don't have the RTL source, a unit can be created to do
+the same thing without modifying the CRT unit.  A unit such as:
+
+       Unit STIUnit;
+       interface
+       implementation
+       begin
+         asm STI end;
+       end.
+
+can be added to the main program source's uses *prior* to all other
+units, and the STI will execute before the CRT unit's initialization
+code.
+
+Pat
+
+<<
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

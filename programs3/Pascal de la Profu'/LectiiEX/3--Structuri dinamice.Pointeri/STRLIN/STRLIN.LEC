@@ -1,0 +1,388 @@
+3.5. Structuri liniare
+
+Structura liniara este o multime finita de elemente care
+   (1) este vida sau
+   (2) contine un singur element sau
+   (3) are mai multe elemente, cu urmatoarele proprietati
+       - exista un singur element, numit primul
+       - exista un singur element, numit ultimul
+       - orice element, cu exceptia primului, are un predecesor
+       - orice element, cu exceptia ultimului, are un succesor
+Exemple de structuri liniare
+  - tabloul:
+  - lista liniara: are elementele ordonate dupa pozitia pe care acestea
+                   o ocupa in structura
+  - lista ordonata: are elementele ordonate (crescator sau descrescator)
+                    dupa valoarea unui camp al informatiei utile,
+                    numit cheie.
+
+3.5.1. Lista liniara (lista dublu inlantuita)
+
+In 3.2.4. am discutat tipul de date lista simplu inlantuita pentru care
+am precizat toate operatiile proprii unei structuri liniare. Aceasta
+structura de date avea in fiecare nod (element) adresa nodului urmator
+(sau precedent). In general, printr-o lista liniara se intelege (conform
+definitiei de mai sus) o lista dublu inlantuita, in sensul ca in fiecare
+nod se gaseste atat adresa nodului precedent, cat si adresa nodului
+urmator.
+
+Specificarea structurii de date lista dublu inlantuita
+
+Elemente:   Toate elementele sunt de acelasi tip, desemnat prin TNod
+            si se numesc noduri. Un nod contine informatie utila, de
+            tipul TInfo
+Structura:  Lista dublu inlantuita are o structura liniara. Exista un
+            nod numit primul si un nod numit ultimul. Fiecare nod (cu
+            exceptia ultimului) contine in el adresa nodului urmator.
+            Fiecare nod (cu exceptia primului) contine in el adresa
+            nodului precedent.
+Domeniu:    Lista are doua campuri, Cap si Cursor. Cap refera primul
+            element al sau, iar Cursor refera elementul curent.
+Operatii:
+  Creeaza(L) - creeaza o lista L vida
+    Pre:  True
+    Post: L este vida (L.Cap si L.Cursor nu refera nimic)
+
+  Vida(L) - testeaza daca L este vida
+    Pre:  True
+    Post: Vida = True daca L este vida si Vida = False in caz contrar
+
+  Insereaza(L, I) - insereaza in L un nod nou (care contine informatia
+                    utila I), pe pozitia cursorului
+    Pre:  True
+    Post: nodul nou se insereaza in cap daca Cursorul este zero
+          sau
+          nodul nou se insereaza dupa cursor
+
+  Sterge(L) - sterge din L nodul referit de L.Cursor
+    Pre:  L nu este vida si L.Cursor refera un nod existent in L
+    Post: nodul referit de L.Cursor este sters si
+          nodul din capul listei devine nod curent (este referit de L.Cursor)
+
+  Modifica(L, I) - modifica informatia utila din nodul referit de cursor
+    Pre:  L este nevida
+    Post: informatia utila din nodul referit de cursor are valoarea I
+
+  Extrage(L, I) - extrage informatia utila din nodul referit de cursor
+    Pre:  L este nevida
+    Post: I primeste valoarea informatiei utile din nodul curent
+
+  Elibereaza(L) - sterge din L toate nodurile
+    Pre:  True
+    Post: L este vida
+
+  Cauta(L, I) - cauta in L nodul cu informatia utila I
+    Pre:  True
+    Post: Informatia utila din nodul curent este I si Cauta = True
+            ( daca exista in L un nod cu informatia utila I )
+          sau
+          L.Cursor ramane nemodificat si Cauta = False
+            ( daca nu exista in L un nod cu informatia utila I )
+
+  Primul(L) - pozitioneaza L.Cursor pe primul element din lista
+    Pre:  L este nevida
+    Post: L.Cursor := L.Cap
+
+  Ultimul(L) - pozitioneaza L.Cursor pe ultimul element din lista
+    Pre:  L este nevida
+    Post: L.Cursor refera ultimul element din lista
+
+  Precedentul(L, Esec)
+    Pre:  L este nevida
+    Post: L.Cursor refera nodul precedent lui L.Cursor si Esec = False
+            (daca L.Cursor nu refera primul nod din lista)
+            sau
+          L.Cursor ramane nemodificat si Esec = True
+            (daca nu exista un nod precedent celui curent )
+
+  Urmatorul(L, Esec)
+    Pre:  L este nevida
+    Post: L.Cursor refera nodul urmator lui L.Cursor si Esec = False
+            (daca L.Cursor nu refera ultimul nod din lista)
+            sau
+          L.Cursor ramane nemodificat si Esec = True
+            (daca nu exista un nod urmator celui curent )
+
+  Traverseaza(L)
+    Pre:  True;
+    Post: parcurge toate nodurile listei, incepand de la primul (L.Cap)
+          si pana la ultimul
+          L.Cursor nu se modifica
+
+Comentarii de implementare
+
+Insereaza(L, I)
+    adauga nodul cu informatia utila I dupa nodul referit de Cursor
+    conventie
+      - daca L.Cursor nu refera nimic se face inserarea in capul listei
+      - daca L.Cursor refera un nod din lista, atunci se face inserarea
+        dupa nodul referit de L.Cursor
+
+    a) Inainte de inserare:
+         - nodul cu informatia utila I este generat, si are adresa in N.
+         - el nu este inca inserat in lista, iar campurile Urm si Prec
+           ale sale au valoarea nedefinita
+
+         UrmÚÄÄ¿       ÚÄÄ¿      ¿Cursor ÚÄÄ¿       ÚÄÄ¿      ¿       ÚÄÄ¿
+CapÄÄ>ÚÄÂÄÄÂÅ¿ À>ÚÄÂÄÄÂÅ¿ À> ... À>ÚÄÂÄÄÂÅ¿ À>ÚÄÂÄÄÂÅ¿ À> ... À>ÚÄÂÄÄÂÅ¿ À>ZERO
+      ³ ³I1³ ³   ³ ³I2³ ³          ³ ³Im³ ³   ³ ³Il³ ³          ³ ³In³ ³
+      ÀÅÁÄÄÁÄÙ<¿ ÀÅÁÄÄÁÄÙ<¿     <¿ ÀÅÁÄÄÁÄÙ<¿ ÀÅÁÄÄÁÄÙ<¿     <¿ ÀÅÁÄÄÁÄÙ
+ZERO<ÄÄÙPrec   ÀÄÄÙ       ÀÄ ... ÀÄÄÙ       ÀÄÄÙ       ÀÄ ... ÀÄÄÙ
+
+                                      ¿N      ÚÄÄ¿
+                                      À>ÚÄÂÄÄÂÅ¿ À>ZERO
+                                        ³ ³I ³ ³
+                                 ZERO<¿ ÀÅÁÄÄÁÄÙ
+                                      ÀÄÄÙ
+
+    b) Dupa inserare:
+         - Cursor contine adresa nodului dupa care se va insera noul nod
+           in lista
+         - nodul N cu informatia I este inserat in lista prin urmatoarele
+           operatii, in ordinea precizata:
+           (1) campul Prec al nodului ce urmeaza dupa Cursor (adica cel
+               referit de campul Urm al cursorului) este setat pe N
+           (2) campul Urm al noului nod inserat se seteaza la valoarea
+               campului Urm al Cursorului
+           (3) campul Urm al Cursorului primeste valoarea N
+           (4) campul Prec al lui N primeste valoarea Cursorului
+           (5) noul nod inserat, N, devine nodul curent al listei
+         - operatiile de mai sus (primele 4) actualizeaza urmatoarele
+           legaturi:
+            - operatiile (1) si (2) stabilesc legaturile dintre nodul nou
+              inserat N si nodul care urmeaza dupa el (si care inainte de
+              inserare era nodul urmator Cursorului)
+               - campul Prec al nodului urmator cursorului (inserarea se
+                 face dupa cursor si inaintea nodului ce urmeaza dupa
+                 acesta; la aceasta operatie trebuie sa se verifice daca
+                 exista un nod urmator Cursorului)
+               - campul Urm al nodului care se insereaza (acesta va referi
+                 vechiul nod care urmeaza dupa cursor, din acelasi motiv)
+            - operatiile (3) si (4) stabilesc legaturile dintre Cursor si
+              nodul nou inserat N (care se insereaza imediat dupa Cursor)
+                - campul Urm al Cursorului va referi pe N
+                - campul Prec al lui N va referi Cursorul
+         - in cazul in care inserarea se face in capul listei, se efectueaza
+           numai (1), (2) si (5) deoarece Cursorul nu refera nimic (iar
+           campul Prec al nodului nou inserat N este deja setat la o
+           valoare echivalenta cu Zero
+
+                           Cursor (4)
+         UrmÚÄÄ¿       ÚÄÄ¿ vechiÂÄÄÄÄÄÄÄÄÄ¿ (2)    ÚÄÄ¿      ¿       ÚÄÄ¿
+CapÄÄ>ÚÄÂÄÄÂÅ¿ À>ÚÄÂÄÄÂÅ¿ À> ... À>ÚÄÂÄÄÂÄ¿³Ú>ÚÄÂÄÄÂÅ¿ À> ... À>ÚÄÂÄÄÂÅ¿ À>ZERO
+      ³ ³I1³ ³   ³ ³I2³ ³          ³ ³Im³ ³³³ ³ ³Il³ ³          ³ ³In³ ³
+      ÀÅÁÄÄÁÄÙ<¿ ÀÅÁÄÄÁÄÙ<¿        ÀÅÁÄÄÁÅÙ³³ ÀÅÁÄÄÁÄÙ<¿     <¿ ÀÅÁÄÄÁÄÙ
+ZERO<ÄÄÙPrec   ÀÄÄÙ       ÀÄ ... <ÄÄÙ ÚÄÄÙ ³³  ³       ÀÄ ... ÀÄÄÙ
+                                   (3)³  ÚÄÙ³  ÀÄ¿
+                                      ³  ³  ÀÄ¿  ³
+                                   NÄÄÅ>ÚÅÂÄÄÂÅ¿ ³
+                                   (5)³ ³ ³I ³ ³ ³(1)
+                              CursorÄÄÙ ÀÄÁÄÄÁÄÙ<Ù
+                                 nou
+
+Sterge(L)
+    sterge din lista nodul referit de Cursor
+    pre: Cursor <> ZERO
+    post: nodul referit de Cursor este sters din lista
+          Cursor refera capul listei
+
+    a) Inainte de stergere
+         - nodul care se va sterge este referit de Cursor
+
+         UrmÚÄÄ¿     ¿       ÚÄÄÂCursor ÚÄÄ¿       ÚÄÄ¿      ¿       ÚÄÄ¿
+CapÄÄ>ÚÄÂÄÄÂÅ¿ À>... À>ÚÄÂÄÄÂÅ¿ À>ÚÄÂÄÄÂÅ¿ À>ÚÄÂÄÄÂÅ¿ À> ... À>ÚÄÂÄÄÂÅ¿ À>ZERO
+      ³ ³I1³ ³         ³ ³Ij³ ³   ³ ³Ik³ ³   ³ ³Im³ ³          ³ ³In³ ³
+      ÀÅÁÄÄÁÄÙ<¿     <¿ÀÅÁÄÄÁÄÙ<¿ ÀÅÁÄÄÁÄÙ<¿ ÀÅÁÄÄÁÄÙ<¿     <¿ ÀÅÁÄÄÁÄÙ
+ZERO<ÄÄÙPrec   ÀÄ ... ÀÄÙ       ÀÄÄÙ       ÀÄÄÙ       ÀÄ ... ÀÄÄÙ
+
+
+    b) Dupa stergere
+         - Cursor contine adresa nodului care se va sterge
+         - stergerea se realizeaza prin urmatoarele operatii, in ordinea
+           precizata:
+           (1) se salveaza adresa nodului care se sterge intr-o variabila
+               auxiliara p
+           (2) campul Urm al nodului precedent Cursorului va fi setat
+               la campul Urm al Cursorului
+           (3) campul Prec al nodului urmator Cursorului va fi setat
+               la campul Prec al Cursorului
+           (4) nodul referit de p se dealoca (se sterge)
+           (5) Cursorul se seteaza la capul listei
+         - operatiile 2 si 3 realizeaza efectiv stergerea din lista a
+           nodului referit de Cursor, actualizand urmatoarele legaturi:
+             - (2): nodul precedent cursorului va avea ca nod urmator
+                    fostul nod urmator al cursorului
+             - (3): nodul urmator cursorului va avea ca nod precedent
+                    fostul nod precedent al cursorului
+         - se observa ca dupa aceste doua operatii nodul referit de
+           Cursor nu mai face parte din lant si poate fi sters
+
+                                   (2)
+Cursor   UrmÚÄÄ¿     ¿       ÚÄÄÄÄÄÄÄÄÄÄÄÄÄ¿       ÚÄÄ¿      ¿       ÚÄÄ¿
+CapÁÄ>ÚÄÂÄÄÂÅ¿ À>... À>ÚÄÂÄÄÂÅ¿ Ú>ÚÄÂÄÄÂÄ¿ À>ÚÄÂÄÄÂÅ¿ À> ... À>ÚÄÂÄÄÂÅ¿ À>ZERO
+      ³ ³I1³ ³         ³ ³Ij³ ³ Àp³ ³Ik³ ³   ³ ³Im³ ³          ³ ³In³ ³
+      ÀÅÁÄÄÁÄÙ<¿     <¿ÀÅÁÄÄÁÄÙ<¿ ÀÄÁÄÄÁÄÙ   ÀÅÁÄÄÁÄÙ<¿     <¿ ÀÅÁÄÄÁÄÙ
+ZERO<ÄÄÙPrec   ÀÄ ... ÀÄÙ       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ       ÀÄ ... ÀÄÄÙ
+                                   (3)
+
+Exemple:
+  ULDCursD - implementare dinamica
+  ULDCursA - implementare statica (cu tablouri)
+  Programul TLDCurs.PAS - apeleaza oricare dintre unit-uri
+  Programul NUMEREM.PAS - apeleaza oricare dintre unit-urile
+                          ULsCursA, ULsCursD, ULdCursA, ULdCursD
+                          si implementeaza numerele naturale ca liste
+
+3.5.2. Lista ordonata
+
+Specificarea structurii de date lista ordonata
+
+Elemente:   Toate elementele sunt de acelasi tip, desemnat prin TNod
+            si se numesc noduri. Un nod contine informatie utila, de
+            tipul TInfo, care are doua campuri: Cheie si Rest. Tipul de
+            date al campului Cheie trebuie sa aiba o operatie de ordonare
+            (relatia de ordine <).
+Structura:  Lista ordonata are o structura liniara, in care elementele
+            sunt ordonate (crescator sau descrescator) dupa valoarea
+            campului Cheie din ele.
+Domeniu:    Lista are doua campuri, Cap si Cursor. Cap refera primul
+            element al sau, iar Cursor refera elementul curent.
+Operatii:
+  Creeaza(L) - creeaza o lista L vida
+    Pre:  True
+    Post: L este vida (L.Cap si L.Cursor nu refera nimic)
+
+  Vida(L) - testeaza daca L este vida
+    Pre:  True
+    Post: Vida = True daca L este vida si Vida = False in caz contrar
+
+  Insereaza(L, I) - insereaza in L un nod nou (care contine informatia
+                    utila I), pastrand ordonarea listei
+    Pre:  True
+    Post: nodul nou se insereaza astfel ca lista sa ramana ordonata si
+          dupa inserare
+
+  Sterge(L) - sterge din L nodul referit de L.Cursor
+    Pre:  L nu este vida si L.Cursor refera un nod existent in L
+    Post: nodul referit de L.Cursor este sters si
+          nodul din capul listei devine nod curent (este referit de L.Cursor)
+
+  Modifica(L, I) - modifica informatia utila din nodul referit de cursor
+    Pre:  L este nevida
+    Post: informatia utila din nodul referit de cursor are valoarea I
+          se pastreaza ordonarea listei
+
+  Extrage(L, I) - extrage informatia utila din nodul referit de cursor
+    Pre:  L este nevida
+    Post: I primeste valoarea informatiei utile din nodul curent
+
+  Elibereaza(L) - sterge din L toate nodurile
+    Pre:  True
+    Post: L este vida
+
+  Cauta(L, I) - cauta in L nodul cu informatia utila I
+    Pre:  True
+    Post: Informatia utila din nodul urmator celui curent (referit de
+          L.Cursor) este I si Cauta = True
+            ( daca exista in L un nod cu informatia utila I )
+          sau
+          L.Cursor se va pozitiona pe nodul anterior celui in care
+          ar trebui sa fie informatia utila I si Cauta = False
+            ( daca nu exista in L un nod cu informatia utila I )
+
+  Primul(L) - pozitioneaza L.Cursor pe primul element din lista
+    Pre:  L este nevida
+    Post: L.Cursor := L.Cap
+
+  Ultimul(L) - pozitioneaza L.Cursor pe ultimul element din lista
+    Pre:  L este nevida
+    Post: L.Cursor refera ultimul element din lista
+
+  Precedentul(L, Esec)
+    Pre:  L este nevida
+    Post: L.Cursor refera nodul precedent lui L.Cursor si Esec = False
+            (daca L.Cursor nu refera primul nod din lista)
+            sau
+          L.Cursor ramane nemodificat si Esec = True
+            (daca nu exista un nod precedent celui curent )
+
+  Urmatorul(L, Esec)
+    Pre:  L este nevida
+    Post: L.Cursor refera nodul urmator lui L.Cursor si Esec = False
+            (daca L.Cursor nu refera ultimul nod din lista)
+            sau
+          L.Cursor ramane nemodificat si Esec = True
+            (daca nu exista un nod urmator celui curent )
+
+  Traverseaza(L)
+    Pre:  True;
+    Post: parcurge toate nodurile listei, incepand de la primul (L.Cap)
+          si pana la ultimul
+          L.Cursor nu se modifica
+
+Comentarii:
+  Fata de lista liniara, lista ordonata prezinta urmatoarele particularitati
+    - fiecare element are un camp Cheie; informatia utila din nod are
+      definitia:
+
+        type
+          TCheie = ...
+          TRest  = ...
+          TInfo =  Record  { tipul de date al informatiei utile din nod }
+            Cheie: TCheie;
+            Rest:  TRest
+          End;
+
+    - tipul TCheie trebuie sa aiba o operatie de comparare, de exemplu:
+        - operatorul relational < sau > (daca e tip simplu)
+        sau una din operatiile generale
+        - MaiMic(e1,e2: TCheie): Boolean
+        - MaiMare(e1,e2: TCheie): Boolean
+        - Egal(e1,e2: TCheie): Boolean
+        - Compara(e1,e2: TCheie): Integer  { cea mai generala }
+            -1: e1 < e2
+             0: e1 = e2
+            +1: e1 > e2
+    - operatia de compararare este folosita in implementarea operatiei
+      Cauta
+    - elementele nu se insereaza dupa pozitia anterioara a cursorului,
+      ci astfel incat lista sa ramana ordonata si dupa inserare
+    - operatiile a caror semantica se modifica sunt
+       - Cauta
+       - Inserare
+       - Modifica
+       - Traverseaza
+    - Cauta: spre deosebire de lista liniara, la lista ordonata
+       - tipul informatiei (parametrului) de cautare este tipul cheii
+       - cursorul se va pozitiona intotdeauna pe elementul anterior celui
+         in care
+           - se gaseste informatia cautata (daca exista in lista un
+             asemenea element)
+           - ar trebui sa se gaseasca informatia cautata (cand in lista
+             nu exista un asemenea element)
+    - Insereaza: spre deosebire de lista liniara, la lista ordonata
+       - inserarea (care se face la fel ca la lista liniara) este
+         precedata de apelul lui Cauta, care va pozitiona corect cursorul:
+           - daca exista in lista un nod cu aceeasi cheie, atunci
+             cursorul va fi pozitionat pe nodul anterior lui si
+             inserarea se va face dupa cursor
+           - daca nu exista in lista un nod cu aceeasi cheie, atunci
+             cursorul se va pozitiona pe nodul anterior nodului cu cheia
+             mai mare decat cheia de introdus si inserarea se face iarasi
+             dupa cursor (deci inaintea elementului cu cheia mai mare
+             decat cheia de introdus); se pastreaza astfel ordonarea
+             listei
+    - Modifica: modificarea elementului curent poate strica ordonarea
+                listei, motiv pentru care modificarea este implementata
+                ca:
+       - Stergerea elementului curent (cu Sterge)
+       - Inserarea noului element (cu Insereaza)
+    - Traverseaza: s-a modificat maniera de listare a informatiei dintr-un
+                   nod, prin apelarea unei functii publice numita
+                   InfoToString
+
+Exemple:
+  ULOCursD - implementare dinamica
+  ULOCursA - implementare statica (cu tablouri)
+  Programul TLOCurs.PAS - apeleaza oricare dintre unit-uri
+

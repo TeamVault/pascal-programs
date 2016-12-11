@@ -1,0 +1,59 @@
+:Base TMTHelp
+:Title TMT Pascal Help
+1 Getting Started
+2 Features=FEATURES
+2 What's New=WHATS_NEW
+1 TMT Pascal Language Description
+2 Implementation Issues=IMPLEMENTATION_ISSUES
+2 Pascal Language Structure=LANG_STRUCT
+2 Types=TYPES
+2 Declarations=DECL
+2 Expressions=EXPRESSIONS
+2 Statements=STATEMENTS
+2 Programs and Units=PROGRAMS_AND_UNITS
+2 Procedures and Functions=PROCEDURES_AND_FUNCTIONS
+2 OOP Extensions=OOP_EXTENSIONS
+2 Open Arrays=OPEN_ARRAYS
+2 User Defined Operators=USER_DEF_OPERATORS
+2 Built-in Assembler=BUILT-IN_ASSEMBLER
+2 Run-time error codes=RUN_ERRORS
+1 Compiler Directives
+2 Compiler Directives=COMPILER_DIRECTIVES
+2 Conditional Directives=CONDITIONALS
+2 Switch and Parameter Directives=SWITCH_DIRS
+2 Predefined Symbols=PREDEFINED_SYMBOLS
+1 Standard Units
+2 Standard Units =STD_UNITS
+3 CompMath Unit=COMPMATH_UNIT
+3 Crt Unit=CRT_UNIT
+3 Debug Unit=DEBUG_UNIT
+3 Dos Unit=DOS_UNIT
+3 DPMI Unit=DPMI_UNIT
+3 ErrCodes Unit=ERRCODES_UNIT
+3 FDebug Unit=FDEBUG_UNIT
+3 Graph Unit=GRAPH_UNIT
+3 Keyboard Unit=KEYBOARD_UNIT
+3 Math Unit=MATH_UNIT
+3 Mouse Unit=MOUSE_UNIT
+3 Printer Unit=PRINTER_UNIT
+3 Strings Unit=STRINGS_UNIT
+3 System Unit=SYSTEM_UNIT
+3 Use16 Unit=USE16_UNIT
+3 Use32 Unit=USE32_UNIT
+3 WinDos Unit=WINDOS_UNIT
+3 ZenTimer Unit=ZENTIMER_UNIT
+1 PMODE/W DOS Extender
+2 About PMODE/W=PMW_INTRO
+2 Supported DPMI INT 31h functions=PMW_FUNC
+1 IDE (Integrated Development Environment)
+2 Overview=IDEW32
+2 Bookmarks=IDEW32_BOOKMARKS
+2 Code Templates=IDEW32_CODE_TEMPL
+2 Compiler Options=IDEW32_COMP_OPT
+2 Directories=IDEW32_DIRS
+2 Display=IDEW32_DISPLAY
+2 Editor=IDEW32_EDITOR
+2 Editor Shortcuts=IDEW32_SHORTCUTS
+
+1 Contacting TMT Development Corporation
+2 Contacting TMT Development Corporation=TMT_CORP>AddWin

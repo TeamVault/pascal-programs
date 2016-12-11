@@ -1,0 +1,349 @@
+1. Programarea modulara.
+
+1.1. Termenul de modul
+1.2. Structura unui modul
+1.3. Exemple
+1.4. Cum s-a ajuns la programarea modulara
+
+1.1. Termenul de modul
+
+Termenul de modul a fost folosit de-a lungul timpului in mai
+multe acceptiuni
+  - subprogram (sursa sau obiect)
+  - biblioteca de subprograme
+      - colectie de subprograme destinate unui anumit domeniu
+        sau de uz general
+      - exemple
+          - biblioteca matematica a firmei IBM -
+            IBM SSP (Scientific Subroutine Package)
+          - biblioteca matematica a calculatorului Felix
+            MATHLAB
+          - biblioteca matematica a firmei DEC
+  - modul obiect - rezultat din compilarea unui modul sursa
+  - modul executabil (DLL)
+     - fisier ce contine cod executabil (functii) si este incarcat
+       cand o aplicatie apeleaza o functie din el
+       DLL - Dynamic Link Library, biblioteca cu legare dinamica
+
+Ce intelegem prin modul
+  - unitate de program
+  - contine declaratii de
+      - subprograme
+      - tipuri de date
+      - variabile
+      - constante
+      - etc
+  - declaratiile sunt
+      - publice (exportate) - se pot folosi de clientii modulului
+      - private (interne) - se pot folosi numai de modul
+  - se compileaza separat
+  - faciliteaza reutilizarea codului
+  - respecta principiul ascunderii informatiei
+      - datele private ale modulului sunt accesibile numai prin
+        intermediul subprogramelor publice ale acestuia.
+
+Ideile programarii modulare
+  - sa se grupeze subprogramele in functie de datele pe care
+    le folosesc
+  - sa se protejeze datele de accesul neautorizat prin 'ascunderea'
+    lor in zona privata a modulului
+  - o mai buna diviziune a muncii de programare
+     - module server: mai complexe, mai dificil de implementat
+     - module client: folosesc declaratiile publice din modulele
+       server
+
+Exemplu de modul: unit-ul Turbo (Borland) Pascal
+
+1.2. Structura unui modul
+
+Un modul are urmatoarele parti
+  - antet
+  - parte de interfata (publica)
+  - parte de implementare (privata)
+  - cod de initializare
+
+1.2.1. Antetul
+
+  - precizeaza numele modulului
+  - numele modulului apare in frazele Uses din modulele client
+
+    Unit Nume_Modul;
+
+  - Unit este un cuvant rezervat
+  - restrictii:
+      - Nume_Modul sa fie identic numelui fisierului sursa (Nume_Modul.PAS)
+      - Uses provoaca cautarea unui modul Nume_Modul.TPU
+
+1.2.2. Partea de interfata
+
+Partea de interfata contine declaratiile numelor (simbolurilor) publice.
+Declaratiile se refera la
+  - modulele server (o fraza Uses)
+  - constante
+  - tipuri de date
+  - variabile
+  - subprograme (proceduri si functii)
+
+Toti clientii unit-ului pot folosi numele care sunt declarate in aceasta
+parte. In situatia in care exista conflict de nume, numele in conflict se
+califica cu numele modulului:
+
+Nume_Modul.Nume
+
+Sintaxa partii de interfata este:
+
+interface   { declaratii de nume publice }:
+  uses      { ce module se folosesc in partea de interfata }
+  const     { declaratii de constante }
+  type      { declaratii de tipuri de date }
+  var       { declaratii de variabile }
+  procedure { antete de proceduri }
+  function  { antete de functii }
+
+1.2.3. Partea de implementare
+
+Partea de implementare este obligatoriu sa contina corpul subprogramelor
+(proceduri si functii) declarate in partea de interfata. In plus, aceasta
+parte poate contine si obiecte (etichete, constante, tipuri de date,
+variabile, subprograme) locale. Termenul de "local" inseamna ca aceste
+obiecte sunt folosibile numai in partea de implementare, nefiind vizibile
+in afara acesteia.
+
+Sintaxa partii de implementare este:
+
+implementation    { declaratii de nume locale }:
+  uses            { ce module se folosesc in implementare }
+  label           { declaratii de etichete locale }
+  const           { declaratii de constante locale }
+  type            { declaratii de tipuri de date locale }
+  var             { declaratii de variabile locale }
+  procedure       { corpul procedurilor publice }
+  function        { corpul functiilor publice }
+  procedure       { corpul procedurilor locale }
+  function        { corpul functiilor locale }
+
+Pentru subprogramele publice nu este necesara specificarea parametrilor.
+Declaratia completa a lor este obligatoriu sa fie facuta in partea de
+interfata. Daca se specifica parametrii si in partea de implementare, antetul
+subprogramului din partea de implementare trebuie sa fie identic (textual) cu
+cel dat in partea de interfata.
+
+Subprogramele publice se pot apela in partea de implementare fara a respecta
+regula: declarare, apoi apelare. Acest lucru este posibil deoarece declararea
+lor in partea de interfata actioneaza ca o declaratie "forward".
+
+Subprogramele locale (private) trebuie sa respecte regulile uzuale: declarare,
+apoi apelare.
+
+1.2.4. Codul de initializare
+
+Codul de initializare a modulului are ca ca functia principala initializarea
+variabilelor (locale in special) din modul. Daca nu este nevoie de un
+asemenea cod, se pune pur si simplu cuvantul rezervat "end."
+Daca trebuie cod de initializare, acesta se va pune intre begin si end.
+
+Din acest punct de vedere, codul de initializare a unui modul poate fi
+asimilat programului principal Pascal (care are instructiunile intre
+begin si end.).
+
+1.3. Exemple:
+
+  Unit-urile standard
+    Crt
+    Dos
+    Printer
+
+  Client     Module folosite
+
+  Complexe   UComplex
+  Test       UDataC
+             Crt
+  Calendar   UDataC
+  CitireT    UFile
+
+  UPolinom - rez.de ecuatii de gr I si II
+
+1.4. Cum s-a ajuns la programarea modulara
+1.4.1. Reutilizarea codului
+1.4.2. Biblioteci de subprograme
+1.4.3. Deficientele bibliotecilor de subprograme
+1.4.4. Principiul programarii modulare
+1.4.5. Deficientele programarii modulare
+
+1.4.1. Reutilizarea codului
+
+La putin timp dupa aparitia limbajelor de nivel inalt a aparut si conceptul
+de subprogram, si odata cu acesta, principiul abstractizarii procedurale.
+Conform acestui principiu, o secventa de instructiuni care efectueaza o
+aceeasi prelucrare se pot grupa intr-o unitate de program independenta,
+numita subprogram, care se caracterizeaza prin:
+  - un nume (cu care se apeleaza)
+  - o lista de parametri formali (de intrare si de iesire), care atribuie
+    subprogramului un caracter general (rezolva o clasa de probleme
+    definita de parametrii sai)
+
+In orice loc in care este nevoie de executia instructiunilor cuprinse in
+corpul subprogramului, nu este nevoie sa se rescrie acele instructiuni.
+Este nevoie doar de o instructiune de apel a subprogramului, care contine
+  - numele acestuia
+  - lista de parametri actuali (sau efectivi), care trebuie sa corespunda
+    listei parametrilor formali ai subprogramului
+
+Pentru a putea fi refolosit in programe diferite, codul sursa al unui
+subprogram nu trebuie sa refere nici un nume din mediul sau de apel (adica
+de acolo unde a fost scris prima data). Rezulta de aici ca in corpul
+unui subprogram:
+  - nu se folosesc variabile globale
+  - nu se folosesc nici un alt fel de declaratii exterioare subprogramului
+  - toate numele folosite sunt fie nume de parametri, fie nume declarate
+    local in subprogram.
+
+Aceasta este prima forma de reutilizare a codului sursa: codul sursa al
+unui subprogram este scris o singura data si folosit in orice loc este
+nevoie de el.
+
+Limbajul Pascal standard rezolva problema reutilizarii codului prin
+includerea textului sursa al unui subprogram (existent intr-un fisier
+sursa) in codul sursa al programului care-l apela (folosind o directiva
+de includere). Mediile Turbo si Borland Pascal au pastrat si aceasta forma
+de reutilizare a codului prin directiva de compilare $I.
+
+1.4.2. Biblioteci de subprograme
+
+O maniera mai eleganta de grupare a subprogramelor este cunoscuta sub
+numele de "biblioteci de subprograme". Acestea sunt fisiere sursa care
+contin codul sursa al mai multor subprograme. In unele limbaje precum
+FORTRAN, aceste fisiere se puteau compila separat, rezultand module
+obiect care se puteau pe urma lega cu programele ce le apelau, formand
+prin link-editare programe executabile.
+
+Astfel de biblioteci sunt:
+  - biblioteca matematica a calculatorului Felix C-256 (MathLib)
+  - biblioteca stiintifica a firmei IBM (IBM SSP - Scientific Subroutine
+    Package)
+  - biblioteca matematica a firmei DEC
+
+Utilizatorul unei astfel de biblioteci trebuia doar sa cunoasca modul de
+apelare a subprogramului dorit.
+
+1.4.3. Deficientele bibliotecilor de subprograme
+
+Intre deficientele folosirii bibliotecilor de subprograme mentionam:
+  - ele nu contin decat subprograme
+  - nu se face nici un fel de verificare a corectitudinii apelului
+    (la compilare nu este nevoie de existenta bibliotecii; este sarcina
+    link-editorului sa rezolve apelul de subprogram, avand codul compilat
+    din modulul obiect, pe care-l include in programul executabil)
+  - toata responsabilitatea folosirii corecte a apelului cade in
+    sarcina programatorului client (cel care apeleaza subprogramul).
+
+1.4.4. Principiul programarii modulare
+
+Odata cu cresterea complexitatii programelor, a devenit din ce in ce
+mai imperioasa problema protejarii datelor dintr-un program. In speta
+este vorba de variabilele globale ale unui program, care (cel putin
+teoretic) se pot modifica accidental si in partile programului care nu ar
+trebui sa le modifice.
+
+Tinand cont de observatia (reala) de mai sus, s-a enuntat principiul
+programarii modulare, care afirma urmatoarele:
+  - grupeaza subprogramele in module, dupa principiul datelor comune
+  - foloseste principiul ascunderii informatiei pentru aceste date.
+
+Asa s-a ajuns de la biblioteci de subprograme (in care subprogramele
+erau grupate de obicei pe criteriul functionalitatii) la module, in care
+subprogramele se grupeaza pe criteriul datelor pe care trebuie sa le acceseze
+sau sa le modifice. Aceste date vor fi considerate locale modulului (deci
+invizibile in afara lui), iar subprogramele care le prelucreaza vor fi
+considerate publice.
+
+Gruparea procedurilor in module pe criteriul datelor comune rezolva deci
+  - protectia datelor (care sunt invizibile in afara modulului)
+  - reutilizarea modulului (impreuna cu datele din el) oriunde este nevoie
+    de functionalitatea lui
+  - o mai fina structurare a programelor client (o alta paradigma de
+    programare).
+
+1.4.5. Deficientele programarii modulare
+
+Pana la un punct, intr-un modul putem concentra definitia unui nou tip
+de date, impreuna cu operatiile pe acest tip. Am spus pana la un punct,
+deoarece daca declaram un tip de date nou, declaratia trebuie sa fie
+publica - deci in partea de interfata. O declaratie publica de tip are ca
+deficienta faptul ca orice variabila de tipul respectiv este modificabila
+(toate componentele sale sunt accesibile) - deci se incalca pe jumatate
+principiul ascunderii informatiei).
+
+Exemplul unit-ului UDataC este edificator: el declara un tip de data
+nou, DataC (public) si implementeaza o serie de operatii pe el (si nu numai):
+  - Compara
+  - ZiCorecta
+  - ZiuaDinAn
+  - NumarZile
+  - Aduna
+  - ZiLucratoare
+  - DataCToStr8
+  - DataCToStr10
+  - DataCToStr
+  - AdunaZi
+  - ScadeZi
+
+Toate aceste operatii sunt utile, insa unit-ul UDataC nu ascunde "structura"
+DataC, deci nu se elimina posibilitatea modificarii accidentale (sau
+neautorizate) a unei variabile de tip DataC in programele client ale
+unit-ului.
+
+O solutie ar fi renuntarea la o declaratie de tip nou si ascunderea
+structurii acestuia in partea de implementare a modulului. Pentru unit-ul
+DataC acest lucru ar insemna sa renuntam la toate declaratiile de tipuri din
+partea de interfata, sa le includem in partea de implementare si sa modificam
+aproape toate antetele subprogramelor (pentru ca nu mai avem tipul DataC).
+Nu am castiga mai nimic in ceea ce priveste protectia datelor, insa am
+castiga sigur in neclaritate.
+
+Exista si situatii cand putem ascunde structura tipului in partea de
+implementare. Unit-ul UListCCD.PAS reprezinta, impreuna cu programul sau
+client, LSTCapCd.PAS un exemplu de modul corect gandit, in spiritul
+paradigmei programarii modulare.
+
+In unit-ul UListCCD au fost incluse subprograme care opereaza cu o structura
+de date dinamica numita ListaCapCoada. Declaratia tipului, ca si a
+unicei variabile de tipul respectiv sunt incluse in partea de implementare a
+modulului, deci nu sunt vizibile in afara acestuia:
+
+type
+  ListaCapCoada = Record
+    Cap,            { capul listei: folosit la traversare }
+    Coada: PNod     { coada listei: acolo se fac inserari si stergeri }
+  End;
+var
+  L: ListaCapCoada;
+
+Deoarece lucreaza toate cu variabila (locala) L, subprogramele publice
+  - Creeaza:            Crearea unei liste vide
+  - Insereaza:          Adaugarea nodului N in coada listei
+  - Sterge:             Stergerea nodului din coada listei
+  - Cauta(I):           Cauta in lista nodul cu informatia utila I
+  - Traverseaza:        Traverseaza toate nodurile listei si afiseaza
+                        informatia utila din ele
+  - Elibereaza:         Dealoca toate elementele listei, transformand-o
+                        intr-o lista vida
+nu au nevoie de L ca parametru. Ca fapt divers, aici am incalcat principiul
+expus mai sus, al autonomiei subprogramelor. De data aceasta, deoarece ele
+sunt grupate in acest modul pe principiul datelor comune care le folosesc
+(in cazul nostru variabila L), nu este nevoie ca acest principiu sa fie
+respectat: daca datele si implementarea subprogramelor ce actioneaza pe ele
+sunt ascunse exteriorului, nu este nici un pericol in a altera aceste date
+din afara.
+
+In acest exemplu am ilustrat principiul programarii modulare. Exemplul
+functioneaza corect atata timp cat in programele client avem nevoie de o
+singura lista. Daca insa am avea nevoie de doua liste, modulul nostru nu mai
+e bun. Aceasta este de fapt principala deficienta a programarii modulare:
+  - datele locale in modul permit lucrul cu o singura instanta a modulului
+    (considerat ca tip de date).
+
+A fost nevoie de urmatoarea paradigma de programare
+  - abstractizarea datelor sau
+  - programarea bazata pe obiecte
+pentru a rezolva aceasta problema.

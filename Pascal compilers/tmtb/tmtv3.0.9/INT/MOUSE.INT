@@ -1,0 +1,39 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal 3.0 Runtime Library                         *)
+(*       Console Mouse Interface Unit                           *)
+(*                                                              *)
+(*       Copyright (c) 1995,98 TMT Development Corporation      *)
+(*       Authors: Anton Moscal, Vadim Bodrov                    *)
+(*                                                              *)
+(****************************************************************)
+
+unit Mouse;
+
+interface
+
+const
+ LeftBtnMask   = 1;
+ RightBtnMask  = 2;
+ MiddleBtnMask = 4;
+
+procedure InitMouse;
+function  GetButtonCount: DWord;
+procedure ShowMouse;
+procedure HideMouse;
+procedure SetMousePos(X, Y: DWord);
+procedure GetMouseInfo(var ButtonMask: Word; var X: Word; var Y: Word);
+function  GetMouseX: DWord;
+function  GetMouseY: DWord;
+function  LeftButtonPressed: Boolean;
+function  MiddleButtonPressed: Boolean;
+function  RightButtonPressed: Boolean;
+procedure SetMouseHandler(Mask: DWord; procedure Hnd(Mask, Buttons, X, Y, MovX, MovY: System.Word));
+procedure ClearMouseHandler;
+procedure DoneMouse;
+procedure SetMouseRange(MinX, MinY, MaxX, MaxY: DWord);
+
+function  MickyToText(Coord: DWord): DWord;
+function  TextToMicky(Coord: DWord): DWord;
+
+implementation

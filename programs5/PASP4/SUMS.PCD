@@ -1,0 +1,146 @@
+l   3
+ ent   1   l   4
+ ent   2   l   5
+ ldcr  0.0                                                                            
+ sror          9
+ ldci 30
+ ngi
+ sroi         11
+i   10
+ ldci 30
+ stri  0      13
+l   6
+ ldoi         11
+ lodi  0      13
+ leqi
+ fjp       l   7
+ ldoi         11
+ ldci 3
+ lda   0       6
+ csp         wri
+i   20
+ lca'                                                                                '
+ ldci 2
+ ldci 2
+ lda   0       6
+ csp         wrs
+ ldor          9
+ ldci 12
+ lda   0       6
+ csp         wrr
+ lda   0       6
+i   30
+ csp         wln
+ ldor          9
+ ldoi         11
+ ldci 10
+ flt
+ csp         log
+ flo
+ mpr
+ csp         exp
+ adr
+i   40
+ sror          9
+ ldoi         11
+ inci          1
+ sroi         11
+ ujp       l   6
+l   7
+ lda   0       6
+ csp         wln
+ ldcr  0.0                                                                            
+ sror         10
+ ldci 30
+i   50
+ sroi         12
+ ldci 30
+ ngi
+ stri  0      13
+l   8
+ ldoi         12
+ lodi  0      13
+ geqi
+ fjp       l   9
+ ldoi         12
+ ldci 3
+i   60
+ lda   0       6
+ csp         wri
+ lca'                                                                                '
+ ldci 2
+ ldci 2
+ lda   0       6
+ csp         wrs
+ ldor         10
+ ldci 12
+ lda   0       6
+i   70
+ csp         wrr
+ lda   0       6
+ csp         wln
+ ldor         10
+ ldoi         12
+ ldci 10
+ flt
+ csp         log
+ flo
+ mpr
+i   80
+ csp         exp
+ adr
+ sror         10
+ ldoi         12
+ deci          1
+ sroi         12
+ ujp       l   8
+l   9
+ lca'Sum1 =                                                                          '
+ ldci 7
+ ldci 7
+i   90
+ lda   0       6
+ csp         wrs
+ ldor          9
+ ldci 12
+ lda   0       6
+ csp         wrr
+ lda   0       6
+ csp         wln
+ lca'Sum2 =                                                                          '
+ ldci 7
+i  100
+ ldci 7
+ lda   0       6
+ csp         wrs
+ ldor         10
+ ldci 12
+ lda   0       6
+ csp         wrr
+ lda   0       6
+ csp         wln
+ lca'Difference =                                                                    '
+i  110
+ ldci 13
+ ldci 13
+ lda   0       6
+ csp         wrs
+ ldor          9
+ ldor         10
+ sbr
+ abr
+ ldci 12
+ lda   0       6
+i  120
+ csp         wrr
+ lda   0       6
+ csp         wln
+ retp
+l   4=14
+l   5=9
+q
+i    0
+ mst           0
+ cup   0   l   3
+ stp
+q

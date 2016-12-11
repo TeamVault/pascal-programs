@@ -1,0 +1,95 @@
+(****************************************************************)
+(*                                                              *)
+(*       TMT Pascal Runtime Library                             *)
+(*       WINDOS Unit                                            *)
+(*                                                              *)
+(*       Copyright (c) 1995,99 TMT Development Corporation      *)
+(*       Author: Vadim Bodrov                                   *)
+(*                                                              *)
+(****************************************************************)
+unit WinDos;
+
+interface
+
+uses DOS, Strings;
+
+type
+  TRegisters = DOS.Registers;
+
+type
+  TDatetime = DOS.DateTime;
+  TSearchRec = DOS.SearchRec;
+
+const
+  faReadOnly  = $01;
+  faHidden    = $02;
+  faSysFile   = $04;
+  faVolumeID  = $08;
+  faDirectory = $10;
+  faArchive   = $20;
+  faAnyFile   = $3F;
+
+  fcExtension = $0001;
+  fcFileName  = $0002;
+  fcDirectory = $0004;
+  fcWildcards = $0008;
+
+  fCarry      = $0001;
+  fParity     = $0004;
+  fAuxiliary  = $0010;
+  fZero       = $0040;
+  fSign       = $0080;
+  fOverflow   = $0800;
+
+  fmClosed    = $D7B0;
+  fmInput     = $D7B1;
+  fmOutput    = $D7B2;
+  fmInOut     = $D7B3;
+
+  fsPathName  = 79;
+  fsDirectory = 67;
+  fsFileName  = 8;
+  fsExtension = 4;
+
+procedure CreateDir(Dir: PChar);
+function  DiskFree(Drive: Byte): DWORD;
+function  DiskSize(Drive: Byte): DWORD;
+function  DosVersion: DWORD;
+function  FileExpand(Dest, Name: PChar): PChar;
+procedure FindFirst(Path: PChar; Attr: Word; var F: TSearchRec);
+procedure FindNext(var F: TSearchRec);
+function  FileSearch(Dest, Name, List: PChar): PChar;
+function  FileSplit(Path, Dir, Name, Ext: PChar): DWORD;
+function  GetArgCount: Longint;
+function  GetArgStr(Dest: PChar; Index: Longint; MaxLen: DWORD): PChar;
+procedure GetCBreak(var Break: Boolean);
+function  GetCurDir(Dir: PChar; Drive: Byte): PChar;
+procedure GetDate(var Year, Month, Day, DayOfWeek: Word);
+function  GetEnvVar(Name: PChar): PChar;
+procedure GetFAttr(var F; var Attr: Word);
+procedure GetFTime(var F; var Time: Longint);
+procedure GetTime(var Hour, Minute, Second, Sec100: Word);
+procedure GetVerify(var Verify: Boolean);
+procedure PackTime(var T: DateTime; var Time: Longint);
+procedure RemoveDir(Dir: PChar);
+procedure SetCBreak(Break: Boolean);
+procedure SetCurDir(Dir: PChar);
+procedure SetFAttr(var F; Attr: Word);
+procedure SetDate(Year, Month, Day: Word);
+procedure SetFTime(var F; Time: Longint);
+procedure SetTime(Hour, Minute, Second, Sec100: Word);
+procedure SetVerify(Verify: Boolean);
+procedure UnpackTime(Time: Longint; var DT: TDateTime);
+procedure GetIntVec(IntNo: Byte; var Vector: FarPointer);
+procedure GetIntVecFar(IntNo: Byte; var Vector: FarPointer);
+procedure Intr(IntNo: Byte; var Regs: Registers);
+procedure MsDos(var Regs: Registers);
+procedure SetIntVecFar(IntNo: Byte; const Vector: FarPointer);
+overload  SetIntVec = SetIntVecFar;
+procedure SetIntVecNear(IntNo: Byte; Vector: Pointer);
+overload  SetIntVec = SetIntVecNear;
+
+var
+  DosError: Longint := 0;
+
+implementation

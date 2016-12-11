@@ -1,0 +1,1972 @@
+
+                        The GRAPH - TMT Graphics Library
+
+                 Copyright (c) 1997,98  TMT Development Corp.
+
+                            All Rights Reserved
+
+
+
+                                 Introduction
+                                ÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+
+   For  some  time the TMT compiler had no accompanying graphics library. Now
+this  deficiency  has been corrected. We have made a graphics library for TMT
+Pascal  which is as compatible with the Borland Graphics Library as possible.
+Since BGI is by now an obsolete interface, we added a number of enhancements.
+They are described in detail below.
+
+   This  graphics  library  for  TMT  Pascal allows easy porting of programs,
+written for Borland Pascal (with minimal changes to the source).
+
+Your opinions and suggestions are welcome.  Please send them to
+support@tmt.com.
+
+
+                                   Features
+                                  ÍÍÍÍÍÍÍÍÍÍ
+
+ þ Real 32-bits accelerated graphics;
+ þ Mostly compatible with Borland's GRAPH;
+ þ Supports the following graphic modes:
+   - VGA/MCGA (13h BIOS);
+   - all SVGA 256 color (PaletteColor) modes;
+   - all SVGA 32k/64k color (HiColor) modes;
+   - all SVGA 16M/16M+A color (TrueColor) modes;
+ þ VESA VBE 1.2/2.0 features (32-bits PM interface, etc);
+ þ Banked SVGA modes;
+ þ Logical pages and hardware scrolling;
+ þ No 64K limit on sprite size;
+ þ Does not use BGI drivers;
+ þ Uses flat memory model for greater performance.
+ þ Advanced sprite engine with transparent BLT;
+ þ 121 procedures and functions.
+
+ Registered version only:
+ þ Virtual graphics mode for DOUBLE and TRIPLE buffering is availible.
+ þ LFB (Linear Flat frame Buffer) SVGA modes
+
+                             System Requirements
+                            ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+
+ þ VGA compatible video card required (VESA VBE 1.2 reccommended,
+   VESA VBE 2.0 is best);
+ þ CPU Intel 80386 or higher;
+ þ PMODE or PMODEW compatible DOS Extender (DOS32.EXE not supported);
+
+
+
+               Compatibility with Graph unit from Borland Pascal
+              ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+
+   The  TMT  Graph unit partly replicates the Graph unit from Borland Pascal.
+However  there  are  some  differences.  Listed  below  are  the names of all
+procedures  and  functions  from  the  Graph  unit  from Borland Pascal 7 and
+status in the TMT Graph unit.
+
+   +Arc                        +GetMaxX                *PutImage
+   +Bar                        +GetMaxY                +PutPixel
+   +Bar3D                      -GetModeName            *Rectangle
+   +Circle                     -GetModeRange           -RegisterBGIdriver
+   *ClearDevice                +GetPalette             -RegisterBGIfont
+   *ClearViewPort              +GetPaletteSize         *RestoreCrtMode
+   *CloseGraph                 +GetPixel               -Sector
+   -DetectGraph                *GetTextSettings        +SetActivePage
+   *Drawpoly                   +GetViewSettings        +SetAllPalette
+   +Ellipse                    +GetX                   *SetAspectRatio
+   *FillEllipse                +GetY                   *SetBkColor
+   *FillPoly                   *GraphDefaults          +SetColor
+   *FloodFill                  +GraphErrorMsg          -SetFillPattern
+   -GetArcCoords               +GraphResult            -SetFillStyle
+   *GetAspectRatio             +ImageSize              +SetGraphBufSize
+   *GetBkColor                 -InitGraph              *SetGraphMode
+   +GetColor                   -InstallUserDriver      +SetLineStyle
+   +GetDefaultPalette          -InstallUserFont        +SetPalette
+   -GetDriverName              +Line                   +SetRGBPalette
+   -GetFillPattern             +LineRel                +SetTextJustify
+   -GetFillSettings            +LineTo                 *SetTextStyle
+   *GetGraphMode               +MoveRel                -SetUserCharSize
+   +GetImage                   +MoveTo                 *SetViewPort
+   +GetLineSettings            +OutText                +SetVisualPage
+   +GetMaxColor                +OutTextXY              *SetWriteMode
+   -GetMaxMode                 -PieSlice               +TextHeight
+                                                       +TextWidth
+
+ Definitions:
+  +  procedure/function supported and functionally equivalent to Borland;
+  *  procedure/function supported, but somewhat different from Borland;
+  -  procedure/function is not supported.
+
+   Note that TMT Graph also provides many procedures and functions, which are
+not supported by Borland's Graph unit.
+
+
+                         Video card compatibility
+                        ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+
+ The GRAPH unit has been tested on following graphic adapters:
+
+ þ Trident 9440 with 1 Mb (with/without UniVBE 5.3);
+ þ S3 SuperVGA (Virge) with 4 Mb (with/without UniVBE 5.3);
+ þ STB Velocity with 4 Mb (without UniVBE);
+ þ Cirrus Logic GD-54xx VGA (with UniVBE 5.3);
+ þ ATI Mach 64 with 4 Mb (without UniVBE);
+
+
+                                 Variables
+                                ÍÍÍÍÍÍÍÍÍÍÍ
+
+ DrawBorder
+ ßßßßßßßßßß
+ You can to enable and disable a border drawing for FillEllipse, FillCircle
+ and FillTriangle procedures.
+
+ Declaration:
+
+ var DrawBorder: Boolean
+
+ Remarks:
+ If DrawBorder = True, border drawing enabled (default).
+ If DrawBorder = False, border drawing disabled.
+
+
+                             Constants and Types
+                            ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+ Bar3D Constants
+ ßßßßßßßßßßßßßßß
+ These constants are used to specify whether a 3-D graph bar has a top. (See
+ Bar3D)
+
+ Constant Value :
+ TopOn    True
+ TopOff   False
+
+ BitBlt Operators
+ ßßßßßßßßßßßßßßßß
+ Use these operators for images you place on the screen with PutImage.
+
+ Constant  ³ Value ³ Meaning
+ ÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍØÍÍÍÍÍ
+ NormalPut ³   0   ³ MOV
+ CopyPut   ³   0   ³ MOV
+ XORPut    ³   1   ³ XOR
+ OrPut     ³   2   ³ OR
+ AndPut    ³   3   ³ AND
+
+ Clipping Constants
+ ßßßßßßßßßßßßßßßßßß
+ Constant Value :
+ ClipOn   True
+ ClipOff  False
+
+ Graphic Result Constants
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+  Constant           Value
+  grOK               0
+  grInvalidMode      1
+  grModeNotSupported 2
+  grSetModeError     3
+  grLFBSetupError    4
+  grError            5
+  grVESANotFound     6
+  grVESAError        7
+
+ Justification Constants
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Use these constants to specify horizontal and vertical justification for
+ SetTextJustify.
+
+   Horizontal Constant ³ Value
+   ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍ
+    LeftText           ³   0
+    CenterText         ³   1
+    RightText          ³   2
+
+   Vertical Constant   ³ Value
+   ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍ
+    BottomText         ³   0
+    CenterText         ³   1
+    TopText            ³   2
+
+ Note how each justification constant places the output text relative to
+ the output coordinates:
+
+      TopText     TopText  TopText   TopText
+      LeftText      CenterText       RightText
+      BottomText    BottomText       BottomText
+
+ LineSettingsType
+ ßßßßßßßßßßßßßßßß
+ The record that defines the style, pattern, and thickness of a line.
+
+ Declaration:
+ LineSettingsType = record
+    LineStyle : Word;
+    Pattern   : Word;
+    Thickness : Word;
+  end;
+
+ Line-Style and Width Constants
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ These constants are used with GetLineSettings and SetLineStyle:
+
+ Line Styles:
+ SolidLn   0
+ DottedLn  1
+ CenterLn  2
+ DashedLn  3
+ UserBitLn 4 (User-defined line style)
+
+ Line Widths:
+  NormWidth  1
+  ThickWidth 3
+
+ Text-Style Constants
+ ßßßßßßßßßßßßßßßßßßßß
+ These constants are used with SetTextStyle and GetTextSettings.
+
+ Constant      ³ Value ³ Meaning
+ ÍÍÍÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+ SmallFont     ³   0   ³ 8x8 bit mapped font
+ MediumFont    ³   1   ³ 8x14 bit mapped font
+ LargeFont     ³   2   ³ 8x16 bit mapped font
+
+ PaletteType
+ ßßßßßßßßßßß
+ The record that defines the size and colors of the palette; used by
+ GetPalette, GetDefaultPalette, and SetAllPalette.
+
+ Declaration:
+ type
+    PaletteType = record
+      Size    : Byte;
+      Colors  : array[0..MaxColors] of DWord;
+    end;
+
+ The size field reports the number of colors in the palette for the current
+ driver in the current mode. Colors contains the actual colors 0..Size - 1.
+
+ PointType
+ ßßßßßßßßß
+ A type defined for your convenience. Both fields are of type LongInt rather
+ than Integer.
+
+ Declaration:
+ PointType = record
+    X, Y : LongInt;
+  end;
+
+ RGBType
+ ßßßßßßß
+
+ A type used for access to Red, Green and Blue fields of each palette entry.
+
+ Declaration:
+ RGBType = record
+  Blue,Green,Red,Aligment: Byte;
+ end;
+
+ SVGA Mode Constants
+ ßßßßßßßßßßßßßßßßßßß
+ Consatnt      Value  Meaning
+ LFBorBanked    0     Enable SVGA LFB mode (if it's supported) or banked mode
+ BankedOnly     1     Enable SVGA banked mode only
+ LFBOnly        2     Enable SVGA LFB mode only
+
+ TextSettingsType
+ ßßßßßßßßßßßßßßßß
+ The record that defines the text attributes used by GetTextSettings.
+
+ Declaration:
+ TextSettingsType = record
+  Font          : Pointer;
+  FontSize      : DWord;
+  FirstChar     : DWord;
+  Width         : DWord;
+  Height        : DWord;
+  Space         : DWord;
+  Direction     : DWord;
+  Horiz         : DWord;
+  Vert          : DWord;
+  end;
+
+ ViewPortType
+ ßßßßßßßßßßßß
+ A record that reports the staus of the current viewport; used by
+ GetViewSettings.
+
+ Declaration:
+ ViewPortType = record
+    x1, y1, x2, y2 : LongInt;
+    Clip           : Boolean;
+  end;
+
+ Remarks:
+ The points (X1, Y1) and (X2, Y2) are the dimensions of the active viewport
+ and are given in absolute screen coordinates.  Clip is a Boolean variable
+ that controls whether clipping is active.
+
+ VbeInfoType
+ ßßßßßßßßßßß
+ A record that stores VESA VBE information block; used by GetVbeInfo.
+
+ Declaration:
+ VbeInfoType = record
+  VbeSignature       : DWord;
+  VbeVersion         : Word;
+  OemStringPtr       : DWord;
+  Capabilities       : DWord;
+  VideoModePtr       : DWord;
+  TotalMemory        : Word;
+  OEMSoftwareRev     : Word;
+  OEMVendorNamePtr   : DWord;
+  OEMProductNamePtr  : DWord;
+  OEMProductRevPtr   : DWord;
+  Reserved           : array [0..221] of Byte;
+  OEMData            : array [0..255] of Byte;
+ end;
+
+ VbeInfoModeType
+ ßßßßßßßßßßßßßßß
+ A record that stores VESA VBE mode information block; used by GetVbeModeInfo.
+
+ Declaration:
+ VbeModeInfoType = record
+  ModeAttributes     : Word;
+  WinAAttributes     : Byte;
+  WinBAttributes     : Byte;
+  WinGranularity     : Word;
+  WinSize            : Word;
+  WinASegment        : Word;
+  WinBSegment        : Word;
+  WinFuncPtr         : Pointer;
+  BytesPerScanLine   : Word;
+  XResolution        : Word;
+  YResolution        : Word;
+  XCharSize          : Byte;
+  YCharSize          : Byte;
+  NumberOfPlanes     : Byte;
+  BitsPerPixel       : Byte;
+  NumberOfBanks      : Byte;
+  MemoryModel        : Byte;
+  BankSize           : Byte;
+  NumberOfImagePages : Byte;
+  Reserved           : Byte;
+  RedMaskSize        : Byte;
+  RedFieldPosition   : Byte;
+  GreenMaskSize      : Byte;
+  GreenFieldPosition : Byte;
+  BlueMaskSize       : Byte;
+  BlueFieldPosition  : Byte;
+  RsvdMaskSize       : Byte;
+  RsvdFieldPosition  : Byte;
+  DirectColorModeInfo: Byte;
+  PhysBasePtr        : DWord;
+  OffScreenMemOffset : DWord;
+  OffScreenMemSize   : Word;
+  Reserved2          : Array [0..205] of Byte;
+ end;
+
+                            Procedures and Functions
+                           ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
+
+ AnalizeRGB (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Returns RGB fields of given color.
+
+ Declaration
+ procedure AnalizeRGB (Color: Dword; var R,G,B: Byte);
+
+ Remarks:
+ This function works in HiColor and TrueColor SVGA modes only. RGB field
+ values, returned by AnalizeRGB depended on current video mode (32K, 64K
+ or 16M colors).
+
+ Arc (procedure)
+ ßßßßßßßßßßßßßßß
+ Draws a circular arc.
+
+ Declaration:
+ procedure Arc (X,Y; Integer; StAngle, EndAngle, Radius; Word);
+
+ Remarks:
+ The arc begins at StAngle (start angle) and ends at EndAngle, with radius Radius,
+ and with (x,y) as the center point.
+
+ Bar (procedure)
+ ßßßßßßßßßßßßßßß
+ Draws a bar with the current fill color.
+
+ Declaration:
+ procedure Bar(x1, y1, x2, y2: LongInt);
+
+ Remarks:
+ Bar draws a filled-in rectangle (used in bar charts, for example). It uses the
+ color defined by SetFillColor. To draw an outlined bar, call Bar3D with a
+ zero depth.
+
+ Bar3D (procedure)
+ ßßßßßßßßßßßßßßßßß
+ Draws a 3-D bar using the current fill color.
+
+ Declaration:
+  procedure Bar3D(x1, y1, x2, y2: DWord; Depth: Word; Top: Boolean);
+
+ Remarks:
+ Bar3D draws a filled-in, three-dimensional bar with the pattern and color
+ defined by SetFillColor. The 3-D outline of the bar is drawn in the current
+ line style and color as set by SetLineStylle and SetColor. Depth is the
+ length in pixels of the 3-D outline. If Top is TopOn, a 3-D top is put on
+ the bar; if Top is TopOff, no top is put on the bar (making it possible
+ to stack several bars on top of one another).
+
+ A typical depth could be calculated by taking 25% of the width of the bar:
+    Bar3D(X1, Y1, X2, Y2, (X2 - X1 + 1) div 4, TopOn);
+
+ Circle (procedure)
+ ßßßßßßßßßßßßßßßßßß
+ Draws a circle (in the current color set by SetColor), using (X,Y) as the
+ center point.
+
+ Declaration:
+ procedure Circle(X,Y: LongInt; Radius: DWord);
+
+ Remarks:
+ Draws a circle in the current color set by SetColor. Each graphics mode has
+ an aspect ratio used by Circle.
+
+ ClearDevice (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Clears the currently selected output device and homes the current pointer.
+
+ Declaration:
+ procedure ClearDevice;
+
+ Remarks:
+ ClearDevice moves the current pointer to (0, 0), and clears all accessible video
+ memory with zero value.
+
+ ClearPage (procedure)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Clears the current active page using the background color set by SetBkColor
+ and moves the current pointer to (0, 0).
+
+ Declaration:
+ procedure ClearPage;
+
+ Remarks:
+ Active logical page sets by SetLogical Page may be larger than the physical
+ screen.
+
+ ClearViewPort (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Clears the current view port using the background color set by SetBkColor
+ and moves the current pointer to (0, 0).
+
+ Declaration:
+ procedure ClearViewPort;
+
+ Remarks:
+ ClearViewPort sets the fill color to the background color and moves the
+ current pointer to (0, 0).
+
+ CliRetrace (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Switches off interrupts and waits for vertical retrace and restor interrupts.
+
+ Declaration:
+ procedure CliRetrace;
+
+ CliHRetrace (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Switches off interrupts, waits for horizontal retrace and restor interrupts.
+
+ Declaration:
+ procedure CliHRetrace;
+
+ CloseGraph (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Shuts down the graphics system.
+
+ Declaration:
+ procedure CloseGraph;
+
+ Remarks:
+ CloseGraph restores the original screen mode before graphics was initialized
+ the first time and frees the memory allocated for the graphics buffer.
+
+ DetectSVGAMode (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns valid VESA VBE mode number for requested video mode.  If the requested
+ video mode is not supported, returns a zero value.
+
+ Declaration:
+ function DetectSVGAMode (XRes,YRes,BPP,VMode: Word): Word;
+
+ Remarks:
+ This function may be used with the SetGraphMode procedure.  The following
+ example tries to set the SVGA mode 640x480 with maximum color depth:
+
+ uses Crt,Graph;
+
+ function SetSVGA640x480: String;
+ const Bps: array [0..4] of Word=(32,24,16,15,8);
+ var   Mode,i: Word;
+ begin
+  for i:=0 to 4 do begin
+   Mode:=DetectSVGAMode(640,480,bps[i],LfbOrBanked);
+   if Mode>0 then begin
+    SetGraphMode(Mode);
+    if GraphResult=grOk then begin
+     Str(bps[i],Result);
+     exit;
+    end;
+   end;
+  end;
+  RestoreCrtMode;
+  Result:='';
+ end;
+
+ var S: String;
+ begin
+  S:=SetSVGA640x480;
+  if S<>'' then begin
+   SetTextJustify(CenterText,CenterText);
+   OutTextXY(320,240,'This is SVGA mode 640x480 '+S+' bps');
+   OutTextXY(320,260,'Press any key...');
+   ReadKey;
+   RestoreCrtMode;
+  end else
+   Writeln(' SVGA mode 640x480 not supported...');
+ end.
+
+ DrawEllipse (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Draws an ellipse
+
+ Declaration:
+ procedure DrawEllipse(X, Y, A, B: LongInt)
+
+ Remarks:
+ (X,Y) is the center point; A and B are the horizontal and vertical axes.
+
+ DrawHLine (procedure)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Draws horizontal line using the current fill color.
+
+ Declaration:
+ procedure DrawHLine (X1,X2,Y: LongInt);
+
+ DrawPoly (procedure)
+ ßßßßßßßßßßßßßßßßßßßß
+ Draws the outline of a polygon using the current line style and color.
+
+ Declaration:
+ procedure DrawPoly(NumVert: DWord; var Vert);
+
+ Remarks:
+ Numvert specifies the number of coordinate pairs in Vert. A coordinate pair
+ consists of two LongInt values, an X and a Y value.
+
+ This function is different from Borland's GRAPH unit. Polygons can only have
+ angles less than 180 degrees. That is, they must be convex.
+
+                                             /\
+                     /\                      \ \
+                     \ \                     /  \
+                      \ \                    \/\ \
+                       \/                       \/
+                 1. Valid polygon       2. Invalid polygon
+
+
+ If you want to draw polygon (2), you must split it up into two valid
+ polygons:
+
+                                  /\               /\
+                                  \ \              \ \
+                      /\     +     \ \      =      /  \
+                      \/            \ \            \/\ \
+                                     \/               \/
+
+
+ Ellipse (procedure)
+ ßßßßßßßßßßßßßßßßßßß
+ Draws a portion of an ellipse.
+
+ Declaration:
+ procedure Ellipse(X,Y: LongInt; StAngle, EndAngle, XRadius, YRadius: DWord);
+
+ Remarks:
+ Draws an arc from StAngle (start angle) to EndAngle, with radii XRadius and
+ YRadius, and (X,Y) as the center point.
+
+ ExpandFill (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Fills a bounded region with the current color.
+
+ Declaration:
+ procedure ExpandFill(X, Y: Integer);
+
+ Remarks:
+ Fills an enclosed area on bitmap devices. (X, Y) is a seed within the
+ enclosed area to be filled. The current fill color, as set by SetFillColor,
+ is used to flood the area bounded by any diferent color. If the seed point
+ is within an enclosed area, then the inside will be filled. If the seed is
+ outside the enclosed area, then the outside will be filled.
+
+ FillEllipse (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Draws a filled ellipse
+
+ Declaration:
+ procedure FillEllipse(X, Y, A, B: LongInt)
+
+ Remarks:
+ (X,Y) is the center point; A and B are the horizontal and vertical axes.
+
+ FillPoly (procedure)
+ ßßßßßßßßßßßßßßßßßßßß
+ Fills a polygon, using the scan converter
+
+ Declaration:
+ procedure FillPoly(NumVert: DWord; var Vert);
+
+ Remarks:
+ Vert is an untyped parameter that contains the coordinates of each
+ vertex in the polygon. NumVert specifies the number of coordinate pairs
+ in Vert. A coordinate pair consists of two LongInt values, an X and a Y value.
+
+ FillPoly calculates all the horizontal intersections, and then fills the
+ polygon using the current color defined by SetFillColor.
+
+ FillTriangle (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Draws a filled triangle.
+
+ Declaration:
+ procedure FillTriangle (X1,Y1,X2,Y2,X3,Y3: LongInt);
+
+ FlipImageOY (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Flips an image (BitMap) top to bottom.
+
+ Declaration:
+ procedure FlipImageOY (var BitMap);
+
+ Example:
+
+ uses Graph, CRT;
+
+ var P: Pointer;
+     i,j,dx,dy: DWord;
+
+ begin
+  { Set SVGA mode 640x480x256. You can set ANY supported mode }
+  SetSVGAMode(640,480,8,LfbOrBanked);
+  if GraphResult<>grOk then begin
+   ClrScr;
+   Writeln(GraphErrorMsg(GraphResult));
+   exit;
+  end;
+  dx:=(GetMaxX+1) div 2;
+  dy:=(GetMaxY+1) div 2;
+  for i:=0 to dx do
+   for j:=0 to dy do
+    PutPixel(i,j,i*j div dx);
+  SetTextJustify(CenterText,BottomText);
+  OutTextXY(dx,dy+dy div 2,'Press any key...');
+  ReadKey;
+  GetMem(P,ImageSize(0,0,dx-1,dy-1));
+  GetImage(0,0,dx-1,dy-1,P^);
+  FlipImageOX(P^);
+  PutImage(dx,0,P^);
+  FlipImageOY(P^);
+  PutImage(dx,dy,P^);
+  FlipImageOX(P^);
+  PutImage(0,dy,P^);
+  ReadKey;
+  FreeMem(P,ImageSize(0,0,dx-1,dy-1));
+  RestoreCrtMode;
+ end.
+
+ FlipImageOX (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Flips an image (BitMap) left to right.
+
+ Declration:
+ procedure FlipImageOX (var BitMap);
+
+ Remarks:
+ See FlipImageOY for example.
+
+ FlipToMemory (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Copies contents of graphic page number 0 to memory buffer pointed by Addr.
+
+ Declaration:
+ procedure FlipToMemory (Addr: Pointer)
+
+ Remarks:
+ Use this procedure to flip contents of graphic page into virtual page.
+ FlipToMemory not supported unregistrated version of TMT Pascal compiler.
+
+ FlipToScreen (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Copies contents of memory buffer pointed by Addr to graphic page number 0.
+
+ Declaration:
+ procedure FlipToScreen (Addr: Pointer)
+
+ Remarks:
+ Use this procedure to flip contents of virtual page into graphic page.
+ FlipToScreen not supported in unregistrated version of TMT Pascal compiler.
+
+ FloodFill (procedure)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Fills a bounded region with the current color.
+
+ Declaration:
+ procedure FloodFill(X, Y: Integer; Border: Word);
+
+ Remarks:
+ Fills an enclosed area on bitmap devices. (X, Y) is a seed within the
+ enclosed area to be filled. The current fill color, as set by SetFillColor,
+ is used to flood the area bounded by Border color. If the seed point is
+ within an enclosed area, then the inside will be filled. If the seed is
+ outside the enclosed area, then the exterior will be filled.
+
+ GetActivePage (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Gets the current active page number.
+
+ Declaration:
+ function GetActivePage: DWord;
+
+ GetAspectRatio (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns current aspect ratio factor.
+
+ Declaration:
+ procedure GetAspectRatio (var AspectRatio: Real);
+
+ Remarks:
+ See the SetAspectRatio for more info.
+
+ GetBitsPerPixel (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the size (in bits) needed to set color of pixel in the current graphic
+ mode.
+
+ Declaration:
+ function GetBitsPerPixel: DWord;
+
+ GetBkColor (function)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Returns the current background color.
+
+ Declaration:
+ function GetBkColor: DWord;
+
+ Remarks:
+ Background colors range from 0 to GatMaxColor, depending on the current
+ graphics driver and current graphics mode.
+
+ GetBytesPerScanLine (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns scan line size in bytes.
+
+ Declaration:
+ function GetBytesPerScanLine: DWord;
+
+ GetColor (function)
+ ßßßßßßßßßßßßßßßßßßß
+ Returns the current drawing color.
+
+ Declaration:
+ function GetColor: Word;
+
+ GetDefaultPalette (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the palette definition structure.
+
+ Declaration:
+ function GetDefaultPalette(var Palette: PaletteType);
+
+ This structure contains the palette as the new graphic mode initialized.
+
+ Remarks:
+ GetDefaultPalette returns a PaletteType record, which contains the palette.
+
+ GetGraphBufSize (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the size of internal graphic buffer;
+
+ Declaration:
+ function GetGraphBufSize: DWord;
+
+ Remarks:
+ See the SetGraphBufSize procedure.
+
+ GetGraphMode (function)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Returns VESA-compatible mode number of curent graphic mode.
+
+ Declaration:
+ function GetGraphMode: Word;
+
+ Remarks:
+ The Mode number returned by GetGrapMode my be used with SetGraphMode. See
+ the example below.
+
+ uses Graph,Crt;
+
+ var ErrorCode,i: LongInt:=0;
+     SX,SY: DWord:=0;
+ begin
+  { Set SVGA mode 640x480x256 }
+  SetSVGAMode(640,480,8,LfbOrBanked);
+  ClearDevice;
+  { Is mode set successfull? }
+  if GraphResult<>0 then begin
+   ErrorCode:=GraphResult;
+   CloseGraph;
+   Writeln(GraphErrorMsg(ErrorCode));
+  end;
+  SetLogicalSize(1280,600);
+  GetLogicalSize(SX,SY);
+  if (SX=640) and (SY=480) then begin
+   CloseGraph;
+   Writeln(' Logical pages not supported...');
+  end;
+  SetLineStyle(SolidLn,0,ThickWidth);
+  SetColor(clRed);
+  Line(0,0,GetMaxX,GetMaxY);
+  Line(GetMaxX,0,0,GetMaxY);
+  SetColor(clWhite);
+  Rectangle(0,0,GetMaxX,GetMaxY);
+  for i:=0 to (SX-640) div 4 do SetScreenStart(i*4,0,True);
+  for i:=0 to (SY-480) div 4 do SetScreenStart(SX-640,i*4,True);
+  for i:=(SX-640) div 4 downto 0 do SetScreenStart(i*4,SY-480,True);
+  for i:=(SY-480) div 4 downto 0 do SetScreenStart(0,i*4,True);
+  ReadKey;
+  CloseGraph;
+ end.
+
+ GetImage (procedure)
+ ßßßßßßßßßßßßßßßßßßßß
+ Saves a bit image of the specified region into a buffer.
+
+ Declaration:
+ procedure GetImage(x1, y1, x2, y2: Integer; var BitMap);
+
+ Remarks:
+ X1, Y1, X2, and Y2 are the coordinates of diagonally opposite points of the
+ regionrectangular region on the screen. BitMap is an untyped parameter that
+ must be at least 4 greater than the amount of area defined by the region.
+ The first two words of BitMap store the width and height of the region.
+
+ The remaining part of BitMap is used to save the bit image itself. Use the
+ ImageSize function to determine the size requirements of BitMap.
+
+ GetLfbAddress (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the physical address of linear flat frame buffer.
+
+ Declaration:
+ function GetLfbAddress: DWord;
+
+ Remarks:
+ If LFB is not supported, the function returns zero.
+
+ GetLineSettings (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the current line style, line pattern, and line thickness, as set by
+ SetLineStyle.
+
+ Declaration:
+ procedure GetLineSettings(var LineInfo: LineSettingsType);
+
+ GetLogicalPage (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the current logical page size.
+
+ Declaration:
+ procedure GetLogicalPage(var SX,SY: Word);
+
+ Remarks:
+ See the SetLogicalPage procedure for more info.
+
+ GetMaxColor (function)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Returns the highest color that can be passed to the SetColor procedure.
+
+ Declaration:
+ function GetMaxColor: DWord;
+
+ Remarks:
+ For example, on a 256 colored VGA/SVGA mode, GetMaxColor always returns
+ 255, which means that any call to SetColor with a value from 0..255 is
+ valid. On an SVGA in high-color mode, GetMaxColor returns a value of 32767
+ or 65535, etc.
+
+ GetMaxPage (function)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Returns the number of the last accessible graphic page.
+
+ Declaration:
+ function GetMaxPage: DWord;
+
+ GetMaxX (function)
+ ßßßßßßßßßßßßßßßßßß
+ Gets current X resolution.
+
+ Declaration:
+ function GetMaxX: DWord;
+
+ Remarks:
+ Returns the rightmost column (X resolution) of the logical visual page
+ in the current graphics mode.
+
+ GetMaxY (function)
+ ßßßßßßßßßßßßßßßßßß
+ Gets current Y resolution.
+
+ Declaration:
+ function GetMaxY: DWord;
+
+ Remarks:
+ Returns the bottommost row (Y resolution) of the logical visual page in
+ the current graphics mode.
+
+ GetOemProductName (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the string containing the name of the display controller board.
+
+ Declaration:
+ function GetOemProductName: String;
+
+ Remarks:
+ If VESA VBE 2.0+ is not supported, this function will return an empty string.
+
+ GetOemProductRev (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the string revision or manufacturing level of the display controller
+ board product.
+
+ Declaration:
+ function GetOemProductRev: String;
+
+ Remarks:
+ If VESA VBE 2.0+ is not supported, this function will return an empty string.
+
+ GetOemString (function)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the OEM-defined string.
+
+ Declaration:
+ function GetOemString: String;
+
+ Remarks:
+ This string may be used to identify the graphics controller chip or OEM
+ product family for hardware specific display drivers.
+
+ If VESA VBE 1.2+ is not supported, this function will return an empty string.
+
+ GetOemVendorName (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the string containing the name of the vendor which produced the
+ display controller board product.
+
+ Declaration:
+ function GetOemVendorName: String;
+
+ Remarks:
+ If VESA VBE 2.0+ is not supported, this function will return an empty string.
+
+ GetPageSize
+ ßßßßßßßßßßß
+ Returns size (in bytes) of the logical video page in the current graphic mode.
+
+ Declaration:
+ function GetPageSize: DWord;
+
+ Size of graphic page depends on the graphic mode and size of logical pages,
+ installed by the SetLogicalPage.
+
+ GetPalette (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Returns the current palette and its size.
+
+ Declaration:
+ procedure GetPalette(var Palette: PaletteType);
+
+ Remarks:
+ Returns the current palette and its size in a variable of type PaletteType.
+
+ GetPixel (function)
+ ßßßßßßßßßßßßßßßßßßß
+ Gets the pixel value at (X,Y).
+
+ Declaration:
+ function GetPixel(X,Y: LongInt): DWord;
+
+ Remarks:
+ Gets the color of the pixel at (X, Y).
+
+ GetScreenHeight (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the height in pixels of the physical screen.
+
+ Declaration:
+ function GetScreenHeight: DWord;
+
+ GetScreenWidth (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the width in pixels of the physical screen.
+
+ Declaration:
+ function GetScreenWidth: DWord;
+
+ GetTextSettings (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Gets settings for text output in graphics mode.
+
+ Declaration:
+ procedure GetTextSettings(var TextInfo: TextSettingsType);
+
+ Remarks:
+ Returns the current text font, direction, size, and justification as set by
+ SetTextStyle or SetCustonFont and SetTextJustify.
+
+ GetTranspSettings (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns current transparent mode settings.
+
+ Declaration:
+ procedure GetTranspSettings (var Mode: Boolean; Color: DWord);
+
+ Remarks:
+ See the SetTransparentMode for more info.
+
+ GetVbeCapabilities (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns VESA VBE capabilities field.
+
+ Declaration:
+ function GetVbeCapabilities: DWord;
+
+ GetVbeInfo (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Returns VESA VBE info.
+
+ Declaration:
+ procedure GetVbeInfo (var VI: VbeInfoType);
+
+ Remarks:
+ VI must be of VbeInfoType. You don't need to allocate a real mode memory block
+ for the VBE Information Table. TMT Graph translates it from real mode memory
+ into VI so you can directly access it from normal Pascal code.
+
+ GetVbeModeInfo (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the video mode information for the specified VBE internal video mode
+ number.
+
+ Declaration:
+ procedure GetVbeModeInfo (ModeNo: Word; var VMI: VbeModeInfoType);
+
+ Remarks:
+ VMI must be of VbeModeInfoType.  You don't need to allocate real mode memory
+ block for VBE Mode Information Table.  TMT Graph translates it from real mode
+ memory into VMI so you can directly access it from normal Pascal code.
+
+ GetVbeModesList (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns list of supported VESA VBE modes.
+
+ Declaration:
+ procedure GetVbeModesList (var ModesList: array of GraphModeType);
+
+ Remarks:
+ Check ModesList to get information about all supported modes.
+
+ GetVbeVersion (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the version of VESA BIOS Implementation.
+
+ Declaration:
+ function GetVbeVersion: Word
+
+ Remarks:
+ The VbeVersion is a BCD value which specifies what level of the VBE standard
+ is implemented in the software. The higher byte specifies the major version
+ number. The lower byte specifies the minor version number.
+ Note: The BCD value for VBE 2.0 is 0200h and the BCD value for VBE 1.2 is
+ 0102h. In the past we have had some applications misinterpreting these BCD
+ values. For example, BCD 0102h was interpreted as 1.02, which is incorrect.
+
+ GetViewSettings (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Gets the current viewport and clipping parameters.
+
+ Declaration:
+ procedure GetViewSettings(var ViewPort: ViewPortType);
+
+ Remarks:
+ GetViewSettings returns a variable of ViewPortType.
+
+ GetVisualPage (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Gets the current visual page number.
+
+ Declaration:
+ function GetVisualPage: DWord;
+
+ GetWriteMode (function)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the current write mode.
+
+ Declaration:
+ function GetWriteMode: DWord;
+
+ GetX (function)
+ ßßßßßßßßßßßßßßß
+ Returns the X coordinate of the current pointer (CP).
+
+ Declaration:
+ function GetX: LongInt;
+
+ GetY (function)
+ ßßßßßßßßßßßßßßß
+ Returns the Y coordinate of the current pointer (CP).
+
+ Declaration:
+ function GetY: LongInt;
+
+ GraphDefaults (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Homes the current pointer (CP) and resets the graphics system to specified
+ default values.
+
+ Declaration:
+ procedure GraphDefaults;
+
+ Remarks:
+ Homes the current pointer (CP) and resets the graphics system to the default
+ values for
+
+  viewport
+  palette
+  draw and background colors
+  line style and line pattern
+  fill color
+  active font, text style, text justification, and user Char size
+
+ GraphResult (function)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Returns an error code for the last graphics operation.
+
+ Declaration:
+ function GraphResult: Integer;
+
+ HRetrace (procedure)
+ ßßßßßßßßßßßßßßßßßßßß
+ Waits for horizontal retrace.
+
+ Declaration:
+ procedure HRetrace;
+
+ ImageSize (function)
+ ßßßßßßßßßßßßßßßßßßßß
+ Returns the number of bytes required to store a rectangular region of the
+ screen.
+
+ Declaration:
+ function ImageSize(x1, y1, x2, y2: LongInt): DWord;
+
+ Remarks:
+ X1, Y1, X2, and Y2 are the coordinates of diagonally opposite vertices of
+ a rectangular region on the screen. ImageSize  determines the number of
+ bytes necessary for GetImage to save the specified region of the screen.
+ The image size includes space for two words. The first stores the width of
+ the region and the second stores the height.
+
+ InvertImage (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Inverts an image.
+
+ Declaration:
+ procedure InvertImage (var BitMap);
+
+ Remarks:
+ This procedure performs the logical NOT operation on each byte of the BitMap Image.
+
+ IsLFBUsed (function)
+ ßßßßßßßßßßßßßßßßßßßß
+ Returns True if Linear Flat frame Buffer is used by the current graphic mode.
+
+ Declaration:
+ function IsLFBUsed: Boolean;
+
+ Line (procedure)
+ ßßßßßßßßßßßßßßßß
+ Draws a line from the point (x1, y1) to (x2, y2).
+
+ Declaration:
+ procedure Line(x1, y1, x2, y2: LongInt);
+
+ Remarks:
+ Draws a line in the style defined by SetLineStyle and uses the color set
+ by SetColor. Use SetWriteMode to determine whether the line is copied or
+ XOR'd to the screen.
+
+ Note that
+
+  MoveTo(100, 100);
+  LineTo(200, 200);
+
+ is equivalent to
+
+  Line(100, 100, 200, 200);
+  MoveTo(200, 200);
+
+ Use LineTo when the current pointer (CP) is at one endpoint of the line. If
+ you want the CP updated automatically when the line is drawn, use LineRel to
+ draw a line a relative distance from the CP. Line doesn't update the CP.
+
+ LineRel (procedure)
+ ßßßßßßßßßßßßßßßßßßß
+ Draws a line relative to the current pointer (CP) and moves the CP to (x1,
+ y1).
+
+ Declaration:
+ procedure LineRel(Dx, Dy: LongInt);
+
+ Remarks:
+ Draws the line from the CP (x0, y0) to a point
+ (x1, y1), where
+
+   x1 = x0 + Dx
+   y1 = y0 + Dy
+
+ LineTo (procedure)
+ ßßßßßßßßßßßßßßßßßß
+ Draws a line from the current pointer to (X,Y).
+
+ Declaration:
+ procedure LineTo(X, Y: LongInt);
+
+ Remarks:
+ Draws a line in the style SetLineStyle and uses the color set by SetColor.
+ Use SetWriteMode to determine whether the line is copied or XOR'd to the
+ screen.
+
+ Note that
+
+  MoveTo(100, 100);
+  LineTo(200, 200);
+
+ is equivalent to
+
+  Line(100, 100, 200, 200);
+
+ The first method is slower and uses more code. Use LineTo only when the
+ current pointer is at one endpoint of the line. Use LineRel to draw a line a
+ relative distance from the CP. The second method doesn't change the value of
+ the CP.
+
+ LineTo moves the current pointer to (X, Y).
+
+ MoveRel (procedure)
+ ßßßßßßßßßßßßßßßßßßß
+ Displaces the current pointer (CP) from its current position.
+
+ Declaration:
+ procedure MoveRel(Dx, Dy: LongInt);
+
+ Remarks:
+ If the CP is at (X1,Y1), MoveRel moves it to ((X1 + Dx),(Y1 + Dy)).
+
+ MoveTo (procedure)
+ ßßßßßßßßßßßßßßßßßß
+ Moves the current pointer (CP) to (X,Y).
+
+ Declaration:
+ procedure MoveTo(X, Y: LongInt);
+
+  Remarks:
+ The CP is similar to a text mode cursor except that the CP is not visible.
+ The following routines move the CP:
+
+ ClearDevice
+ ClearViewPort
+ GraphDefaults
+ SetGraphMode
+ SetSVGAMode
+ LineRel
+ LineTo
+ MoveRel
+ MoveTo
+ OutText
+ SetViewPort
+
+ OutCharXY (procedure)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Sends a char to the output device.
+
+ Declaration:
+ procedure OutCharXY(X,Y: LongInt; C: Char; Color: DWord);
+
+ Remarks:
+ Displays Char at (X, Y) using given Color.
+
+ OutCharXY has no affects on the CP.
+
+ OutText (procedure)
+ ßßßßßßßßßßßßßßßßßßß
+ Sends a string to the output device at the current pointer.
+
+ Declaration:
+ procedure OutText(TextString: string);
+
+ Remarks:
+ Displays TextString at the CP using the current justification settings.
+
+ TextString is truncated at the viewport border if it is too long.
+
+ OutText uses the font set by SetTextStyle. To maintain code compatibility
+ when using several fonts, use the TextWidth and TextHeight calls to
+ determine the dimensions of the string.
+
+ OutText uses the output options set by SetTextJustify (justify and center).
+
+ The CP is updated by OutText only if the direction is horizontal with left
+ justification.  Text output direction is set by SetTextStyle (horizontal or
+ vertical); text justification is set by SetTextJustify (CP at the left of
+ the string, centered around CP, or CP at the right of the string--written
+ above CP, below CP, or centered around CP).
+
+ OutTextXY (procedure)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Sends a string to the output device.
+
+ Declaration:
+ procedure OutTextXY(X,Y: LongInt; TextString: string);
+
+ Remarks:
+ Displays TextString at (X, Y). TextString is truncated at the viewport
+ border if it is too long.
+
+ Use OutText to output text at the current pointer; use OutTextXY to output
+ text elsewhere on the screen.
+
+ OutTextXY uses the font set by SetTextStyle. To maintain code compatibility
+ when using several fonts, use the TextWidth and TextHeight calls to
+ determine the dimensions of the string.
+
+ OutTextXY uses the output options set by SetTextJustify (justify and center).
+
+ PutImage (procedure)
+ ßßßßßßßßßßßßßßßßßßßß
+ Puts a bit image onto the screen.
+
+ Declaration:
+ procedure PutImage(X, Y: LongInt; var BitMap);
+
+ Remarks:
+ (X, Y) is the upper left corner of a rectangular region on the screen.
+ BitMap is an untyped parameter that contains the height and width of the
+ region, and the bit image that will be put onto the screen.
+
+ PutPixel (procedure)
+ ßßßßßßßßßßßßßßßßßßßß
+ Plots a pixel at X,Y.
+
+ Declaration:
+ procedure PutPixel(X, Y: LongInt; Pixel: DWord);
+
+ Remarks:
+ Plots a point in the color defined by Pixel at (X, Y).
+
+ Rectangle (procedure)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Draws a rectangle, using the current line style and color.
+
+ Declaration:
+ procedure Rectangle(x1, y1, x2, y2: LongInt);
+
+ Remarks:
+ (X1, Y1) defines the upper left corner of the rectangle, and (X2, Y2) defines
+ the lower right corner. The rectangle can cross the screen borders.
+
+ Draws the rectangle in the current line style and color, as set by
+ SetLineStyle and SetColor. Use SetWriteMode to determine whether the
+ rectangle is copied or XOR'd to the screen.
+
+ RestoreCrtMode (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Restores the original screen mode before graphics was initialized the first
+ time.
+
+ Declaration:
+ procedure RestoreCrtMode;
+
+ Remarks:
+ Restores the original video mode detected by first SetGraphMode or
+ SetSVGAMode execution. Can be used in conjunction with SetGraphMode and
+ SetSVGAMode to switch back and forth between text and graphics modes.
+
+ Retrace (procedure)
+ ßßßßßßßßßßßßßßßßßßß
+ Waits for vertical retrace.
+
+ Declaration:
+ procedure Retrace;
+
+ RGBColor (function)
+ ßßßßßßßßßßßßßßßßßßß
+ Packs a set of RGB values into a color value for passing to the primitive
+ drawing routines that is appropriate for the current video mode.
+
+ Declaration:
+ function RGBColor(R, G, B: Byte): DWord;
+
+ Remarks:
+ This routine is intended to work with RGB video modes such as the 15, 16,
+ 24 and 32 bits per pixel modes.
+
+ Use this routine to convert all color values to ensure that they
+ work correctly on the different types of direct color video modes available.
+
+ SetActivePage (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Set the active page for graphics output.
+
+ Declaration:
+ procedure SetActivePage(Page: DWord);
+
+ Remarks:
+ Makes Page the active graphics page, directing all subsequent graphics
+ output to Page.
+
+ Multiple pages are supported only by the SVGA graphics cards.  With multiple
+ graphics pages, a program can direct graphics output to an offscreen page,
+ then quickly display the offscreen image by changing the visual page with
+ the SetVisualPage procedure.  This technique is especially useful for
+ animation.
+
+ SetAllPalette (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Changes all palette colors as specified.
+
+ Declaration:
+ procedure SetAllPalette(var Palette);
+
+ SetAspectRatio (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Changes the default aspect-ratio correction factor.
+
+ Declaration:
+ procedure SetAspectRatio(AspectRatio: Real);
+
+ Remarks:
+ SetAspectRatio is used to change the default aspect ratio of the current
+ graphics mode.  The aspect ratio is used to draw circles.  If circles appear
+ elliptical, the monitor is not aligned properly.  This can be corrected in
+ hardware by realigning the monitor, or it can be corrected in software
+ by changing the aspect ratio using SetAspectRatio.  To read the current
+ aspect ratio from the system, use GetAspectRatio.
+
+ SetBkColor (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Sets the current background color, using the palette.
+
+ Declaration:
+ procedure SetBkColor(ColorNum: Word);
+
+ Remarks:
+ Background colors range from 0 to GetMaxColor, depending on the current
+ graphics driver and the current graphics mode. The background color is
+ used by the ClearViewPort and ClearPage procedures.  SetBkColor does
+ not change the first color in the active palette! To change it, use the
+ GetRGBPalette and SetRGBPalette procedures.
+
+ SetColor (procedure)
+ ßßßßßßßßßßßßßßßßßßßß
+ Sets the current drawing color, using the palette.
+
+ Declaration:
+ procedure SetColor(Color: DWord);
+
+ Remarks:
+ Drawing colors can range from 0 to GetMaxColor, depending on the current
+ graphics driver and the current graphics mode.
+
+ SetCustomFont (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets user-defined bit-fonts.
+
+ Declaration:
+ procedure SetCustomFont (AddrPtr: Pointer; Width,Height,Start,Space: DWord);
+
+ Remarks:
+ AddrPtr points to the fonts data location in memory.  The width parameter is the
+ horizontal size of char (in pixels) divided on 8. Height is the vertical
+ size of char (in pixels).
+
+ SetFillColor (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Selects a user-defined fill color.
+
+ Declaration:
+ procedure SetFillColor (Color: DWord);
+
+ Remarks:
+ Sets the color for all filling done by FillPoly, Bar, Bar3D, FillCircle,
+ FillEllipse, FloodFill and ExpandFill. TMT Graph does not support pattern
+ fill.  Pattern fill has been used in CGA, EGA and 16-colored VGA modes
+ for drawing charts, diagrams etc.  TMT Graph does not support 16-colored
+ modes.
+
+ SetGraphBufSize (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Changes the default graphics buffer size used for ellipse drawing.
+
+ Declaration:
+ procedure SetGraphBufSize (BufSize: DWord);
+
+ Remarks:
+ The internal buffer size is set to BufSize, and a buffer is allocated
+ on call is made to SetGrapMode or SetSVGAMode.  CloseGraph frees the alocated
+ buffer.  Use GetGraphBufSize to get the size in bytes of the internal graphic
+ buffer.
+
+ SetGraphMode (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets the system to graphics mode and clears the screen.
+
+ Declaration:
+ procedure SetGraphMode(Mode: Word);
+
+ Remarks:
+ Mode must be a valid mode for the current video adapter.  This procedure
+ supports all VESA VBE graphic modes (100h - FFFh), which are supported by
+ video adapter.
+
+ Example:
+
+ SetGraphMode($101) - sets SVGA 256-colored mode 640x480;
+ SetGraphMode($114) - sets SVGA 64K-colored mode 800x600;
+ SetGraphMode($12A) - sets SVGA 16M+A-colored mode 1024x768;
+
+ Keep in mind what your video card may not support all these modes.
+ See GetVbeModesList and TotalVbeModes.
+
+ Also supported are two additional modes:
+
+  $03 - VGA text mode;
+  $13 - MCGA/VGA 256-colored graphic mode 320x200.
+
+ SetGraphMode can also be used to switch back and forth between text and
+ graphics modes.
+
+ SetGraphMode resets all graphics settings to their defaults (current
+ pointer, palette, color, viewport, and so on).
+
+ SetLineStyle (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets the current line width and style.
+
+ Declaration:
+ procedure SetLineStyle(LineStyle: Word; Pattern: Word; Thickness: Word);
+
+ Remarks:
+ Affects all lines drawn by Line, Spline, LineTo, Rectangle, DrawPoly, and
+ so on.
+
+ Lines can be drawn solid, dotted, centerline, or dashed.  If invalid input is
+ passed to SetLineStyle, GraphResult returns a value of grError, and the
+ current line settings will be unchanged.  See Line style constants for a list
+ of constants used to determine line styles.
+
+ LineStyle is a value from SolidLn to UserBitLn(0..4), Pattern is ignored
+ unless LineStyle equals UserBitLn, and Thickness is NormWidth or ThickWidth.
+ When LineStyle equals UserBitLn, the line is output using the 16-bit pattern
+ defined by the Pattern parameter. For example, if Pattern = $AAAA, then the
+ 16-bit pattern looks like this:
+
+  1010101010101010         _{ NormWidth }
+
+  1010101010101010         _{ ThickWidth }
+  1010101010101010
+  1010101010101010
+
+ SetLogicalPage (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets the logical page size. The SX and SY valus are the new logical size.
+
+ Declaraton:
+ procedure SetLogicalPage(SX,SY: Word);
+
+ Remarks:
+ Many SVGA adapters support logical pages. A logical page can exceed the
+ size of the physical screen. For instance, it is possible to install a
+ logical page 1280 x 480 with a screen of physical resolution 640x480.
+ In this case only half the logical page will be seen on the screen.
+ Logical pages are used for hardware scrolling. The maximum size logical
+ pages depend on the SVGA adapter and the size of the video memory. Use the
+ function GetLogicalPage to get the current logical page size. Remember that
+ the number of available graphic pages depends on the logical page
+ size. Thus SetLogicalSize influences the number of available graphic
+ pages and resets ViewPort to the whole logical page size.  Keep in mind, that
+ SX and SY can't be less than the physical screen size. Here is an example of
+ use of the logical page:
+
+ {Example, that sets a logical page 1280x600 and performs hardware scrolling }
+
+ { VESA-compatible SVGA card with 1Mb required }
+
+ uses Graph,Crt;
+
+ var ErrorCode,i: LongInt;
+     SX,SY: Word;
+ begin
+  { setup SVGA mode 640x480x256 }
+  SetSVGAMode(640,480,8,LfbOrBanked);
+  ClearDevice;
+  if GraphResult<>0 then begin
+   ErrorCode:=GraphResult;
+   CloseGraph;
+   Writeln(GraphErrorMsg(ErrorCode));
+  end;
+  { setup logical page 1280x600 }
+  SetLogicalPage(1280,600);
+  { check logical page size }
+  GetLogicalPage(SX,SY);
+  if (SX=640) and (SY=480) then begin
+   CloseGraph;
+   Writeln(' Logical pages not supported...');
+  end;
+  { draw on logical page }
+  SetLineStyle(SolidLn,0,ThickWidth);
+  SetColor(clRed);
+  Line(0,0,GetMaxX,GetMaxY);
+  Line(GetMaxX,0,0,GetMaxY);
+  SetColor(clWhite);
+  Rectangle(0,0,GetMaxX,GetMaxY);
+  { scroll the screen left }
+  for i:=0 to (SX-640) div 4 do SetScreenStart(i*4,0,True);
+  { scroll the screen up }
+  for i:=0 to (SY-480) div 4 do SetScreenStart(SX-640,i*4,True);
+  { scroll the screen right }
+  for i:=(SX-640) div 4 downto 0 do SetScreenStart(i*4,SY-480,True);
+  { scroll the screen down }
+  for i:=(SY-480) div 4 downto 0 do SetScreenStart(0,i*4,True);
+  { Wait a key }
+  ReadKey;
+  { Close Graph and restore old video mode }
+  CloseGraph;
+ end.
+
+ SetNormalMode (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Canceals action of procedure SetVirtualMode and re-directs graphic
+ operations to active graphic page.
+
+ Declaration:
+ procedure SetNormalMode
+
+ Remarks:
+ SetNormalMode not supported in unregistrated version of TMT Pascal compiler.
+
+ See also: SetVirtualMode, FlipToScreen and FlipToMemory.
+
+ SetPalette (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßß
+ Changes one palette color as specified by ColorNum and Color.
+
+ Declaration:
+ procedure SetPalette(ColorNum: Word; Color: Word);
+
+ Remarks:
+ Changes the ColorNum entry in the palette to Color. SetPalette(0,clLightCyan)
+ makes the first color in the palette light cyan. ColorNum can range from 0
+ to 255 and works only in 256-colored (palette) modes. If an invalid input is
+ passed to SetPalette, GraphResult returns a value of grError, and the
+ palette remains unchanged.
+
+ SetRGBPalette (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Modifies palette entries for the VGA, MCGA and 256-colored SVGA modes.
+
+ Declaration:
+ procedure SetRGBPalette(ColorNum, RedValue, GreenValue, BlueValue: Byte);
+
+ Remarks:
+ ColorNum defines the palette entry to be loaded, while RedValue, GreenValue,
+ and BlueValue define the component colors of the palette entry.
+
+ SetScreenStart (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets the CRTC display starting address to the specified value.
+
+ Declaration:
+ procedure SetScreenStart (X,Y: DWord; WaitForRetrace: Boolean);
+
+ Remarks:
+ You can use this procedure to implement hardware scrolling.  You can also use
+ this function to perform double buffering.
+
+ If the WaitForRetrace flag is false, the routine will not wait for a vertical
+ retrace before programming the CRTC starting address.  Otherwise the routine
+ will sync to a vertical retrace.  Under VBE 1.2 it is not guaranteed what the
+ behaviour will be (some wait and some don't).
+
+ SetSVGAMode (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Sets SVGA video mode with given resolution and color depth.
+
+ Declaration:
+ procedure SetSVGAMode (XRes, YRes, BPP, VMode: Word);
+
+ Remarks:
+ XRes and YRes parameters define required resolution; BPP define color
+ depth (bits per pixel) and must be in range [8,15,16,24,32]. VMode parameter
+ must be in range [1..3]:
+   LFBorBanked        = 0 - Set Lfb or Banked modes.
+   BankedOnly         = 1 - Set Banked modes only;
+   LFBOnly            = 2 - Set Lfb modes only;
+
+ Example:
+ SetSVGAMode(640,480,8,LfbOrBanked) tortured to set 256-colored (8 bits per
+ pixel) SVGA mode with resolution 640x480. This procedure will try to
+ install Lfb mode, if it supported. If not - Banked mode will be installed.
+
+
+ SetTextJustify (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets text justification values used by OutText and OutTextXY.
+
+ Declaration:
+ procedure SetTextJustify(Horiz, Vert: DWord);
+
+ Remarks:
+ Text output after a SetTextJustify will be justified around the current
+ pointer in the manner specified. Given the following,
+
+  SetTextJustify(CenterText, CenterText);
+  OutTextXY(100, 100, 'ABC');
+
+ The point (100, 100) will appear in the middle of the letter B.  The default
+ justification settings can be restored by SetTextJustify(LeftText, TopText).
+ If an invalid input is passed to SetTextJustify, GraphResult returns a value of
+ grError, and the current text justification settings will be unchanged.
+
+ SetTextStyle (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets style for text output in graphics mode.
+
+ Declaration:
+ procedure SetFontStyle(Font, Direction: DWord);
+
+ SetTranspMode (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets/resets transparent mode for BitMaps output.
+
+ Declaration:
+ procedure SetTranspMode(Mode: Boolean; Color: DWord);
+
+ Remarks:
+ TMT Graph supports transparent BitMaps blt. If Mode parameter is True,
+ all pixels consisting of BitMap pixels with a color which is different from
+ the given value Color will be put to the screen. Any pixel which coincides
+ with the value Color will be ignored (will not be placed on the screen).
+ This is very useful for games programming.  Transparent BitMaps blt are
+ supported in any graphic mode (MCGA/VGA, SVGA 256, 32K, 64K, 16M and 16M+A colored
+ modes, with LFB and banked modes)!
+
+ SetTranspMode affects calls to the following routines only: PutXHetxel,
+ PutSprite and PutImage.
+
+ SetViewPort (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßß
+ Sets the current output viewport or window for graphics output
+
+ Declaration:
+ procedure SetViewPort(x1, y1, x2, y2: LongInt; Clip: Boolean);
+
+ Remarks:
+ (X1, Y1) defines the upper left corner of the viewport, and (X2, Y2) defines
+ the lower right corner. The upper left corner of a viewport is (0, 0).
+
+ The Boolean parameter Clip determines whether drawings are clipped at the
+ current viewport boundaries.  SetViewPort(0, 0, GetMaxX, GetMaxY, True)
+ always sets the viewport to the entire graphics screen.  If (X1>=X2) or
+ (Y1>=Y2), GraphResult returns grError, and the current view settings will
+ be unchanged. TMT Garph allows the assignment of ViewPort outside the the screen!
+
+ All graphics commands (for example, GetX, OutText, Rectangle, MoveTo, and so
+ on) are viewport-relative.
+
+ If the Boolean parameter Clip is set to True when a call to SetViewPort is
+ made, all drawings will be clipped to the current viewport.  Note that the
+ current pointer is never clipped.  The following will not draw the whole
+ line requested because the line will be clipped to the current viewport:
+
+  SetViewPort(10, 10, 20, 20, ClipOn);
+  Line(0, 5, 15, 5);
+
+ The line would start at absolute coordinates (10,15) and terminate at
+ absolute coordinates (25, 15) if no clipping were performed.  But because
+ clipping was performed, the actual line drawn would start at
+ absolute coordinates (10, 15) and terminate at coordinates (20, 15).
+
+ SetSVGAMode, GraphDefaults, and SetGraphMode all reset the viewport to the
+ entire graphics screen.  The current viewport settings are available by
+ calling the procedure GetViewSettings, which accepts a parameter of
+ ViewPortType.
+
+ SetViewPort moves the current pointer to (0, 0).
+
+ SetVirtualMode (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßßß
+
+ Sets virtual graphic mode.
+
+ Declaration:
+ procedure SetVirtualMode (BuffAddr: Pointer)
+
+ Remarks:
+ This procedure re-directs all graphic operations directly to virtual
+ video buffer pointed by BuffAddr in the memory. You must previously allocate
+ memory block for virtual buffer using GetMem procedure. Use GetPake size
+ to obtaion size of video page to be allocated. SetVirtualMode not supported
+ in unregistrated version of TMT Pascal compiler.
+
+ See also: SetNormalMode, FlipToScreen and FlipToMemory.
+
+ SetVisualPage (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets the visual graphics page number.
+
+ Declaration:
+ procedure SetVisualPage(Page: DWord; WaitForRetrace: Boolean);
+
+ Remarks:
+ Makes Page the visual graphics page.
+
+ Multiple pages are supported only by the SVGA graphics modes.  With multiple
+ graphics pages, a program can direct graphics output to an offscreen page,
+ then quickly display the offscreen image by changing the visual page with
+ the SetVisualPage procedure.  This technique is especially useful for
+ animation.  If the WaitForRetrace flag is not true, this routine will not
+ sync to the vertical retrace.  This flag is now part of the VBE 2.0 spec,
+ and if you have a VBE 1.2 device you cannot be sure that the device will
+ sync to the retrace anyway.
+
+ SetWriteMode (procedure)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Sets the writing mode for line drawing.
+
+ Declaration:
+ procedure SetWriteMode(WriteMode: DWord);
+
+ Remarks:
+ Each binary operation constant corresponds to a binary operation between
+ each byte in the line and the corresponding bytes on the screen.  CopyPut
+ uses the assembly language MOV instruction, overwriting the line with
+ whatever is on the screen. XORPut uses the XOR command to combine the line
+ with the screen.  Two successive XOR commands will erase the line and restore
+ the screen to its original appearance.
+
+ SetWriteMode affects calls to the following routines only: DrawPoly, Line,
+ Spline, LineRel, LineTo, Rectangle, Circle, Ellipse and Bar3D, Putpixel,
+ PutSprite and PutImage.
+
+ Spline (procedure)
+ ßßßßßßßßßßßßßßßßßß
+ Draws a spline.
+
+ Declaration:
+ Spline(Nodes: Byte; Points: array of PointType);
+
+ Remarks:
+ Fits a smooth curve through a given set of points. Nodes specifies the
+ number of Points.  A coordinate pair consists of two LongInts,
+ an X and a Y value.
+
+ Use the SetSplineSteps procedure to adjust the spline.
+
+ Stretch (procedure)
+ ßßßßßßßßßßßßßßßßßßß
+ Stretchs screen vertical.
+
+ Declaration:
+ procedure Stretch (Param: Byte);
+
+ TextHeight (function)
+ ßßßßßßßßßßßßßßßßßßßßß
+ Returns the height of a string, in pixels.
+
+ Declaration:
+ function TextHeight(TextString: string): DWord;
+
+ Remarks:
+ Takes the current font size and multiplication factor, and determines the
+ height of the TextString in pixels.  This is useful for adjusting the spacing
+ between lines, computing viewport heights, sizing a title to make it fit on
+ a graph or in a box, etc.
+
+ For example, with an 8x8 bit-mapped font and a multiplication factor of 1
+ (set by SetTextStyle), the string Pascal is 8 pixels high.
+
+ It is important to use TextHeight to compute the height of strings, instead
+ of doing the computation manually. In that way, no source code modifications
+ have to be made when different fonts are selected.
+
+ TextWidth (function)
+ ßßßßßßßßßßßßßßßßßßßß
+ Returns the width of a string in pixels.
+
+ Declaration:
+ function TextWidth(TextString: string): DWord;
+
+ Remarks:
+ Takes the string length, current font size, and multiplication factor, and
+ determines the width of TextString in pixels. This is useful for computing
+ view-port widths, sizing a title to make it fit on a graph or in a box, and
+ so on.
+
+ For example, with the 8x8 bit-mapped font (set by SetTextStyle), the string
+ TMT is 24 pixels wide.
+
+ It is important to use TextWidth to compute the width of strings, instead of
+ doing the computation manually.  In that way, no source code modifications
+ have to be made when different fonts are selected.
+
+ TotalVbeMemory (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns size in bytes of total video memory.
+
+ Declaration:
+ function TotalVbeMemory: DWord;
+
+ Remarks:
+ If VESA VBE 1.1+ is not supported, this function will return an empty string.
+
+ TotalVbeModes (function)
+ ßßßßßßßßßßßßßßßßßßßßßßßß
+ Returns the total number of supported VESA modes.
+
+ Declaration:
+ function TotalVbeModes: Word;
+
+ Remarks:
+ Use GetVbeModesList to get info on supported modes.
+
+ Triangle (procedure)
+ ßßßßßßßßßßßßßßßßßßßß
+ Draws a triangle.
+
+ Declaration:
+ procedure Triangle (X1,Y1,X2,Y2,X3,Y3: LongInt);

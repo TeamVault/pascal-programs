@@ -1,0 +1,174 @@
+5. Stive si cozi
+
+5.1. Stive
+
+Stiva este o structura dinamica de date in care inserarea si stergerea
+respecta principiul LIFO - Last In, First Out: ultimul venit, primul
+iesit.
+
+Cu alte cuvinte, putem considera stiva ca o lista liniara in care
+inserarea si stergerea se fac doar in capul listei.
+
+5.1.1. Structura de date Stiva (engl. Stack)
+
+Stiva este o structura dinamica de date in care stergerea elementelor
+se face in ordinea inversa a inserarii lor: cel mai recent introdus
+element se sterge primul.
+
+Specificarea structurii de date Stiva este urmatoarea:
+
+  Elemente:  Toate elementele din Stiva sunt de acelasi tip, notat
+             cu TElement.
+  Structura: Exista o relatie de 1:1 intre fiecare element si pozitia
+             pe care acesta o ocupa in Stiva
+  Domeniu:   Stiva are o pozitie particulara, notata cu Varf, care
+             refera elementul accesibil din ea. Inserarea si stergerea
+             folosesc aceasta pozitie.
+  Operatii:
+    Vida(S);
+      Pre:  True
+      Post: Intoarce True daca S e vida, False altfel
+    Plina(S);
+      Pre:  True
+      Post: Intoarce True daca S e plina, False altfel
+    Push(S, E);       { push = apasa, pune, insereaza }
+      Pre:  S nu este plina
+      Post: E va fi introdus in S si Varf refera pe E
+    Pop(S, E);        { pop = ia, scoate, sterge }
+      Pre:  S nu este vida
+      Post: E este elementul care a fost in S pe pozitia Varf
+            S nu mai contine pe E
+    Top(S, E);        { top = varf }
+      Pre:  S nu este vida
+      Post: E este valoarea elementului din varful stivei
+            S nu se modifica
+    Init(S);
+      Pre:  True;
+      Post: S este vida
+    Term(S);
+      Pre:  S nu este vida
+      Post: Scoate din S toate elementele
+            S devine vida
+    List(S);
+      Pre:  S nu este vida
+      Post: sunt afisate toate elementele din S, incepand cu varful
+
+5.1.2. Implementarea structurii de date Stiva
+
+Prezentam in cele ce urmeaza o multitudine de implementari ale acestei
+structuri de date, folosind diverse reprezentari ale stivei.
+Implementarile difera prin:
+  - paradigma de programare folosita (procedurala sau modulara)
+  - prezenta sau nu a unui parametru de tip Stiva la operatii
+
+I. S este variabila globala
+
+   Prin urmare, nu este nevoie prezenta sa ca parametru al operatiilor
+   pe stiva.
+   Toate implementarile apeleaza procedurile
+     - Operatii
+     - Run
+   care sunt incluse in fisierele
+     - operatp.pas
+     - stivap.run
+   Acest lucru se vrea o demonstratie a modului in care aceeasi
+   specificare este implementata in moduri diferite, care pastreaza
+   (toate) aceeasi modalitate de apel a operatiilor. Prin urmare,
+   procedurile Operatii si Run vor apela operatiile descrise mai sus
+   (fara parametrul S), chiar daca acestea sunt implementate diferit
+   in diferite programe. Operatii si Run sunt exemple de (sub)programe
+   generale, scrise pe baza specificarii unei structuri de date.
+   Ele se vor putea folosi pentru toate implementarile structurii de
+   de date care respecta specificarea.
+
+   I.A. Varianta procedurala
+
+   S este variabila globala in programul principal. Aceasta varianta
+   nu ofera nici o protectie pentru integritatea lui S: in orice parte
+   a programului principal se poate accesa (si modifica) S si
+   componentele sale.
+
+   Exista doua implementari, care difera intre ele prin reprezentarea
+   stivei
+
+Stiva1P - stiva implementata ca tablou, varianta procedurala
+Stiva2P - stiva implementata ca lista inlantuita, varianta procedurala
+
+   I.B. Varianta modulara
+
+   S este variabila locala in modulul care implementeaza operatiile
+   pe stiva.
+
+Stiva1M - stiva implementata ca tablou, varianta modulara (UStiva1M)
+Stiva2M - stiva implementata ca lista inlantuita, varianta modulara
+          (UStiva2M)
+Stiva3M - stiva implementata ca tablou de pointeri la element,
+          varianta modulara (UStiva3M)
+Stiva4M - stiva implementata ca lista inlantuita de pointeri la element,
+          varianta modulara (UStiva4M)
+Stiva5M - stiva implementata ca tablou dinamic si flexibil de pointeri
+          la element, varianta modulara (UStiva5M)
+
+II. S este parametru al fiecarei operatii
+
+   Ne gasim in situatia in care respectam integral specificarea de
+   mai sus.
+
+   Toate implementarile apeleaza procedurile
+     - Operatii
+     - Run
+   care sunt incluse in fisierele
+     - operatm.pas
+     - stivam.run
+
+   S este variabila globala in programul apelant (mai exact in
+   stivam.run).
+
+   Acest lucru se vrea o demonstratie a modului in care aceeasi
+   specificare este implementata in moduri diferite, care pastreaza
+   (toate) aceeasi modalitate de apel a operatiilor. Prin urmare,
+   procedurile Operatii si Run vor apela operatiile descrise mai sus
+   (cu parametrul S), chiar daca acestea sunt implementate diferit
+   in diferite programe. Operatii si Run sunt exemple de (sub)programe
+   generale, scrise pe baza specificarii unei structuri de date.
+   Ele se vor putea folosi pentru toate implementarile structurii de
+   de date care respecta specificarea.
+
+   I.A. Varianta procedurala
+
+   S este parametru al fiecarei operatii si in acelasi timp este variabila
+   globala in programul principal (declarata ca atare in stivam.run).
+   Aceasta varianta nu ofera nici o protectie pentru integritatea lui S:
+   in orice parte a domeniului de vizibilitate al lui S componentele sale
+   se pot modifica.
+
+   Exista doua implementari, care difera intre ele prin reprezentarea
+   stivei
+
+Stiva1  - stiva implementata ca tablou, varianta procedurala
+Stiva2  - stiva implementata ca lista inlantuita, varianta procedurala
+
+   II.B. Varianta modulara
+
+   S este parametru al fiecarei operatii si in acelasi timp este variabila
+   globala in programul principal (declarata ca atare in stivam.run).
+   Aceasta varianta nu ofera nici o protectie pentru integritatea lui S:
+   in orice parte a domeniului de vizibilitate al lui S componentele sale
+   se pot modifica.
+
+   Aceasta varianta nu respecta integral principiul programarii modulare,
+   in sensul ca S nu este protejata (locala in modul).
+
+   Exista cinci implementari, care difera intre ele prin reprezentarea
+   stivei
+
+Stiva1U - stiva implementata ca tablou, varianta modulara (UStiva1)
+Stiva2U - stiva implementata ca lista inlantuita, varianta modulara
+          (UStiva2)
+Stiva3U - stiva implementata ca tablou de pointeri la element,
+          varianta modulara (UStiva3)
+Stiva4U - stiva implementata ca lista inlantuita de pointeri la element,
+          varianta modulara (UStiva4)
+Stiva5U - stiva implementata ca tablou dinamic si flexibil de pointeri
+          la element, varianta modulara (UStiva5)
+

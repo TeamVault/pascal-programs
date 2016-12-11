@@ -1,0 +1,35 @@
+Newsgroups: comp.sources.misc
+Path: netcomsv!decwrl!uunet!sparky!kent
+From: steven@cwi.nl (Steven Pemberton)
+Subject:  v23i025:  pascal - Public domain Pascal Compiler and Interpreter, Part01/03
+Message-ID: <csm-v23i025=pascal.231008@sparky.IMD.Sterling.COM>
+Followup-To: comp.sources.d
+X-Md4-Signature: ffb57898f8934e31e7b62c5bee2a26d1
+Sender: kent@sparky.imd.sterling.com (Kent Landfield)
+Organization: CWI, Amsterdam
+Date: Fri, 27 Sep 1991 04:11:51 GMT
+Approved: kent@sparky.imd.sterling.com
+Lines: 1864
+
+Submitted-by: steven@cwi.nl (Steven Pemberton)
+Posting-number: Volume 23, Issue 25
+Archive-name: pascal/part01
+Environment: Pascal
+
+Due to public demand following postings to comp.lang.misc and
+comp.compilers, here are the sources of a public domain Pascal
+compiler and interpreter.
+
+This is the Pascal source of a public domain Pascal compiler and
+interpreter. The entire code is documented in the book:
+	Pascal Implementation
+	by Steven Pemberton and Martin Daniels
+	published by Ellis Horwood, Chichester, UK,
+(also available in Japanese).
+It was distributed by John Wiley in other countries, but now that
+Prentice Hall has taken over Ellis Horwood, that may have changed.
+
+Best wishes,
+
+Steven Pemberton, CWI, Amsterdam; steven@cwi.nl
+-----

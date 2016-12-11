@@ -1,0 +1,951 @@
+FILES ON DISKS
+--------------
+
+DISK 1
+------
+INSTALL   EXE - Installation utility
+UNZIP     EXE - De-archiving program
+README    COM - Program to view README file
+BPWHLP    CA3 - Split File of BPWHLP.ZIP
+FILELIST  DOC - This file
+WINUTILS  ZIP - 
+   HC        BAT - Windows help compiler batch file
+   HC30      EXE - Windows 3.0 help compiler
+   HC31      ERR - Windows 3.1 help compiler
+   HC31      EXE - Windows 3.1 help compiler
+   MRBC      EXE - Muliple resolution bitmap compiler
+   RC        EXE - Microsoft resource compiler
+   RCPP      ERR - Microsoft resource compiler
+   RCPP      EXE - Microsoft resource compiler
+   SHED      EXE - "Hotspot" editor
+   SHED      HLP - "Hotspot" editor help file
+
+README        - Last minute product information
+
+DISK 2
+------
+BPWHLP    CA2 - Split File of BPWHLP.ZIP
+
+DISK 3
+------
+BPWHLP    CA1 - 
+   BPW       HLP - Online help data file Windows IDE/OWL/Windows API
+   MMSYSTEM  HLP - Multi-media help file
+   PENAPI    HLP - PenWindows help file
+
+
+DISK 4
+------
+HELPEX    ZIP - 
+   BULLET    BMP - Part of Windows help system demo
+   CHKBOFF   BMP - Part of Windows help system demo
+   CHKBON    BMP - Part of Windows help system demo
+   CODEC     BMP - Part of Windows help system demo
+   CONTINUE  BMP - Part of Windows help system demo
+   DONE      BMP - Part of Windows help system demo
+   HELP      CUR - Part of Windows help system demo
+   HELPEX    DEF - Part of Windows help system demo
+   HELPEX    DLG - Part of Windows help system demo
+   HELPEX      H - Part of Windows help system demo
+   HELPEX    HLP - Part of Windows help system demo
+   HELPEX    HPJ - Part of Windows help system demo
+   HELPEX    MAK - Part of Windows help system demo
+   HELPEX    PAS - Part of Windows help system demo
+   HELPEX     PH - Part of Windows help system demo
+   HELPEX     RC - Part of Windows help system demo
+   HELPEX    RES - Part of Windows help system demo
+   HELPEX    RTF - Part of Windows help system demo
+   HELPICON  BMP - Part of Windows help system demo
+   HELPIDS     H - Part of Windows help system demo
+   KEYS      RTF - Part of Windows help system demo
+   MAX2ICON  BMP - Part of Windows help system demo
+   MOUSE     BMP - Part of Windows help system demo
+   OWLHELP     H - Part of Windows help system demo
+   OWLHELP   PAS - Part of Windows help system demo
+   OWLHELP    RC - Part of Windows help system demo
+   OWLHELP   RES - Part of Windows help system demo
+   TERMS     RTF - Part of Windows help system demo
+   WINWORD   BMP - Part of Windows help system demo
+
+TDDEBUG   ZIP - 
+   TDDEBUG   386 - Device driver for 80386/80486 processors
+
+WINTPH    ZIP - 
+   WINDOWS   TPH - Windows API help for DOS IDE
+
+
+DISK 5
+------
+DOC       ZIP - 
+   README    TSM - Online TASM information
+   TEMC      DOC - TEMC reference information
+   UTILS     DOC - Command line utilities documentaion
+   MANUAL     TV - Corrections to printed TV documentation
+   DPMIUSER  DOC - DPMI program information
+   TURBO3    INT - TURBO3.TPU interface section
+   GRAPH3    INT - GRAPH3.TPU interface section
+
+RW        ZIP - 
+   LOADBWCC  EXE - Program to automatically load BWCC.DLL
+   WORKHELP  HLP - Resource Workshop Help file
+   WORKOPT   DOS - Resource Workshop support file
+   WORKSHOP  EXE - Resource Workshop Main program
+
+TASM      ZIP - 
+   DPMIMEM   DLL - Memory manager for TLINK.EXE
+   TASM      EXE - Turbo Assembler 3.2 DOS
+   TASM      TAH - Turbo Assembler Help text file
+   TASMX     EXE - Turbo Assembler 3.2 with DPMI Support
+   TCREF     EXE - Turbo Assembler cross-reference utility
+   TLINK     EXE - Turbo Linker
+   WINSTUB   EXE - Windows stub
+
+TD        ZIP - 
+   TD        EXE - Turbo Debugger
+   TD286     EXE - Turbo Debugger
+   TD386     EXE - Turbo Debugger
+   TDH386    SYS - Turbo Debugger 386 device driver
+   TDHELP    TDH - Turbo Debugger help file
+
+
+DISK 6
+------
+GREPDLL   ZIP - 
+   _REGEXP     H - GREP demo file
+   MAKEFILE      - GREP demo file
+   REGEXDLL    C - GREP demo file
+   REGEXP      C - GREP demo file
+   REGEXP    DEF - GREP demo file
+   REGEXP      H - GREP demo file
+   REGEXP     RC - GREP demo file
+
+RWED      ZIP - 
+   WORKED1   DLL - Menu editor
+   WORKED2   DLL - Icon, cursor, bitmap, and font editors
+   WORKED3   DLL - Dialog editor
+   WORKED4   DLL - Stringtable editor
+   WORKED5   DLL - Accelerator table editor
+
+TDW       ZIP - 
+   TDWINST   EXE - Custom configuration Program for TDW
+   TDW       EXE - Turbo Debugger Program for Windows
+   TDWHELP   TDH - Help File for the TDW Debugger
+   TDWIN     DLL - DLL for Turbo Debugger for Windows
+
+TDX       ZIP - 
+   TDX       EXE - Turbo Debugger for DPMI apps
+   TDX       ICO - Icon for TDX.EXE
+   TDX       PIF - PIF file for TDX.EXE
+   TDXDEBUG  DLL - TDX libraries
+   TDXHELP   TDH - Turbo Debugger for DPMI help file
+
+TURBOHLP  ZIP - 
+   TURBO     TPH - Online help data file for DOS IDES/Pascal language
+
+
+DISK 7
+------
+PENWIN    ZIP - 
+   MARS      DLL - Pen Windows Recognizer DLL
+   MARS      MOB - Pen Windows Recognizer data
+   MSMOUSE   DRV - Pen Windows mouse driver
+   PENWIN    DLL - Pen Windows DLL
+   PENWIN    INI - Pen Windows data file
+   PENWIN    PAS - Pen Windows interface file
+   README    PEN - Pen Windows information
+   VGAP      DRV - Pen Windows VGA driver
+   YESMOUSE  DRV - Pen Windows mouse driver
+
+RWLIB     ZIP - 
+   WORKLIB1  DLL - Resource compiler, resource data base
+   WORKLIB2  DLL - Custom controls
+
+TASMEXMP  ZIP - 
+   ASMPSCL   ASM - Tasm example file
+   BIOS      INC - Tasm example file
+   CALLPROC  ASM - Tasm example file
+   COMPROG   ASM - Tasm example file
+   DBLCOLON  ASM - Tasm example file
+   DLLPROG   ASM - Tasm example file
+   DOS       INC - Tasm example file
+   SAMPLE    PAS - Tasm example file
+   TSAMPLE   PAS - Tasm example file
+   ENVMOD    ASM - Tasm example file
+   ENVSTR    PAS - Tasm example file
+   EXCHMOD   ASM - Tasm example file
+   EXEPROG   ASM - Tasm example file
+   FINDCHAR  ASM - Tasm example file
+   HELLO1    ASM - Tasm example file
+   HELLO2    ASM - Tasm example file
+   HELLO3    ASM - Tasm example file
+   HEX       ASM - Tasm example file
+   HEX       PAS - Tasm example file
+   HEXMOD    ASM - Tasm example file
+   KBD       INC - Tasm example file
+   PRIMES    ASM - Tasm example file
+   PRMSTACK  ASM - Tasm example file
+   REVERSE   ASM - Tasm example file
+   SOMESTR   ASM - Tasm example file
+   VAREXCH   ASM - Tasm example file
+   VAREXCH   PAS - Tasm example file
+   WINPROG   ASM - Tasm example file
+
+TDUTILS   ZIP - 
+   TD286INS  EXE - Turbo Debugger 286 customization program
+   TDDEV     EXE - Lists currently loaded device drivers
+   TDINST    EXE - Turbo Debugger customization program
+   TDMEM     EXE - Displays a memory usage report
+   TDREMOTE  EXE - Turbo Debugger remote program
+   TDRF      EXE - Turbo Debugger file transfer program
+   TDSTRIP   EXE - Utility to Strip Debug Information from .EXE Files
+   TDUMP     EXE - Dumps Symbolic Information from .EXE Files
+
+TPROF     ZIP - 
+   TDH386    SYS - Device Driver for TPROF.EXE
+   TF386     EXE - Utility For 80386/80486 Virtual Profiling
+   TFHELP    TFH - Help file for TPROF.EXE
+   TFINST    EXE - Configuration Customization Program for TPROF.EXE
+   TFREMOTE  EXE - Remote Profiling Kernel for TPROF
+   TPROF     EXE - Turbo Profiler program
+
+TVHLP     ZIP - 
+   TVISION   TPH - Online help data file for Turbo Vision
+
+
+DISK 8
+------
+BP        ZIP - 
+   BP        EXE - DPMI hosted, multi-target IDE
+   BP        ICO - Icon for BP.EXE
+   BP        PIF - PIF file for BP.EXE
+   BP         TP - Configuration file for BP.EXE
+
+BPW       ZIP - 
+   BPW       EXE - Borland Pascal for Windows IDE
+   PBROWSER  DLL - DLL used by BPW.EXE
+   TCOLORCC  DLL - DLL used by BPW.EXE
+
+RTPL      ZIP - 
+   TURBO     TPL - Resident units for real mode
+
+TPROFW    ZIP - 
+   TFWHELP   TFH - Help file for TPROFW.EXE
+   TPROFW    EXE - Turbo Profiler program for Windows
+   WREMOTE   EXE - Remote profiling/debugging tool for Windows
+   WRSETUP   EXE - Setup program for
+
+TURBO     ZIP - 
+   TURBO     EXE - Turbo Pascal Integrated Development Environment
+   TURBO     ICO - Icon for TURBO.EXE
+   TURBO      TP - Configuration file for TURBO.EXE
+
+TVISION   ZIP - 
+   APP       TPP - Application unit for DPMI
+   APP       TPU - Application unit
+   COLORSEL  TPP - Color installation unit for DPMI
+   COLORSEL  TPU - Color installation unit
+   DIALOGS   TPP - Dialogs unit for DPMI
+   DIALOGS   TPU - Dialogs unit
+   DRIVERS   TPP - Drivers unit for DPMI
+   DRIVERS   TPU - Drivers unit
+   EDITORS   TPP - Editors unit for DPMI
+   EDITORS   TPU - Editors unit
+   HISTLIST  TPP - History list unit for DPMI
+   HISTLIST  TPU - History list unit
+   MEMORY    TPP - Memory management unit for DPMI
+   MEMORY    TPU - Memory management unit
+   MENUS     TPP - Menus unit for DPMI
+   MENUS     TPU - Menus unit
+   MSGBOX    TPP - Messagebox unit for DPMI
+   MSGBOX    TPU - Messagebox unit
+   OBJECTS   TPP - Objects unit for DPMI
+   OBJECTS   TPU - Objects unit
+   OUTLINE   TPP - Outline unit for DPMI
+   OUTLINE   TPU - Outline unit
+   STDDLG    TPP - Standard dialogs unit for DPMI
+   STDDLG    TPU - Standard dialogs unit
+   TEXTVIEW  TPP - Simple text window unit for DPMI
+   TEXTVIEW  TPU - Simple text window unit
+   VALIDATE  TPP - Validate objects unit for DPMI
+   VALIDATE  TPU - Validate objects unit
+   VIEWS     TPP - Views unit for DPMI
+   VIEWS     TPU - Views unit
+
+WIN31DLL  ZIP - 
+   COMMDLG   DLL - Windows 3.1 DLL
+   DDEML     DLL - Windows 3.1 DLL
+   LZEXPAND  DLL - Windows 3.1 DLL
+   OLECLI    DLL - Windows 3.1 DLL
+   OLESVR    DLL - Windows 3.1 DLL
+   SHELL     DLL - Windows 3.1 DLL
+   STRESS    DLL - Windows 3.1 DLL
+   TOOLHELP  DLL - Windows 3.1 DLL
+   VER       DLL - Windows 3.1 DLL
+   WINMEM32  DLL - Windows 3.1 DLL
+
+
+DISK 9
+------
+BGIBIN    ZIP - 
+   ATT       BGI - AT&T 6300 driver
+   BOLD      CHR - Additional installable BGI font
+   CGA       BGI - CGA and MCGA driver
+   EGAVGA    BGI - EGA and VGA driver
+   EURO      CHR - Additional installable BGI font
+   GOTH      CHR - Gothic font
+   HERC      BGI - Hercules mono driver
+   IBM8514   BGI - IBM 8514 driver
+   LCOM      CHR - Additional installable BGI font
+   LITT      CHR - Small font
+   PC3270    BGI - 3270 PC driver
+   SANS      CHR - Sans serif font
+   SCRI      CHR - Additional installable BGI font
+   SIMP      CHR - Additional installable BGI font
+   TRIP      CHR - Triplex font
+   TSCR      CHR - Additional installable BGI font
+   VESA16    BGI - 16 color VESA driver
+
+CHESS     ZIP - 
+   CHESS     DLL - Chess demo file
+   CHESS     PAS - Chess demo file
+   CHESSDLL  PAS - Chess demo file
+   CHESSINF  PAS - Chess demo file
+   CTIMERS   PAS - Chess demo file
+   GAMEREC   PAS - Chess demo file
+   GAMETASK  PAS - Chess demo file
+   LBOARD    PAS - Chess demo file
+   LEVAL     PAS - Chess demo file
+   LMOVEGEN  PAS - Chess demo file
+   LMOVES    PAS - Chess demo file
+   LOPENLIB  PAS - Chess demo file
+   LOPENLIB  RES - Chess demo file
+   LTIMER    PAS - Chess demo file
+   MOVELIST  PAS - Chess demo file
+   OPENING   LIB - Chess demo file
+   OWBOARD   PAS - Chess demo file
+   OWCHDLGS  PAS - Chess demo file
+   OWCHPIEC  PAS - Chess demo file
+   OWCONST   PAS - Chess demo file
+   OWLCHESS  PAS - Chess demo file
+   OWLCHESS  RES - Chess demo file
+   OWLCMDLG  PAS - Chess demo file
+   OWLCMDLG  RES - Chess demo file
+   OWPIECES  PAS - Chess demo file
+   OWUTILS   PAS - Chess demo file
+   OWABOUT   PAS - Chess demo file
+   OWABOUT   RES - Chess demo file
+   TASKMGR   PAS - Chess demo file
+   TVBOARD   PAS - Chess demo file
+   TVCHESS   PAS - Chess demo file
+   TVCHSAPP  PAS - Chess demo file
+   TVCHSCMD  PAS - Chess demo file
+   TVCHSDLG  PAS - Chess demo file
+   TVCHSTAT  PAS - Chess demo file
+   TVCHSUTL  PAS - Chess demo file
+   TVPIECES  PAS - Chess demo file
+   TVSTATUS  PAS - Chess demo file
+
+DDOCDEMO  ZIP - 
+   COLLECT1  PAS - Documentation demo
+   COLLECT2  PAS - Documentation demo
+   COLLECT3  PAS - Documentation demo
+   COLLECT4  PAS - Documentation demo
+   COUNT     PAS - Documentation demo
+   DRAGS     PAS - Documentation demo
+   ENDCMD    PAS - Documentation demo
+   HINTER    PAS - Documentation demo
+   IMPORT    PAS IMPORT - Documentation demo
+   INSWIN    PAS INSWIN - Documentation demo
+   ITEMS     DAT ITEMS - Documentation demo
+   ITEMS     TXT ITEMS - Documentation demo
+   MAKEDAT   BAT - Documentation demo
+   MINIMAL   PAS MINIMAL - Documentation demo
+   NEWBACK   PAS NEWBACK - Documentation demo
+   ORDERS    DAT ORDERS - Documentation demo
+   ORDERS    PAS ORDERS - Documentation demo
+   ORDERS    TXT ORDERS - Documentation demo
+   OUTDIR    PAS OUTDIR - Documentation demo
+   PICKLIST  PAS - Documentation demo
+   RESOURC1  PAS - Documentation demo
+   RESOURC2  PAS - Documentation demo
+   STOCKS    PAS STOCKS - Documentation demo
+   STREAM1   PAS STREAM1 - Documentation demo
+   STREAM2   PAS STREAM2 - Documentation demo
+   STRMERR   PAS STRMERR - Documentation demo
+   SUPPLIER  DAT - Documentation demo
+   SUPPLIER  PAS - Documentation demo
+   SUPPLIER  TXT - Documentation demo
+   TERMTEST  PAS - Documentation demo
+   TUTCONST  PAS - Documentation demo
+   TUTOR     PAS TUTOR - Documentation demo
+   TUTOR01   PAS TUTOR01 - Documentation demo
+   TUTOR02A  PAS - Documentation demo
+   TUTOR02B  PAS - Documentation demo
+   TUTOR02C  PAS - Documentation demo
+   TUTOR03A  PAS - Documentation demo
+   TUTOR03B  PAS - Documentation demo
+   TUTOR03C  PAS - Documentation demo
+   TUTOR04A  PAS - Documentation demo
+   TUTOR04B  PAS - Documentation demo
+   TUTOR04C  PAS - Documentation demo
+   TUTOR05   PAS TUTOR05 - Documentation demo
+   TUTOR06A  PAS - Documentation demo
+   TUTOR06B  PAS - Documentation demo
+   TUTOR07   PAS TUTOR07 - Documentation demo
+   TUTOR08A  PAS - Documentation demo
+   TUTOR08B  PAS - Documentation demo
+   TUTOR08C  PAS - Documentation demo
+   TUTOR09   PAS TUTOR09 - Documentation demo
+   TUTOR10   PAS TUTOR10 - Documentation demo
+   TUTOR11A  PAS - Documentation demo
+   TUTOR11B  PAS - Documentation demo
+   TUTOR11C  PAS - Documentation demo
+   TUTOR12   PAS TUTOR12 - Documentation demo
+   TUTORIAL  TVR - Documentation demo
+   TUTRES    PAS TUTRES - Documentation demo
+   TUTTYPES  PAS - Documentation demo
+   TWOSTAT   PAS - Documentation demo
+
+DPMISYS   ZIP - 
+   DPMI16BI  OVL - DPMI Server
+   DPMIINST  EXE - DPMI Server configuration program
+   DPMILOAD  EXE - DPMILOAD compatible with RTM
+   RTM       EXE - DPMI Runtime manager
+   RTMRES    EXE - Program to load RTM resident
+
+HEAPSPY   ZIP - 
+   HEAPSPY   HLP HEAPSPY - HEAPSPY demo file
+   HEAPSPY   INC HEAPSPY - HEAPSPY demo file
+   HEAPSPY   PAS HEAPSPY - HEAPSPY demo file
+   HEAPSPY   RES HEAPSPY - HEAPSPY demo file
+   HELPIDS   INC HELPIDS - HEAPSPY demo file
+   HWBITMAP  PAS - HEAPSPY demo file
+   HWCLASS   PAS HWCLASS - HEAPSPY demo file
+   HWDLGS    PAS HWDLGS - HEAPSPY demo file
+   HWGLOBAL  PAS - HEAPSPY demo file
+   HWGRAPH   PAS HWGRAPH - HEAPSPY demo file
+   HWHEAP    PAS HWHEAP - HEAPSPY demo file
+   HWHEXDMP  PAS - HEAPSPY demo file
+   HWLOCAL   PAS HWLOCAL - HEAPSPY demo file
+   HWRIBBON  PAS - HEAPSPY demo file
+   HWTPWH    PAS HWTPWH - HEAPSPY demo file
+
+OWLDEMOS  ZIP - 
+   BLAISE    BMP - ObjectWindows demo
+   BSCRLAPP  PAS - ObjectWindows demo
+   BSCRLAPP  RES - ObjectWindows demo
+   EDITAPP   PAS - ObjectWindows demo
+   FCONVERT  PAS - ObjectWindows demo
+   FCONVERT  RES - ObjectWindows demo
+   FILEAPP   PAS - ObjectWindows demo
+   GDIDEMO   PAS - ObjectWindows demo
+   GDIDEMO   RES - ObjectWindows demo
+   HELLOAPP  PAS - ObjectWindows demo
+   MDIAPP    PAS - ObjectWindows demo
+   MDIAPP    RES - ObjectWindows demo
+   MENU      PAS - ObjectWindows demo
+   MENU      RES - ObjectWindows demo
+   MFILEAPP  PAS - ObjectWindows demo
+   MFILEAPP  RES - ObjectWindows demo
+   NOLIMITS  BMP - ObjectWindows demo
+   POPUP     PAS - ObjectWindows demo
+   POPUP     RES - ObjectWindows demo
+   PROGTALK  PAS - ObjectWindows demo
+   PROGTALK  RES - ObjectWindows demo
+   RACECAR   BMP - ObjectWindows demo
+   SCROLAPP  PAS - ObjectWindows demo
+   STRETCH   PAS - ObjectWindows demo
+   STRETCH   RES - ObjectWindows demo
+   SYSINFO   PAS - ObjectWindows demo
+   SYSINFO   RES - ObjectWindows demo
+   VDLGAPP   PAS - ObjectWindows demo
+   VDLGAPP   RES - ObjectWindows demo
+
+OWLTPH    ZIP - 
+   OWL       TPH - ObjectWindows help for DOS IDE
+
+RWUTILS   ZIP - 
+   BRC       EXE - Borland Resource Compiler "shell"
+   BRCC      EXE - Borland Resource Compiler
+   LOADBWCC  EXE - Program to load bwcc.dll
+   RLINK     EXE - Borland Resource Linker
+
+TDVIDEO   ZIP - 
+   ATI       DLL - Super VGA support for TDW with an ATI video card
+   DUAL8514  DLL - Super VGA support for dual 8514 video cards
+   STB       DLL - Super VGA support for STB, MVP series video cards
+   SVGA      DLL - Super VGA support for TDW
+   TDVESA    DLL - Super VGA support for VESA compliant cards
+   TSENG     DLL - Super VGA support for TDW with a TSENG based video card
+   ULTRA     DLL - Super VGA support for TDW with an ULTRA video card
+   VESATEST  EXE - Program to test if hardware is VESA compliant
+
+UTILS     ZIP - 
+   BINOBJ    EXE - Convert binary data to an OBJ file
+   BRIEF     TEM - Example TEMC script
+   COMPRESS  EXE - File compression utility
+   DEFAULTS  TEM - Example TEMC script
+   DOSEDIT   TEM - Example TEMC script
+   EMSTEST   COM - Test extended memory in your computer
+   EPSILON   TEM - Example TEMC script
+   GREP      COM - Borland Grep
+   GREP2MSG  EXE - GREP filter program
+   MAKE      EXE - Borland Make utility
+   PRNFLTR   EXE - Print filter program
+   TASM2MSG  EXE - TASM message filter
+   RC2MSG    EXE - RC message filter
+   TEMC      EXE - Turbo editor macro compiler
+   THELP     COM - Turbo Help TSR
+   TOUCH     COM - Change a file's date/time to current date/time
+   TPUMOVER  EXE - Unit mover utility
+   TPWALT    TEM - Example TEMC script
+
+WINHELP   ZIP - 
+   HELP      ICO - Icon for help files
+   WINHELP   EXE - Windows 3.1 Help system
+   WINHELP   HLP - Windows 3.1 Help system
+
+WINSIGHT  ZIP - 
+   TOOLHELP  DLL - Win 3.1 toolhelp file
+   WINSIGHT  EXE - WinSight program for Windows
+   WINSIGHT  HLP - Help for WinSight
+   WSIHOOK   DLL - Support DLL for WinSight
+   WSIWIN    DLL - Support DLL for WinSight
+
+WINSPECT  ZIP - 
+   DFA       EXE - Program to process Winspctr's log files
+   WINSPCTR  EXE - Program to log UAE's in the Windows Environment
+   WINSPCTR  HLP - WINSPCTR's help file
+
+
+DISK 10
+-------
+BGI       ZIP - 
+   GRAPH     TPP - Borland Graphics Interface (BGI) Graph unit (DPMI)
+   GRAPH     TPU - Borland Graphics Interface (BGI) Graph unit
+
+BGIDEMO   ZIP - 
+   ARTY      PAS - Borland Graphics Interface demo
+   BGIDEMO   PAS - Borland Graphics Interface demo
+   BGIDRIV   PAS - Borland Graphics Interface demo
+   BGIFONT   PAS - Borland Graphics Interface demo
+   BGILINK   MAK - Borland Graphics Interface demo
+   BGILINK   PAS - Borland Graphics Interface demo
+
+BPC       ZIP - 
+   BPC       EXE - Multi-target command-line compiler
+
+BREAKOUT  ZIP - 
+   BOUNDS    PAS - Breakout game source code
+   BREAKOUT  PAS - Breakout game source code
+   BRICKS    PAS - Breakout game source code
+   COUNT     PAS - Breakout game source code
+   SCREEN    PAS - Breakout game source code
+   WALLS     PAS - Breakout game source code
+
+BWCC      ZIP - 
+   BWCC      DLL - Borland Windows Custom Control DLL
+
+CALC      ZIP - 
+   CALC      PAS - Windows calculator demo using OWL
+   CALC      RES - Windows calculator demo using OWL
+
+COMMDLGS  ZIP - 
+   COMMDLGS  HLP - Common Dialogs demo file
+   COMMDLGS  PAS - Common Dialogs demo file
+   COMMDLGS  RES - Common Dialogs demo file
+
+DDEML     ZIP - 
+   DATAENTR  PAS - DDEML demo file
+   DDEMLCLI  PAS - DDEML demo file
+   DDEMLCLI  RES - DDEML demo file
+   DDEMLSRV  PAS - DDEML demo file
+   DDEMLSRV  RES - DDEML demo file
+
+DOCDEMO   ZIP - 
+   NORECVER  PAS - Documentation demo
+   RECOVER   PAS - Documentation demo
+   WORKERS   PAS - Documentation demo
+   WORKLIST  PAS - Documentation demo
+
+DOSDEMOS  ZIP - 
+   CRTDEMO   PAS - Demo showing use of CRT unit
+   DIRDEMO   PAS - Directory list demo
+   EXECDEMO  PAS - Demo showing how to EXEC other programs
+   FIB8087   PAS - Demo showing use of 8087
+   LISTER    PAS - Source code printing demo
+   OVRDEMO   PAS - Overlay demo
+   OVRDEMO1  PAS - Overlay demo
+   OVRDEMO2  PAS - Overlay demo
+   PROCVAR   PAS - Procedure variable types demo
+   QSORT     PAS - Quick sort demo
+   TEST286   PAS - Shows how to test for 286 (or later) chip
+
+GREP      ZIP - 
+   GREPDLG   PAS - GREP demo file
+   OGCONST   PAS - GREP demo file
+   OWLGREP   PAS - GREP demo file
+   OWLGREP   RES - GREP demo file
+   REGEXP    DLL - GREP demo file
+   REGEXP    PAS - GREP demo file
+   TVGREP    PAS - GREP demo file
+
+GROUPS    ZIP - 
+   GROUPS    EXE - Utility to create Program Manager group
+
+HEAP      ZIP - 
+   DEMO_MEM  BAT - Tasm example file
+   DISPLAY   ASM - Tasm example file
+   DISPLAY   INC - Tasm example file
+   MEM       ASM - Tasm example file
+   MEM       INC - Tasm example file
+   MEMTEST   ASM - Tasm example file
+   MEMTEST   MAK - Tasm example file
+   VMTUTIL   INC - Tasm example file
+
+MCISOUND  ZIP - 
+   MCISOUND  PAS - Windows 3.1 MCI demo
+   MCISOUND  RES - Windows 3.1 MCI demo
+
+OLE       ZIP - 
+   OLEAPP    PAS - OLE demo file
+   OLECLNT   PAS - OLE demo file
+   OLECLNT   RES - OLE demo file
+   OLEOBJ    PAS - OLE demo file
+   OLESERVR  PAS - OLE demo file
+   OLESERVR  RES - OLE demo file
+   OLETYPES  PAS - OLE demo file
+   SERVER    PAS - OLE demo file
+   SERVRWIN  PAS - OLE demo file
+
+OWL       ZIP - 
+   BWCC      TPW - BWCC interface unit
+   CUSTCNTL  TPW - Custom Control interface unit
+   OBJECTS   TPW - OWL Objects unit
+   ODIALOGS  TPW - OWL Dialogs unit
+   OMEMORY   TPW - OWL memory unit
+   OPRINTER  RES - Resource file for OPRINTER unit
+   OPRINTER  TPW - OWL Printer unit
+   OSTDDLGS  RES - Resource file for STDDLGS unit
+   OSTDDLGS  TPW - OWL Standard Dialogs
+   OSTDDLGS  INC - OWL Standard Dialogs include file
+   OSTDWNDS  RES - Resource file for STDWNDS unit
+   OSTDWNDS  TPW - OWL Standard Windows
+   OWINDOWS  TPW - OWL Windows unit
+   OWINDOWS  INC - OWL Windows include file
+   VALIDATE  TPW - OWL Validator unit
+
+PAINT     ZIP - 
+   BITMAPS   PAS - Windows Paint program using OWL
+   CANVAS    PAS - Windows Paint program using OWL
+   LINEBAR   PAS - Windows Paint program using OWL
+   PAINT     PAS - Windows Paint program using OWL
+   PAINT     RES - Windows Paint program using OWL
+   PAINTDEF  PAS - Windows Paint program using OWL
+   PAINTDLG  PAS - Windows Paint program using OWL
+   PALETTE   PAS - Windows Paint program using OWL
+   RECT      PAS - Windows Paint program using OWL
+   RESDEF    PAS - Windows Paint program using OWL
+   TOOLBAR   PAS - Windows Paint program using OWL
+   TOOLS     PAS - Windows Paint program using OWL
+
+PTPL      ZIP - 
+   TPP       TPL - Resident units for protected mode
+
+PXWIN     ZIP - 
+   PXACCESS  PAS - Paradox Engine for Windows demo program
+   PXDEMO    PAS - Paradox Engine for Windows demo program
+   PXDEMO    RES - Paradox Engine for Windows demo program
+
+QUEUE     ZIP - 
+   LIST      ASM - Turbo Assembler queue example file
+   LIST      ASO - Turbo Assembler queue example file
+   NODE      ASM - Turbo Assembler queue example file
+   NODE      ASO - Turbo Assembler queue example file
+   OOP       ASM - Turbo Assembler queue example file
+   QUEUE     ASM - Turbo Assembler queue example file
+   QUEUE     ASO - Turbo Assembler queue example file
+   STACK     ASM - Turbo Assembler queue example file
+   STACK     ASO - Turbo Assembler queue example file
+
+RWDEMOS   ZIP - 
+   BITBNAPP  PAS - Resource Workshop demo
+   BITBNAPP  RES - Resource Workshop demo
+   BITBTN    PAS - Resource Workshop demo
+   BITBTN    RES - Resource Workshop demo
+   BITBTNCO  PAS - Resource Workshop demo
+   CUSTCNTL  PAS - Resource Workshop demo
+   RWDEMO    CUR - Resource Workshop demo
+   RWDEMO    ICO - Resource Workshop demo
+   RWFNT     FNT - Resource Workshop demo
+   RWPDEMO   PAS - Resource Workshop demo
+   RWPDEMO    RC - Resource Workshop demo
+   RWPDEMO   RES - Resource Workshop demo
+   RWPDEMOB   RC - Resource Workshop demo
+   RWPDEMOB  RES - Resource Workshop demo
+   RWPDEMOC  PAS - Resource Workshop demo
+   RWPDLGS   PAS - Resource Workshop demo
+   RWPWND    PAS - Resource Workshop demo
+   STRINGS    RC - Resource Workshop demo
+
+RWDOC     ZIP - 
+   BWCCAPI    RW - Borland Custom Control API documentation
+   BWCCSTYL   RW - Borland custom control style guidelines
+   CUSTCNTL   RW - Custom Control API documentation
+   MANUAL     RW - Corrections to printed RW documentation
+   README     RW - Last-minute information about Resource Workshop
+
+SHELLDEM  ZIP - 
+   SHELLDEM  PAS - Windows 3.1 ShellAPI demo
+   SHELLDEM  RES - Windows 3.1 ShellAPI demo
+
+SWAT      ZIP - 
+   SWAT      PAS - Windows game demo using OWL
+   SWAT      RES - Windows game demo using OWL
+
+TADOC     ZIP - 
+   HELPME!   TSM - Turbo Assembler online document
+   TCREF     TSM - Turbo Assembler online document
+
+TDDEMOS   ZIP - 
+   TDDEMO    PAS - Turbo Debugger demo
+   TDDEMOB   PAS - Turbo Debugger demo
+   TDODEMO   ICO - Turbo Debugger for Windows demo
+   TDODEMO   PAS - Turbo Debugger for Windows demo
+   TDODEMO   RES - Turbo Debugger for Windows demo
+   TDODEMOB  PAS - Turbo Debugger for Windows demo
+
+TDDOC     ZIP - 
+   DBGBOARD   TD - Turbo Debugger online document
+   HDWDEBUG   TD - Turbo Debugger online document
+   HELPME!    TD - Turbo Debugger online document
+   README     TD - Turbo Debugger online document
+   UTILS      TD - Turbo Debugger online document
+   MANUAL     TD - Corrections to printed documentation
+
+TFDEMOS   ZIP - 
+   OVRDEMO   PAS - Turbo Profiler Demo
+   OVRDEMO1  PAS - Turbo Profiler Demo
+   OVRDEMO2  PAS - Turbo Profiler Demo
+   PLOSTPAS  PAS - Turbo Profiler Demo
+   PRIME0PA  PAS - Turbo Profiler Demo
+   PRIME1PA  PAS - Turbo Profiler Demo
+   PRIME2PA  PAS - Turbo Profiler Demo
+   PRIME3PA  PAS - Turbo Profiler Demo
+   PRIME4PA  PAS - Turbo Profiler Demo
+   PRIME5PA  PAS - Turbo Profiler Demo
+   PRIME6PA  PAS - Turbo Profiler Demo
+   PTOLLPAS  PAS - Turbo Profiler Demo
+
+TFDOC     ZIP - 
+   HELPME!   PRF - Turbo Profiler online document
+   MANUAL    PRF - Turbo Profiler online document
+
+TOOLBAR   ZIP - 
+   MFILEAPP  PAS - OWL Toolbar demo
+   MFILEAPP   RC - OWL Toolbar demo
+   MFILEAPP  RES - OWL Toolbar demo
+   MFILEC    PAS - OWL Toolbar demo
+   TOOLBAR   PAS - OWL Toolbar demo
+   TOOLBAR    RC - OWL Toolbar demo
+   TOOLBAR   RES - OWL Toolbar demo
+
+TPC       ZIP - 
+   TPC       EXE - Command-line compiler
+
+TRUETYPE  ZIP - 
+   TTDEMO    PAS - Windows 3.1 TrueType demo
+   TTDEMO    RES - Windows 3.1 TrueType demo
+
+TURBO3    ZIP - 
+   GRAPH3    TPU - Turbo Pascal 3.0 compatibility unit
+   TURBO3    TPU - Turbo Pascal 3.0 compatibility unit
+
+TVDEBUG   ZIP - 
+   CMDNAMER  PAS - TV Debugging example
+   KEYNAMER  PAS - TV Debugging example
+   SHOWEVNT  PAS - TV Debugging example
+   TVDEBUG   PAS - TV Debugging example
+
+TVDEMO    ZIP - 
+   ASCIITAB  PAS - Turbo Vision demo file
+   CALC      PAS - Turbo Vision demo file
+   CALENDAR  PAS - Turbo Vision demo file
+   DEMOCMDS  PAS - Turbo Vision demo file
+   DEMOHELP  HLP - Turbo Vision demo file
+   DEMOHELP  PAS - Turbo Vision demo file
+   DEMOHELP  TXT - Turbo Vision demo file
+   DEMOSTRS  PAS - Turbo Vision demo file
+   GADGETS   PAS - Turbo Vision demo file
+   GENRDEMO  PAS - Turbo Vision demo file
+   HELPFILE  PAS - Turbo Vision demo file
+   MKRDEMO   BAT - Batch file to build TVRDEMO
+   MOUSEDLG  PAS - Turbo Vision demo file
+   PUZZLE    PAS - Turbo Vision demo file
+   TVDEMO    PAS - Turbo Vision demo file
+   TVEDIT    PAS - Turbo Vision demo file
+   TVHC      PAS - Turbo Vision demo file
+   TVRDEMO   PAS - Turbo Vision demo file
+
+TVFM      ZIP - 
+   ASSOC     PAS - TVFM demo file
+   COLORS    PAS - TVFM demo file
+   CYAN      PAL - TVFM demo file
+   DEFAULT   PAL - TVFM demo file
+   DIRVIEW   PAS - TVFM demo file
+   DRAGDROP  PAS - TVFM demo file
+   EDITPAL   PAS - TVFM demo file
+   EQU       PAS - TVFM demo file
+   FILECOPY  PAS - TVFM demo file
+   FILEFIND  PAS - TVFM demo file
+   FILEVIEW  PAS - TVFM demo file
+   GAUGES    PAS - TVFM demo file
+   GLOBALS   PAS - TVFM demo file
+   INFOVIEW  PAS - TVFM demo file
+   MAKERES   PAS - TVFM demo file
+   MAKETVFM  BAT - TVFM demo file
+   ROSE      PAL - TVFM demo file
+   TOOLS     PAS - TVFM demo file
+   TRASH     PAS - TVFM demo file
+   TREEWIN   PAS - TVFM demo file
+   TVFM      PAS - TVFM demo file
+   TVFM      TVR - TVFM demo file
+   VIEWHEX   PAS - TVFM demo file
+   VIEWTEXT  PAS - TVFM demo file
+
+UNITS     ZIP - 
+   STRINGS   TPU - Strings unit for real mode
+   WINDOS    TPU - WinDos unit for real mode
+   WINAPI      H - WINAPI header file
+   WINDOWS     H - WINDOWS API header file
+
+UTILDEMO  ZIP - 
+   GREP2MSG  PAS - GREP filter program source code
+   PRNFLTR   PAS - Print filter source code
+   RTMRES    PAS - RTMRES source code
+
+WDOCDEMO  ZIP - 
+   BTNTEST   PAS BTNTEST - Documentation demo
+   CBOXTEST  PAS - Documentation demo
+   COLLECT1  PAS - Documentation demo
+   COLLECT2  PAS - Documentation demo
+   COLLECT3  PAS - Documentation demo
+   COLLECT4  PAS - Documentation demo
+   DIALTEST  PAS - Documentation demo
+   DIALTEST  RES - Documentation demo
+   DRAWLINE  PAS - Documentation demo
+   EDITTEST  PAS - Documentation demo
+   EDITTEST  RES - Documentation demo
+   EWNDTEST  PAS - Documentation demo
+   EWNDTEST  RES - Documentation demo
+   GRAFFITI  ICO - Documentation demo
+   GRAFFITI  INC - Documentation demo
+   GRAFFITI  PAS - Documentation demo
+   GRAFFITI  RES - Documentation demo
+   GRAFLINE  PAS - Documentation demo
+   INIRTEST  PAS - Documentation demo
+   LBOXTEST  PAS - Documentation demo
+   MDITEST   PAS MDITEST - Documentation demo
+   MDITEST   RES MDITEST - Documentation demo
+   PALTEST   PAS PALTEST - Documentation demo
+   PEN       PAS PEN - Documentation demo
+   PEN       RES PEN - Documentation demo
+   PENPAL    PAS PENPAL - Documentation demo
+   PENPAL    RES PENPAL - Documentation demo
+   PRNTEST   INC - Documentation demo
+   PRNTEST   PAS - Documentation demo
+   PRNTEST   RES - Documentation demo
+   SBARTEST  PAS - Documentation demo
+   STATTEST  PAS - Documentation demo
+   STEP01A   PAS STEP01A - Documentation demo
+   STEP01B   PAS STEP01B - Documentation demo
+   STEP01C   PAS STEP01C - Documentation demo
+   STEP02    PAS STEP02 - Documentation demo
+   STEP03A   PAS STEP03A - Documentation demo
+   STEP03B   PAS STEP03B - Documentation demo
+   STEP04A   PAS STEP04A - Documentation demo
+   STEP04B   PAS STEP04B - Documentation demo
+   STEP05    PAS STEP05 - Documentation demo
+   STEP06A   PAS STEP06A - Documentation demo
+   STEP06B   PAS STEP06B - Documentation demo
+   STEP07    PAS STEP07 - Documentation demo
+   STEP08A   PAS STEP08A - Documentation demo
+   STEP08B   PAS STEP08B - Documentation demo
+   STEP09    PAS STEP09 - Documentation demo
+   STEP10    PAS STEP10 - Documentation demo
+   STEP11A   PAS STEP11A - Documentation demo
+   STEP11B   PAS STEP11B - Documentation demo
+   STEP12A   PAS STEP12A - Documentation demo
+   STEP12B   PAS STEP12B - Documentation demo
+   STEPS     ICO STEPS - Documentation demo
+   STEPS     INC STEPS - Documentation demo
+   STEPS     RES STEPS - Documentation demo
+   STREAM1   PAS STREAM1 - Documentation demo
+   STREAM2   PAS STREAM2 - Documentation demo
+   SUBCTEST  PAS - Documentation demo
+   TRANTEST  PAS - Documentation demo
+   TRANTEST  RES - Documentation demo
+
+WHEREIS   ZIP - 
+   BIOS      INC - Tasm example file
+   BIOSMAC   DOC - Tasm example file
+   DEMO1     BAT - Tasm example file
+   DOS       INC - Tasm example file
+   DOSMAC    DOC - Tasm example file
+   IASCIIZS  ASM - Tasm example file
+   IBIOS     MAC - Tasm example file
+   IBYTECPY  ASM - Tasm example file
+   IDELCHAR  ASM - Tasm example file
+   IDOS      INC - Tasm example file
+   IDOS      MAC - Tasm example file
+   IEXECDOS  ASM - Tasm example file
+   IFINDBYT  ASM - Tasm example file
+   IFINDFIL  ASM - Tasm example file
+   IFINDREP  ASM - Tasm example file
+   ILOCSTRG  ASM - Tasm example file
+   IMACROS   MAC - Tasm example file
+   IPARAM    ASM - Tasm example file
+   IPARSEFN  ASM - Tasm example file
+   ISKPWHIT  ASM - Tasm example file
+   IWHEREIS  ASM - Tasm example file
+   IWHGLOBL  INC - Tasm example file
+   IWRITEPS  ASM - Tasm example file
+   KBD       INC - Tasm example file
+   WHEREIS   DOC - Tasm example file
+   WHEREIS   MAK - Tasm example file
+   WHUSAGE   INC - Tasm example file
+
+WIN31     ZIP - 
+   COLORDLG  TPW - Windows 3.1 API Interface unit
+   COMMDLG   TPW - Windows 3.1 API Interface unit
+   CPL       TPW - Windows 3.1 API Interface unit
+   DDEML     TPW - Windows 3.1 API Interface unit
+   DLGS      TPW - Windows 3.1 API Interface unit
+   LZEXPAND  TPW - Windows 3.1 API Interface unit
+   MMSYSTEM  TPW - Windows 3.1 API Interface unit
+   OLE       TPW - Windows 3.1 API Interface unit
+   PRINT     TPW - Windows 3.1 API Interface unit
+   SHELLAPI  TPW - Windows 3.1 API Interface unit
+   STRESS    TPW - Windows 3.1 API Interface unit
+   TOOLHELP  TPW - Windows 3.1 API Interface unit
+   VER       TPW - Windows 3.1 API Interface unit
+   WFEXT     TPW - Windows 3.1 API Interface unit
+   WINMEM32  TPW - Windows 3.1 API Interface unit
+
+WINDEMOS  ZIP - 
+   DIRDEMO   PAS - Windows demo file
+   FDLGDEMO  PAS - Windows demo file
+   FDLGDEMO  RES - Windows demo file
+   FILEDLGS  PAS - Windows demo file
+   FILEDLGS  RES - Windows demo file
+   GENERIC   PAS - Windows demo file
+   GENERIC   RES - Windows demo file
+   WELCOME   PAS - Windows demo file
+   WMENU     PAS - Windows demo file
+   WMENU     RES - Windows demo file
+   WPOPUP    PAS - Windows demo file
+   WPOPUP    RES - Windows demo file
+
+WTPL      ZIP - 
+   TPW       TPL - Resident units for Windows
+

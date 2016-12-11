@@ -1,0 +1,9 @@
+
+Program Demo;
+uses crt;
+begin
+textcolor(6);clrscr;
+write ('Marius M.');
+
+
+end.

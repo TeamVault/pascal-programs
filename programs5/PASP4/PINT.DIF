@@ -1,0 +1,184 @@
+*** pint.p	Wed Aug 26 21:32:43 1992
+--- pint.pas	Wed Aug 26 21:32:43 1992
+***************
+*** 1,1
+  (*Assembler and interpreter of Pascal code*)
+
+--- 1,2 -----
++ {$D+}
+  (*Assembler and interpreter of Pascal code*)
+***************
+*** 38,39
+        duminst     = 62;
+  
+
+--- 39,41 -----
+        duminst     = 62;
++       stringlgth  = 80;     (* string length *)
+  
+***************
+*** 46,47
+        settype     = set of 0..58;
+  
+
+--- 48,50 -----
+        settype     = set of 0..58;
++       alfa        = packed array[1..10] of char;
+  
+***************
+*** 164,166
+  	     with labeltab[i] do begin val:=-1; st:= entered end;
+! 	 reset(prd);
+     end;(*init*)
+
+--- 167,169 -----
+  	     with labeltab[i] do begin val:=-1; st:= entered end;
+! 	 reset(prd, 'pcode');
+     end;(*init*)
+***************
+*** 167,169
+  
+!    procedure errorl(string: beta); (*error in loading*)
+     begin writeln;
+
+--- 170,172 -----
+  
+!    procedure errorl(thestring: beta); (*error in loading*)
+     begin writeln;
+***************
+*** 169,171
+     begin writeln;
+!       write(string);
+        halt
+
+--- 172,174 -----
+     begin writeln;
+!       write(thestring);
+        halt
+***************
+*** 244,245
+        procedure getname;
+        begin  word[1] := ch;
+
+--- 247,249 -----
+        procedure getname;
++       var i : integer;
+        begin  word[1] := ch;
+***************
+*** 247,249
+  	 if not eoln(prd) then read(prd,ch) (*next character*);
+! 	 pack(word,1,name)
+        end; (*getname*)
+
+--- 251,253 -----
+  	 if not eoln(prd) then read(prd,ch) (*next character*);
+!    for i := 1 TO 10 DO name[i] := word[i];
+        end; (*getname*)
+***************
+*** 351,353
+  
+! 			   'b': begin p := 3;  read(prd,q)  end;
+  
+
+--- 355,357 -----
+  
+! 			   'b': begin p := 3;  read(prd,q); end;
+  
+***************
+*** 396,398
+  	   56 (*lca*): begin
+! 			 if mcp + 16 >= overm then
+  			   errorl(' multiple table overflow ');
+
+--- 400,402 -----
+  	   56 (*lca*): begin
+! 			 if mcp + stringlgth >= overm then
+  			   errorl(' multiple table overflow ');
+***************
+*** 398,400
+  			   errorl(' multiple table overflow ');
+! 			 mcp := mcp+16;
+  			 q := mcp;
+
+--- 402,404 -----
+  			   errorl(' multiple table overflow ');
+! 			 mcp := mcp+stringlgth;
+  			 q := mcp;
+***************
+*** 400,402
+  			 q := mcp;
+! 			 for i := 0 to 15 (*stringlgth*) do
+  			 begin read(prd,ch);
+
+--- 404,406 -----
+  			 q := mcp;
+! 			 for i := 0 to (*15*) stringlgth-1 do
+  			 begin read(prd,ch);
+***************
+*** 442,444
+     procedure pt;
+!    begin  write(s:6);
+        if abs(store[s].vi) < maxint then write(store[s].vi)
+
+--- 446,448 -----
+     procedure pt;
+!    begin  write(s:6, ' : ');
+        if abs(store[s].vi) < maxint then write(store[s].vi)
+***************
+*** 462,465
+  
+! procedure errori(string: beta);
+! begin writeln; writeln(string);
+        pmd; goto 1
+
+--- 466,469 -----
+  
+! procedure errori(thestring: beta);
+! begin writeln; writeln(thestring);
+        pmd; goto 1
+***************
+*** 665,667
+  begin (* main *)
+!   rewrite(prr);
+    load; (* assembles and stores code *)
+
+--- 669,671 -----
+  begin (* main *)
+!   rewrite(prr, 'prr');
+    load; (* assembles and stores code *)
+***************
+*** 894,896
+  
+! 	  96,97,98,99,
+  	  26 (*chk*): if (store[sp].vi < store[q-1].vi) or
+
+--- 898,900 -----
+  
+! 	  96,97,99,
+  	  26 (*chk*): if (store[sp].vi < store[q-1].vi) or
+***************
+*** 897,898
+  			 (store[sp].vi > store[q].vi) then
+  			errori(' value out of range      ');
+
+--- 901,911 -----
+  			 (store[sp].vi > store[q].vi) then
++          begin
++            Writeln('Value (', store[sp].vi,')  out of range :', store[q-1].vi, '..', store[q].vi);
++ 			     errori(' value out of range      ');
++          end;
++ 
++ 	  98 (*chkb*): if (ORD(store[sp].vb) < store[q-1].vi) or
++ 			 (ORD(store[sp].vb) > store[q].vi) then
++          begin
++            Writeln('Value (', ORD(store[sp].vb),')  out of range :', store[q-1].vi, '..', store[q].vi);
+  			     errori(' value out of range      ');
+***************
+*** 898,899
+  			errori(' value out of range      ');
+  
+
+--- 911,913 -----
+  			     errori(' value out of range      ');
++          end;
+  
