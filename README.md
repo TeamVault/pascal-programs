@@ -1,5 +1,5 @@
 # pascal-programs
-This repo. contains an array of Pascal programs which were written during the years 2000-2002 and represent class asignments and also the final project assignment. The programs were written all on a Win. XP OS. Since Win. XP is legacy I also provide some of the .exe files of the programs. The final project can be run on an Win. XP OS. I did no tests on newer OSs. You are free to try if the .exe files will run on these new OS versions. For those of you who are not familiar to Pascal, please check here:
+This repo. contains an array of Pascal programs which were written during the years 2000-2002 and represent class assingnments and also the final project assignment. The programs were written all on a Win. XP OS. Since Win. XP is legacy I also provide some of the .exe files of the programs. The final project can be run on an Win. XP OS. I did no tests on newer OSs. You are free to try if the provided .exe files will run on new OS versions. For those of you who are not familiar with Pascal, please check here:
 https://en.wikipedia.org/wiki/Pascal_(programming_language)
 
 # Folder Contents
